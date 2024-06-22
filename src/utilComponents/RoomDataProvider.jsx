@@ -5,7 +5,7 @@ export const RoomContext = createContext();
 
 export const RoomDataProvider = ({ children }) => {
 
-  const [ isOpen, data, send, open, close ] = useContext(WebsocketContext);
+  const { isOpen, data, send, open, close } = useContext(WebsocketContext);
 
   const [ players, setPlayers ] = useState([]);
   
