@@ -1,32 +1,35 @@
 import { useContext, useEffect, useRef } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
+import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 
 const MainPage = () => {
+    const navigate = useNavigate();
 
     const [isOpen, data, send, open, close] = useContext(WebsocketContext);
 
     const onCreateClick = () => {
         
-        // @ts-ignore
         if(open) open();
-        // @ts-ignore
         send('{"type": "create-room"}');
     }
 
     const onJoinClick = () => {
 
-        // @ts-ignore
         const code = codeInputRef?.current?.value;
 
         if(!code) console.log("zadej kode pyco");
         else {
         
-            // @ts-ignore
             if(open) open();
-            // @ts-ignore
             send('{"type": "join-room", "code": "' + code + '"}');
         }
     }
+
+    useEffect(() => {
+        if (data?.type === "create-room" || data?.type === "join-room"){
+            navigate("game/" + data?.code)
+        }
+    }, [data])
 
     const codeInputRef = useRef();
 
