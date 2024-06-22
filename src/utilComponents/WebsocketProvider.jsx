@@ -39,7 +39,14 @@ export const WebsocketProvider = ({ children }) => {
     }
     socket.onmessage = (event) => {
         console.log("recieved: ",event.data)
-        setData(JSON.parse(event.data));
+        let data;
+        try{
+          data = JSON.parse(event.data);
+        }
+        catch{
+          data = event.data
+        }
+        setData(data);
     }
 
     ws.current = socket
