@@ -1,24 +1,40 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 
 const MainPage = () => {
 
     const [isOpen, data, send, open, close] = useContext(WebsocketContext);
 
-    useEffect(() => {
-        console.log(open)
+    const onCreateClick = () => {
+        
         // @ts-ignore
         if(open) open();
-    },[])
-
-    useEffect(() => {
-        console.log(isOpen)
         // @ts-ignore
-        if(isOpen) send('{"type": "create-room"}');
-    }, [isOpen]);
+        send('{"type": "create-room"}');
+    }
+
+    const onJoinClick = () => {
+
+        // @ts-ignore
+        const code = codeInputRef?.current?.value;
+
+        if(!code) console.log("zadej kode pyco");
+        else {
+        
+            // @ts-ignore
+            if(open) open();
+            // @ts-ignore
+            send('{"type": "join-room", "code": "' + code + '"}');
+        }
+    }
+
+    const codeInputRef = useRef();
 
     return <>
-        main page {isOpen}
+        main page
+        <button disabled={!!isOpen} onClick={onCreateClick}>create</button>
+        <button disabled={!!isOpen} onClick={onJoinClick}>join</button>
+        <input type="text" ref={codeInputRef}></input>
     </>
 }
 
