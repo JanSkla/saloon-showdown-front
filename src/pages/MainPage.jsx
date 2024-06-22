@@ -9,7 +9,6 @@ const MainPage = () => {
         console.log(open)
         // @ts-ignore
         if(open) open();
-        //send('{"type": "create-room"}');
     },[])
 
     useEffect(() => {
