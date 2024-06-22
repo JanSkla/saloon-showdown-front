@@ -33,8 +33,8 @@ export const WebsocketProvider = ({ children }) => {
         setIsOpen(false)
     }
     socket.onmessage = (event) => {
-        console.log(event.data)
-        setVal(event.data);
+        console.log("recieved: ",event.data)
+        setVal(JSON.parse(event.data));
     }
 
     ws.current = socket
