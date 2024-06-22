@@ -5,18 +5,22 @@ export const RoomContext = createContext();
 
 export const RoomDataProvider = ({ children }) => {
 
-  const [isOpen, data, send, open, close] = useContext(WebsocketContext);
+  const [ isOpen, data, send, open, close ] = useContext(WebsocketContext);
 
   const [ players, setPlayers ] = useState([]);
+  
+  const [ thisPID, setThisPID ] = useState();
 
   useEffect(() => {
     if (data?.type === "create-room" || data?.type === "join-room"){
       setPlayers(data?.players);
+      setThisPID(data?.pId);
       console.log("room players loaded", data?.players)
     }
-    else if(data?.type === "player-join" && data?.player){
+    else if(data?.type === "player-join"){
       const updatedPlayers = [...players, data?.player];
       setPlayers(updatedPlayers);
+      setThisPID(data?.pId);
       console.log("player joined", updatedPlayers)
     }
     else if(data?.type === "player-disconnect" && data?.player){
@@ -28,7 +32,7 @@ export const RoomDataProvider = ({ children }) => {
   }, [data]);
 
   return (
-    <RoomContext.Provider value={{ players, setPlayers }}>
+    <RoomContext.Provider value={{ players, thisPID }}>
       {children}
     </RoomContext.Provider>
   );
