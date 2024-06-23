@@ -61,7 +61,7 @@ export const WebsocketProvider = ({ children }) => {
   const waitingMessagesForConnection = []
 
   const send = (value) => {
-    console.log(ws.current?.readyState)
+    console.log("sent:", value)
     if (ws.current?.readyState === 1)
         ws.current?.send(value);
     else if (ws.current?.readyState === 0){
