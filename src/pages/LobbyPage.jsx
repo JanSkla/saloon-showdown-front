@@ -17,7 +17,7 @@ const LobbyPage = () => {
         }
     }, [data])
 
-    const thisPlayer = players.find(player => player.pId == thisPID);
+    const thisPlayer = players.find(player => player.pId === thisPID);
 
     const onStartGameClick = () => {
         send('{"type": "start-game"}');
@@ -27,7 +27,7 @@ const LobbyPage = () => {
         lobbyPage
         {players.map(player => <div key={player.pId}>id: {player.pId} name: {player.name} {player.isLeadPlayer && "🎖️"}, {player.pId == thisPID && "YOU"}</div>)}
         <br/>
-        {thisPlayer.isLeadPlayer && <button onClick={onStartGameClick}>Start game</button>}
+        {thisPlayer?.isLeadPlayer && <button onClick={onStartGameClick}>Start game</button>}
     </div>
 }
 

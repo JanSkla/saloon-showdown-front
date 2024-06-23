@@ -20,11 +20,19 @@ export const RoomDataProvider = ({ children }) => {
     else if(data?.type === "player-join"){
       const updatedPlayers = [...players, data?.player];
       setPlayers(updatedPlayers);
-      setThisPID(data?.pId);
       console.log("player joined", updatedPlayers)
     }
     else if(data?.type === "player-disconnect" && data?.player){
-      const updatedPlayers = players.filter(player => player.id !== data?.player);
+      const updatedPlayers = players.filter(player => player.pId !== data?.player);
+
+      setPlayers(updatedPlayers);
+      console.log("player disconnected", updatedPlayers)
+    }
+    else if(data?.type === "new-leader" && data?.player){
+      const updatedPlayers = players.map(player => {
+        player.isLeadPlayer = player.pId === data?.player;
+        return player
+      });
 
       setPlayers(updatedPlayers);
       console.log("player disconnected", updatedPlayers)
