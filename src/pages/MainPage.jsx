@@ -1,13 +1,11 @@
 import { useContext, useEffect, useRef } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
-import { RoomContext } from "../utilComponents/RoomDataProvider";
 
 const MainPage = () => {
     const navigate = useNavigate();
 
-    const [isOpen, data, send, open, close] = useContext(WebsocketContext);
-    const { players, setPlayers } = useContext(RoomContext);
+    const { isOpen, data, send, open } = useContext(WebsocketContext);
 
     const onCreateClick = () => {
         

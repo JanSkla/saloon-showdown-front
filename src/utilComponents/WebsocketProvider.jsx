@@ -1,12 +1,17 @@
-import { createContext, useEffect, useRef, useState } from "react"
+import { createContext, useRef, useState } from "react"
 import { wssAddress } from "../config"
 
-export const WebsocketContext = createContext([false, null, () => {}, () => {}, () => {}])
-//                                            ready, value, send
+export const WebsocketContext = createContext({
+  isOpen: false,
+  data: null,
+  send: () => {},
+  open: () => {},
+  clcose: () => {}
+});
 
 export const WebsocketProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [value, setVal] = useState(null)
+  const [data, setData] = useState(null)
 
   const ws = useRef(null)
 
@@ -18,7 +23,7 @@ export const WebsocketProvider = ({ children }) => {
     waitingMessagesForConnection.length = 0; //delete sent messages
   }
 
-  const openConnection = () => {
+  const open = () => {
 
     if(isOpen) return;
 
@@ -34,13 +39,20 @@ export const WebsocketProvider = ({ children }) => {
     }
     socket.onmessage = (event) => {
         console.log("recieved: ",event.data)
-        setVal(JSON.parse(event.data));
+        let data;
+        try{
+          data = JSON.parse(event.data);
+        }
+        catch{
+          data = event.data
+        }
+        setData(data);
     }
 
     ws.current = socket
   }
 
-  const closeConnection = () => {
+  const close = () => {
     if(!isOpen) return;
 
     ws.current?.close();
@@ -48,8 +60,8 @@ export const WebsocketProvider = ({ children }) => {
 
   const waitingMessagesForConnection = []
 
-  const sendMessage = (value) => {
-    console.log(ws.current?.readyState)
+  const send = (value) => {
+    console.log("sent:", value)
     if (ws.current?.readyState === 1)
         ws.current?.send(value);
     else if (ws.current?.readyState === 0){
@@ -58,7 +70,7 @@ export const WebsocketProvider = ({ children }) => {
   }
 
   return (
-    <WebsocketContext.Provider value={[isOpen, value, sendMessage, openConnection, closeConnection]}>
+    <WebsocketContext.Provider value={{isOpen, data, send, open, close}}>
       {children}
     </WebsocketContext.Provider>
   )
