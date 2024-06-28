@@ -10,9 +10,11 @@ export const RoomDataProvider = ({ children }) => {
   const [ players, setPlayers ] = useState([]);
   
   const [ thisPID, setThisPID ] = useState();
+  
+  const [ roomCode, setRoomCode ] = useState();
 
   useEffect(() => {
-    if (data?.type === "create-room" || data?.type === "join-room"){
+    if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
       setPlayers(data?.players);
       setThisPID(data?.pId);
       console.log("room players loaded", data?.players)
@@ -40,7 +42,7 @@ export const RoomDataProvider = ({ children }) => {
   }, [data]);
 
   return (
-    <RoomContext.Provider value={{ players, thisPID }}>
+    <RoomContext.Provider value={{ players, thisPID, roomCode, setRoomCode }}>
       {children}
     </RoomContext.Provider>
   );

@@ -1,11 +1,14 @@
 import { useContext, useEffect, useRef } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
+import { Button } from "../components/Button";
+import { RoomContext } from "../utilComponents/RoomDataProvider";
 
 const MainPage = () => {
     const navigate = useNavigate();
 
     const { isOpen, data, send, open } = useContext(WebsocketContext);
+    const { roomCode } = useContext(RoomContext);
 
     const onCreateClick = () => {
         
@@ -26,7 +29,7 @@ const MainPage = () => {
     }
 
     useEffect(() => {
-        if (data?.type === "create-room" || data?.type === "join-room"){
+        if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
             navigate("game/" + data?.code)
         }
     }, [data])
@@ -35,9 +38,9 @@ const MainPage = () => {
 
     return <>
         main page
-        <button disabled={!!isOpen} onClick={onCreateClick}>create</button>
+        <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
         <button disabled={!!isOpen} onClick={onJoinClick}>join</button>
-        <input type="text" ref={codeInputRef}></input>
+        <input type="text" ref={codeInputRef} value={roomCode}></input>
     </>
 }
 
