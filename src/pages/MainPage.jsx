@@ -37,9 +37,9 @@ const MainPage = () => {
     const codeInputRef = useRef();
 
     return <>
-        main page
-        <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
-        <button disabled={!!isOpen} onClick={onJoinClick}>join</button>
+        main page<br/><br/>
+        <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button><br/><br/>
+        <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button><br/><br/>
         <input type="text" ref={codeInputRef} value={roomCode}></input>
     </>
 }
