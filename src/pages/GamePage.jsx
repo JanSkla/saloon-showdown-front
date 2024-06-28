@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
+import GameCanvas from "../components/GameCanvas";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -52,6 +53,9 @@ const GamePage = () => {
     }
 
     return <div>
+        <div className="canvas-container">
+            <GameCanvas />
+        </div>
         game page
         <br/>
         game state: {gameState}

@@ -7,7 +7,6 @@ const GameWrapperPage = () =>{
 
     const navigate = useNavigate();
     const {id} = useParams();
-    console.log(id)
 
     const { exists } = useContext(WebsocketContext);
 
