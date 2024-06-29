@@ -1,36 +1,53 @@
 import { Canvas } from "@react-three/fiber"
 import Room from "./models/Room"
 import { Environment, PerspectiveCamera } from "@react-three/drei"
-import Player, { PLAYER } from "./models/Player"
+import Player from "./models/Player"
+import { useContext, useEffect, useState } from "react"
+import { RoomContext } from "../utilComponents/RoomDataProvider"
 
 const GameCanvas = () => {
 
 
+  const { players, thisPID } = useContext(RoomContext);
+
+  const enemies = [];
+
+  players.filter(player => player.pId !== thisPID).forEach(enemy => {
+    enemies.push({
+      pId: enemy.pId,
+      playerState: 0,
+    })
+  })
+
+  const enemyCount = enemies.length;
+  const angleRange = 180;
+
   const radius = 3.8;
-  const offset = -0.5;
+  const offset = -(enemyCount - 1)/2;
 
-  const playerCount = 3;
-  const angleRange = 210;
-
-  const angleOffset = angleRange/playerCount;
+  const angleOffset = angleRange/enemyCount;
   
   function toRadians (angle) {
     return angle * (Math.PI / 180);
   }
 
-  const positions = [];
+  const [positions, setPositions] = useState([]);
 
-  for (let i = 0 + offset; i < playerCount + offset; i++){
-    const pos = {
-      a: radius * Math.sin(toRadians(angleOffset * i)),
-      b: radius * Math.cos(toRadians(angleOffset * i)),
-    };
-    console.log(pos);
-    positions.push(pos);
-  }
+  useEffect(() => {
+
+    const poss = [];
+    for (let i = 0 + offset; i < enemyCount + offset; i++){
+      const pos = {
+        a: radius * Math.sin(toRadians(angleOffset * i)),
+        b: radius * Math.cos(toRadians(angleOffset * i)),
+      };
+      poss.push(pos);
+    }
+    setPositions(poss);
+  }, [])
 
   return <Canvas>
-    {positions.map(({a,b}) => <Player position={[a, 3.55, b]} playerState={PLAYER.shootBeer}/>)}
+    {positions.map(({a,b},index) => <Player pId={enemies[index].pId} position={[a, 3.55, b]}/>)}
     <Room />
     <ambientLight />
     <Environment preset='sunset'/>

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useLoader } from '@react-three/fiber';
+import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
 
 export const PLAYER = {
   cards: 0,
@@ -10,10 +11,11 @@ export const PLAYER = {
   shoot: 4,
   drinkBeer: 5,
   shootBeer: 6,
-  idle: 7,
+  orderBeer: 7,
+  idle: 8,
 };
 
-export default function Player({position, playerState}) {
+export default function Player({pId, position}) {
 
   const defaultTexture = useLoader(THREE.TextureLoader, '/cowboy/cowboy_cards.png');
 
@@ -25,8 +27,11 @@ export default function Player({position, playerState}) {
     {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_hands_down.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_shoot_hand.png')},
     {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer0.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer0_hand.png')},
     {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer1_shoot.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer1_shoot_hand.png')},
+    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_order_beer_hand.png')},
     {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_hands_down.png'), top: undefined},
   ]
+
+  const [playerState, setPlayerState] = useState(PLAYER.idle);
 
   const planeRef = useRef();
   const planeTopRef = useRef();
@@ -39,6 +44,64 @@ export default function Player({position, playerState}) {
   }, [planeRef])
 
   const scale = 1.3;
+
+
+  
+  const { data } = useContext(WebsocketContext);
+
+  useEffect(() => {
+    if(data?.type === "choose"){
+      setPlayerState(PLAYER.cards)
+    }
+    else if(data?.type === "stop-choice"){
+      setPlayerState(PLAYER.playCard)
+    }
+    if(data?.type === "round-actions" && data?.data){
+      console.log(data?.data)
+      data.data.forEach(action => {
+        if(action.user == pId){
+  
+          switch (action.type) {
+            case "ammo":
+              setPlayerState(PLAYER.ammo);
+              break;
+            case "block":
+              setPlayerState(PLAYER.block);
+              break;
+            case "shoot-damage":
+            case "shoot-death":
+            case "shoot-block":
+              setPlayerState(PLAYER.shoot);
+              break;
+            case "order-beer":
+              setPlayerState(PLAYER.orderBeer);
+              break;
+            case "started-beer":
+              //dies while drinking
+              break;
+            case "finished-beer":
+              setPlayerState(PLAYER.drinkBeer);
+              break;
+            default:
+              break;
+          }
+
+        }
+
+        if(action.target == pId){
+          switch (action.type) {
+            case "shoot-drinking-beer":
+              setPlayerState(PLAYER.shootBeer);
+              break;
+            default:
+              break;
+          }
+        }
+  
+      })
+    }
+    
+  }, [data])
   
   return <>
     <mesh
