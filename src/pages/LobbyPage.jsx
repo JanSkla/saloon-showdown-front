@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate, useParams } from "../../node_modules/react-router-dom/dist/index";
+import { Button } from "../components/Button";
 
 const LobbyPage = () => {
     const { id } = useParams(); 
@@ -27,7 +28,7 @@ const LobbyPage = () => {
         lobbyPage
         {players.map(player => <div key={player.pId}>id: {player.pId} name: {player.name} {player.isLeadPlayer && "🎖️"}, {player.pId == thisPID && "YOU"}</div>)}
         <br/>
-        {thisPlayer?.isLeadPlayer && <button onClick={onStartGameClick}>Start game</button>}
+        {thisPlayer?.isLeadPlayer && <Button onClick={onStartGameClick}>Start game</Button>}
     </div>
 }
 

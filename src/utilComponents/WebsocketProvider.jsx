@@ -69,8 +69,10 @@ export const WebsocketProvider = ({ children }) => {
     }
   }
 
+  const exists = ws.current != undefined;
+
   return (
-    <WebsocketContext.Provider value={{isOpen, data, send, open, close}}>
+    <WebsocketContext.Provider value={{exists, isOpen, data, send, open, close}}>
       {children}
     </WebsocketContext.Provider>
   )

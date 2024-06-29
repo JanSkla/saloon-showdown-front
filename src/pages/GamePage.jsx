@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
+import { Button } from "../components/Button";
+import GameCanvas from "../components/GameCanvas";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -51,6 +53,9 @@ const GamePage = () => {
     }
 
     return <div>
+        <div className="canvas-container">
+            <GameCanvas />
+        </div>
         game page
         <br/>
         game state: {gameState}
@@ -62,13 +67,13 @@ const GamePage = () => {
                     {players.filter(player => player.pId !== thisPID).map(player => <option key={player.pId} value={player.pId}>{player.pId} - {player.name}</option>)}
                 </select>
             }
-            <button key={index} onClick={() => sendChoice(option)}>{option}</button>
+            <Button key={index} onClick={() => sendChoice(option)}>{option}</Button>
         </>)}
         <br/>
         logs:
         <br/>
         {logs.map((log, index) => <div key={index}>{log}</div>)}
-        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <button onClick={playAgain}>play again</button>}
+        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
     </div>
 }
 
