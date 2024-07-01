@@ -15,6 +15,8 @@ const GamePage = () => {
     const [options, setOptions] = useState([]);
     
     const [gameState, setGameState] = useState([]);
+    
+    const [choice, setChoice] = useState([]);
 
     useEffect(() => {
         if (data?.type === "choose"){
@@ -38,12 +40,13 @@ const GamePage = () => {
     }, [data])
     const [target, setTarget] = useState([]);
 
-    const sendChoice = (choice) => {
-        if (choice === "shoot"){
-            send(JSON.stringify({"type": "choose-card", "choice": choice, "target": target}))
+    const sendChoice = (choiceVal) => {
+        setChoice(choiceVal)
+        if (choiceVal === "shoot"){
+            send(JSON.stringify({"type": "choose-card", "choice": choiceVal, "target": target}))
             return;
         }
-        send(JSON.stringify({"type": "choose-card", "choice": choice}))
+        send(JSON.stringify({"type": "choose-card", "choice": choiceVal}))
     }
 
     const playAgain = () => {
@@ -54,7 +57,7 @@ const GamePage = () => {
 
     return <div>
         <div className="canvas-container">
-            <GameCanvas />
+            <GameCanvas chooseTarget={setTarget}/>
         </div>
         {options.map((option, index) => <>
             {option === "shoot" &&
@@ -63,7 +66,7 @@ const GamePage = () => {
                     {players.filter(player => player.pId !== thisPID).map(player => <option key={player.pId} value={player.pId}>{player.pId} - {player.name}</option>)}
                 </select>
             }
-            <Button key={index} onClick={() => sendChoice(option)}>{option}</Button>
+            <Button key={index} onClick={() => sendChoice(option)} selected={choice == option}>{option}</Button>
         </>)}
         <br/>
         game page

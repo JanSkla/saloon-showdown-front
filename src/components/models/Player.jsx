@@ -20,7 +20,7 @@ export const PLAYER = {
 
 const MAX_HEALTH = 3;
 
-export default function Player({pId, position}) {
+export default function Player({pId, position, onClick}) {
   
   const disconnected = useRef(false);
 
@@ -148,6 +148,7 @@ export default function Player({pId, position}) {
     <mesh
       position={position} // Position it at the origin
       ref={planeRef}
+      onClick={onClick}
     >
       <planeGeometry args={[3 * scale, 4 * scale]} />
       <meshStandardMaterial

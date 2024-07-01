@@ -8,7 +8,7 @@ import { RoomContext } from "../utilComponents/RoomDataProvider"
 import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 
-const GameCanvas = () => {
+const GameCanvas = ({chooseTarget}) => {
 
   // SETTINGS //
   const angleRange = 180;
@@ -78,7 +78,7 @@ const GameCanvas = () => {
     scene.fog = new THREE.FogExp2(0x120c0c, 0.05); // Fog color and density
   }}>
     {positions.map(({pId, pos, beerPos}) => <>
-      <Player pId={pId} position={[pos.a, 3.55, pos.b]}/>
+      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)}/>
       <Beer pId={pId} position={[beerPos.a, 2.8, beerPos.b]} lookAt={[-0.35, 2.8, -1.3]}/>
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
