@@ -6,7 +6,7 @@ export const WebsocketContext = createContext({
   data: null,
   send: () => {},
   open: () => {},
-  clcose: () => {}
+  close: () => {}
 });
 
 export const WebsocketProvider = ({ children }) => {
@@ -19,7 +19,10 @@ export const WebsocketProvider = ({ children }) => {
     
     setIsOpen(true);
 
-    waitingMessagesForConnection.forEach(message => ws.current?.send(message)); //send messages buffered before connection established
+    waitingMessagesForConnection.forEach(message => {
+      ws.current?.send(message);
+      console.log("sent:", message)
+    }); //send messages buffered before connection established
     waitingMessagesForConnection.length = 0; //delete sent messages
   }
 
@@ -61,9 +64,11 @@ export const WebsocketProvider = ({ children }) => {
   const waitingMessagesForConnection = []
 
   const send = (value) => {
-    console.log("sent:", value)
     if (ws.current?.readyState === 1)
+      {
         ws.current?.send(value);
+        console.log("sent:", value)
+      }
     else if (ws.current?.readyState === 0){
         waitingMessagesForConnection.push(value);
     }

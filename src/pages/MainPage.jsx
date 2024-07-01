@@ -40,7 +40,7 @@ const MainPage = () => {
         main page<br/><br/>
         <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button><br/><br/>
         <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button><br/><br/>
-        <input type="text" ref={codeInputRef} value={roomCode}></input>
+        <input type="text" ref={codeInputRef} defaultValue={roomCode}></input>
     </>
 }
 
