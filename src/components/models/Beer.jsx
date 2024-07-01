@@ -26,7 +26,11 @@ export default function Beer({pId, position, lookAt}) {
   const [beerState, setBeerState] = useState(BEER.none);
 
   useEffect(() => {
-    if(data?.type === "round-actions" && data?.data){
+
+    if(data?.type === "start-countdown"){
+      setBeerState(BEER.none);
+    }
+    else if(data?.type === "round-actions" && data?.data){
       data.data.forEach(action => {
         
         if(action.target == pId){

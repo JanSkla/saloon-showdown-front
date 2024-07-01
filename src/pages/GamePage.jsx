@@ -56,10 +56,6 @@ const GamePage = () => {
         <div className="canvas-container">
             <GameCanvas />
         </div>
-        game page
-        <br/>
-        game state: {gameState}
-        <br/>
         {options.map((option, index) => <>
             {option === "shoot" &&
                 <select value={target} onChange={e => setTarget(e.target.value)}>
@@ -69,6 +65,10 @@ const GamePage = () => {
             }
             <Button key={index} onClick={() => sendChoice(option)}>{option}</Button>
         </>)}
+        <br/>
+        game page
+        <br/>
+        game state: {gameState}
         <br/>
         logs:
         <br/>

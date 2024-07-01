@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { useContext, useEffect, useRef, useState } from "react";
 import { useLoader } from '@react-three/fiber';
 import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
+import Shot from './Shot';
 
 export const PLAYER = {
   cards: 0,
@@ -14,9 +15,14 @@ export const PLAYER = {
   orderBeer: 7,
   idle: 8,
   shootBeer2: 9,
+  disconnected: 10,
 };
 
+const MAX_HEALTH = 3;
+
 export default function Player({pId, position}) {
+  
+  const disconnected = useRef(false);
 
   const textureLocation = '/images/cowboy/';
   const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png');
@@ -32,9 +38,11 @@ export default function Player({pId, position}) {
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_hands_down.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer2.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
+  const [lives, setLives] = useState(MAX_HEALTH);
 
   const planeRef = useRef();
   const planeTopRef = useRef();
@@ -48,18 +56,17 @@ export default function Player({pId, position}) {
 
   const scale = 1.3;
 
-
+  const shotsOffset = [-0.1, -0.6, 0.3];
   
   const { data } = useContext(WebsocketContext);
 
   useEffect(() => {
-    if(data?.type === "choose"){
-      setPlayerState(PLAYER.cards)
+    if(disconnected.current) return;
+    if(data?.type === "start-countdown"){
+      setLives(MAX_HEALTH);
+      setPlayerState(PLAYER.idle);
     }
-    else if(data?.type === "stop-choice"){
-      setPlayerState(PLAYER.playCard)
-    }
-    if(data?.type === "round-actions" && data?.data){
+    else if(data?.type === "round-actions" && data?.data){
       console.log(data?.data)
       data.data.forEach(action => {
         if(action.user == pId){
@@ -80,9 +87,18 @@ export default function Player({pId, position}) {
               setPlayerState(PLAYER.orderBeer);
               break;
             case "started-beer":
-              //dies while drinking
+            case "shoot-drinking-beer":
+              setPlayerState(PLAYER.shootBeer);
+              
+              const timeoutId = setTimeout(() => {
+                setPlayerState(PLAYER.shootBeer2);
+              }, 500);
+          
+              // Cleanup function to clear the timeout if the component unmounts
+              return () => clearTimeout(timeoutId);
               break;
             case "finished-beer":
+              setLives(lives + 1);
               setPlayerState(PLAYER.drinkBeer);
               break;
             default:
@@ -103,12 +119,27 @@ export default function Player({pId, position}) {
               // Cleanup function to clear the timeout if the component unmounts
               return () => clearTimeout(timeoutId);
               break;
+            
+            case "shoot-damage":
+            case "shoot-death":
+              setLives(lives - 1);
+              break;
             default:
               break;
           }
         }
   
       })
+    }
+    else if(data?.type === "choose"){
+      setPlayerState(PLAYER.cards)
+    }
+    else if(data?.type === "stop-choice"){
+      setPlayerState(PLAYER.playCard)
+    }
+    else if(data?.type === "player-disconnect" && data?.player === pId){
+      disconnected.current = true;
+      setPlayerState(PLAYER.disconnected)
     }
     
   }, [data])
@@ -118,12 +149,17 @@ export default function Player({pId, position}) {
       position={position} // Position it at the origin
       ref={planeRef}
     >
-      <planeGeometry args={[3*scale, 4*scale]} />
-      <meshStandardMaterial 
-          side={THREE.DoubleSide}
-          map={variants[playerState].main}
-          transparent={true}/>
-    </mesh>
+      <planeGeometry args={[3 * scale, 4 * scale]} />
+      <meshStandardMaterial
+        side={THREE.DoubleSide}
+        map={variants[playerState].main}
+        transparent={true}
+      />
+      {lives < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {lives < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {lives < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      </>}</>}</>}
+      </mesh>
     <mesh
       position={position} // Position it at the origin
       ref={planeTopRef}
