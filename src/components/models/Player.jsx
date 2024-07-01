@@ -13,22 +13,25 @@ export const PLAYER = {
   shootBeer: 6,
   orderBeer: 7,
   idle: 8,
+  shootBeer2: 9,
 };
 
 export default function Player({pId, position}) {
 
-  const defaultTexture = useLoader(THREE.TextureLoader, '/cowboy/cowboy_cards.png');
+  const textureLocation = '/images/cowboy/';
+  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png');
 
   const variants = [
-    {main: defaultTexture, top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_cards_hand.png')},
-    {main: defaultTexture, top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_play_card_hand.png')},
-    {main: defaultTexture, top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_ammo_hand.png')},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_block.png'), top: undefined},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_hands_down.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_shoot_hand.png')},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer0.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer0_hand.png')},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer1_shoot.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_drink_beer1_shoot_hand.png')},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, '/cowboy/cowboy_order_beer_hand.png')},
-    {main: useLoader(THREE.TextureLoader, '/cowboy/cowboy_hands_down.png'), top: undefined},
+    {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_hand.png')},
+    {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_play_card_hand.png')},
+    {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_ammo_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_block.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_hands_down.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer0.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer0_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer1_shoot.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer1_shoot_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_hands_down.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer2.png'), top: undefined},
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
@@ -92,6 +95,13 @@ export default function Player({pId, position}) {
           switch (action.type) {
             case "shoot-drinking-beer":
               setPlayerState(PLAYER.shootBeer);
+              
+              const timeoutId = setTimeout(() => {
+                setPlayerState(PLAYER.shootBeer2);
+              }, 500);
+          
+              // Cleanup function to clear the timeout if the component unmounts
+              return () => clearTimeout(timeoutId);
               break;
             default:
               break;
