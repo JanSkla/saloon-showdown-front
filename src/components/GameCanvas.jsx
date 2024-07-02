@@ -7,11 +7,12 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { RoomContext } from "../utilComponents/RoomDataProvider"
 import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
+import { TARGET } from './models/TargetFrame';
 
-const GameCanvas = ({chooseTarget}) => {
+const GameCanvas = ({chooseTarget, choosing, target}) => {
 
   // SETTINGS //
-  const angleRange = 180;
+  const angleRange = 140;
 
   const radius = 3.8;
   const beerRadius = 2;
@@ -34,7 +35,7 @@ const GameCanvas = ({chooseTarget}) => {
     players.filter(player => player.pId !== thisPID).forEach(enemy => {
       enemies.current.push({
         pId: enemy.pId,
-        playerState: 0,
+        name: enemy.name,
       })
     })
     
@@ -56,7 +57,7 @@ const GameCanvas = ({chooseTarget}) => {
         b: beerRadius * Math.cos(radiansBeer),
       };
       console.log(enemies, i, enemies.length, poss, pos)
-      poss.push({pId: enemies.current[i].pId, pos: pos, beerPos: beerPos});
+      poss.push({pId: enemies.current[i].pId, pos: pos, beerPos: beerPos, name: enemies.current[i].name});
     }
     setPositions(poss);
   }
@@ -73,12 +74,20 @@ const GameCanvas = ({chooseTarget}) => {
     recalculatePlayers();
   }, [])
 
+  const getTargetState = (pId) => {
+    if(!choosing) return TARGET.none;
+
+    if(target === undefined) return TARGET.choosing;
+    if(pId === target) return TARGET.chosen;
+    return TARGET.unchosen
+  }
+
   return <Canvas
   onCreated={({ gl, scene }) => {
     scene.fog = new THREE.FogExp2(0x120c0c, 0.05); // Fog color and density
   }}>
-    {positions.map(({pId, pos, beerPos}) => <>
-      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)}/>
+    {positions.map(({pId, pos, beerPos, name}) => <>
+      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)}/>
       <Beer pId={pId} position={[beerPos.a, 2.8, beerPos.b]} lookAt={[-0.35, 2.8, -1.3]}/>
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>

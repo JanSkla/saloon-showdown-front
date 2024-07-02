@@ -3,6 +3,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useLoader } from '@react-three/fiber';
 import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
 import Shot from './Shot';
+import { Text } from '@react-three/drei';
+import { TARGET, TargetFrame } from './TargetFrame';
 
 export const PLAYER = {
   cards: 0,
@@ -15,12 +17,13 @@ export const PLAYER = {
   orderBeer: 7,
   idle: 8,
   shootBeer2: 9,
-  disconnected: 10,
+  dead: 10,
+  disconnected: 11,
 };
 
 const MAX_HEALTH = 3;
 
-export default function Player({pId, position, onClick}) {
+export default function Player({pId, position, onClick, name, targetState}) {
   
   const disconnected = useRef(false);
 
@@ -38,6 +41,7 @@ export default function Player({pId, position, onClick}) {
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_hands_down.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer2.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_dead.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
   ]
 
@@ -66,6 +70,7 @@ export default function Player({pId, position, onClick}) {
       setLives(MAX_HEALTH);
       setPlayerState(PLAYER.idle);
     }
+    if(lives <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
       console.log(data?.data)
       data.data.forEach(action => {
@@ -121,7 +126,10 @@ export default function Player({pId, position, onClick}) {
               break;
             
             case "shoot-damage":
+              setLives(lives - 1);
+              break;
             case "shoot-death":
+              setPlayerState(PLAYER.dead);
               setLives(lives - 1);
               break;
             default:
@@ -148,7 +156,7 @@ export default function Player({pId, position, onClick}) {
     <mesh
       position={position} // Position it at the origin
       ref={planeRef}
-      onClick={onClick}
+      onClick={targetState == TARGET.choosing && lives > 0 && onClick}
     >
       <planeGeometry args={[3 * scale, 4 * scale]} />
       <meshStandardMaterial
@@ -156,6 +164,11 @@ export default function Player({pId, position, onClick}) {
         map={variants[playerState].main}
         transparent={true}
       />
+      <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} >
+        {name}
+      </Text>
+      {lives > 0 && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
+    
       {lives < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
       {lives < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
       {lives < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>

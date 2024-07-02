@@ -16,12 +16,16 @@ const GamePage = () => {
     
     const [gameState, setGameState] = useState([]);
     
-    const [choice, setChoice] = useState([]);
+    const [choice, setChoice] = useState();
+    
+    const [target, setTarget] = useState([]);
 
     useEffect(() => {
         if (data?.type === "choose"){
             setOptions(data?.options);
             setGameState(data?.type);
+            setChoice();
+            setTarget();
         }
         else if (data?.type === "stop-choice"){
             setOptions([]);
@@ -38,12 +42,10 @@ const GamePage = () => {
         }
         setLogs([JSON.stringify(data), ...logs])
     }, [data])
-    const [target, setTarget] = useState([]);
 
     const sendChoice = (choiceVal) => {
         setChoice(choiceVal)
         if (choiceVal === "shoot"){
-            send(JSON.stringify({"type": "choose-card", "choice": choiceVal, "target": target}))
             return;
         }
         send(JSON.stringify({"type": "choose-card", "choice": choiceVal}))
@@ -55,17 +57,18 @@ const GamePage = () => {
         send('{"type": "start-game"}');
     }
 
+    const chooseTarget = (targetPID) => {
+        setTarget(targetPID);
+        if(targetPID)
+            send(JSON.stringify({"type": "choose-card", "choice": "shoot", "target": targetPID}))
+        return;
+    }
+
     return <div>
         <div className="canvas-container">
-            <GameCanvas chooseTarget={setTarget}/>
+            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target}/>
         </div>
         {options.map((option, index) => <>
-            {option === "shoot" &&
-                <select value={target} onChange={e => setTarget(e.target.value)}>
-                    <option value="" disabled>Select a target</option>
-                    {players.filter(player => player.pId !== thisPID).map(player => <option key={player.pId} value={player.pId}>{player.pId} - {player.name}</option>)}
-                </select>
-            }
             <Button key={index} onClick={() => sendChoice(option)} selected={choice == option}>{option}</Button>
         </>)}
         <br/>
