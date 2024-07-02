@@ -1,8 +1,10 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import { Button } from "../components/Button";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
+
+const MAX_NAME_LENGTH = 16;
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -10,10 +12,23 @@ const MainPage = () => {
     const { isOpen, data, send, open } = useContext(WebsocketContext);
     const { roomCode } = useContext(RoomContext);
 
+
+    const [ name , setName ] = useState();
+
+    const changeName = (value) => {
+
+        console.log(value)
+        
+
+        if (value.length > MAX_NAME_LENGTH) return;
+
+        setName(value);
+    }
+
     const onCreateClick = () => {
         
         if(open) open();
-        send('{"type": "create-room"}');
+        send(`{"type": "create-room"${name ? `, "name": "${name}"` : ""}}`);
     }
 
     const onJoinClick = () => {
@@ -24,7 +39,7 @@ const MainPage = () => {
         else {
         
             if(open) open();
-            send('{"type": "join-room", "code": "' + code + '"}');
+            send(`{"type": "join-room"${name ? `, "name": "${name}"` : ""}, "code": "${code}"}`);
         }
     }
 
@@ -38,6 +53,8 @@ const MainPage = () => {
 
     return <>
         main page<br/><br/>
+        name <br/>
+        <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/>
         <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button><br/><br/>
         <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button><br/><br/>
         <input type="text" ref={codeInputRef} defaultValue={roomCode}></input>
