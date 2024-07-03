@@ -22,6 +22,7 @@ const GamePage = () => {
     const [target, setTarget] = useState([]);
 
     useEffect(() => {
+        setLogs([JSON.stringify(data), ...logs])
         if (data?.type === "choose"){
             setOptions(data?.options);
             setGameState(data?.type);
@@ -39,9 +40,8 @@ const GamePage = () => {
             setGameState(data?.type);
         }
         if (data?.type === "start-countdown"){
-            setLogs([]);
+            //setLogs([]);
         }
-        setLogs([JSON.stringify(data), ...logs])
     }, [data])
 
     const sendChoice = (choiceVal) => {
@@ -53,7 +53,7 @@ const GamePage = () => {
     }
 
     const playAgain = () => {
-        setLogs([]);
+        //setLogs([]);
         setGameState("loading");
         send('{"type": "start-game"}');
     }

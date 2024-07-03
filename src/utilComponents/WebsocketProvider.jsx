@@ -1,5 +1,6 @@
 import { createContext, useRef, useState } from "react"
 import { wssAddress } from "../config"
+import useStateWithQueue from "../utils/useStateWithQueue";
 
 export const WebsocketContext = createContext({
   isOpen: false,
@@ -11,7 +12,7 @@ export const WebsocketContext = createContext({
 
 export const WebsocketProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const [data, setData] = useState(null)
+  const [data, setData] = useStateWithQueue(null)
 
   const ws = useRef(null)
 
@@ -64,12 +65,12 @@ export const WebsocketProvider = ({ children }) => {
   const waitingMessagesForConnection = []
 
   const send = (value) => {
-    if (ws.current?.readyState === 1)
+    if (ws.current?.readyState === WebSocket.OPEN)
       {
         ws.current?.send(value);
         console.log("sent:", value)
       }
-    else if (ws.current?.readyState === 0){
+    else if (ws.current?.readyState === WebSocket.CONNECTING){
         waitingMessagesForConnection.push(value);
     }
   }

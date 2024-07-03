@@ -18,7 +18,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
   const beerRadius = 2;
   // --- //
 
-  const { players, thisPID } = useContext(RoomContext);
+  const { thisPID } = useContext(RoomContext);
 
   const enemies = useRef([]);
   
@@ -28,24 +28,19 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
 
   const [positions, setPositions] = useState([]);
 
-  const recalculatePlayers = () => {
+  const recalculatePlayers = (players) => {
 
-    enemies.current = [];
-
-    players.filter(player => player.pId !== thisPID).forEach(enemy => {
-      enemies.current.push({
-        pId: enemy.pId,
-        name: enemy.name,
-      })
-    })
+    enemies.current = players.filter(player => player.pId !== thisPID).map(enemy => ({
+      pId: enemy.pId,
+      name: enemy.name,
+    }));
     
     console.log("enemies", enemies)
     const offset = -(enemies.current.length - 1.8)/2;
   
     const angleOffset = angleRange/enemies.current.length;
 
-    const poss = [];
-    for (let i = 0; i < enemies.current.length; i++){
+    const poss = enemies.current.map((enemy, i) => {
       const radians = toRadians(angleOffset * (i + offset));
       const pos = {
         a: radius * Math.sin(radians),
@@ -56,23 +51,24 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
         a: beerRadius * Math.sin(radiansBeer),
         b: beerRadius * Math.cos(radiansBeer),
       };
-      console.log(enemies, i, enemies.length, poss, pos)
-      poss.push({pId: enemies.current[i].pId, pos: pos, beerPos: beerPos, name: enemies.current[i].name});
-    }
+      return { pId: enemy.pId, pos, beerPos, name: enemy.name };
+    });
+    
     setPositions(poss);
   }
   
   const { data } = useContext(WebsocketContext);
 
   useEffect(() => {
-    if(data?.type === "game-over" || data?.type === "start-countdown"){
-      recalculatePlayers();
+    if(data?.type === "players-loaded"){
+      
+      recalculatePlayers(data?.players);
     }
   }, [data])
 
-  useEffect(() => {
-    recalculatePlayers();
-  }, [])
+  // useEffect(() => {
+  //   recalculatePlayers();
+  // }, [])
 
   const getTargetState = (pId) => {
     if(!choosing) return TARGET.none;
