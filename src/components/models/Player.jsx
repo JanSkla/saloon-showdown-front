@@ -3,6 +3,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useLoader } from '@react-three/fiber';
 import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
 import Shot from './Shot';
+import { Text } from '@react-three/drei';
+import { TARGET, TargetFrame } from './TargetFrame';
 
 export const PLAYER = {
   cards: 0,
@@ -15,12 +17,13 @@ export const PLAYER = {
   orderBeer: 7,
   idle: 8,
   shootBeer2: 9,
-  disconnected: 10,
+  dead: 10,
+  disconnected: 11,
 };
 
-const MAX_HEALTH = 3;
+export const MAX_HEALTH = 3;
 
-export default function Player({pId, position, onClick}) {
+export default function Player({pId, position, onClick, name, targetState}) {
   
   const disconnected = useRef(false);
 
@@ -38,20 +41,25 @@ export default function Player({pId, position, onClick}) {
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_order_beer_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_hands_down.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer2.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_dead.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
-  const [lives, setLives] = useState(MAX_HEALTH);
+  const [health, setHealth] = useState(MAX_HEALTH);
 
   const planeRef = useRef();
   const planeTopRef = useRef();
 
-  useEffect(() => {
+  const refreshLookAt = () => {
     if (planeRef.current) {
       planeRef.current.lookAt(0, position[1], 0);
       planeTopRef.current.lookAt(0, position[1], 0);
     }
+  }
+
+  useEffect(() => {
+    refreshLookAt();
   }, [planeRef])
 
   const scale = 1.3;
@@ -61,14 +69,22 @@ export default function Player({pId, position, onClick}) {
   const { data } = useContext(WebsocketContext);
 
   useEffect(() => {
-    if(disconnected.current) return;
-    if(data?.type === "start-countdown"){
-      setLives(MAX_HEALTH);
-      setPlayerState(PLAYER.idle);
+    if(data?.type === "player-disconnect" && data?.player === pId){
+      disconnected.current = true;
+      setPlayerState(PLAYER.disconnected)
     }
+    else if(data?.type === "start-countdown"){
+      setHealth(MAX_HEALTH);
+      setPlayerState(PLAYER.idle);
+      refreshLookAt();
+      disconnected.current = false;
+    }
+    if(disconnected.current) return;
+    if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
-      console.log(data?.data)
+      let dead = false;
       data.data.forEach(action => {
+        if(dead) return;
         if(action.user == pId){
   
           switch (action.type) {
@@ -98,7 +114,7 @@ export default function Player({pId, position, onClick}) {
               return () => clearTimeout(timeoutId);
               break;
             case "finished-beer":
-              setLives(lives + 1);
+              setHealth(health + 1);
               setPlayerState(PLAYER.drinkBeer);
               break;
             default:
@@ -121,8 +137,13 @@ export default function Player({pId, position, onClick}) {
               break;
             
             case "shoot-damage":
+              setHealth(action.targetHealth);
+              break;
             case "shoot-death":
-              setLives(lives - 1);
+              console.log("DEATH")
+              setPlayerState(PLAYER.dead);
+              setHealth(0);
+              dead = true;
               break;
             default:
               break;
@@ -137,10 +158,6 @@ export default function Player({pId, position, onClick}) {
     else if(data?.type === "stop-choice"){
       setPlayerState(PLAYER.playCard)
     }
-    else if(data?.type === "player-disconnect" && data?.player === pId){
-      disconnected.current = true;
-      setPlayerState(PLAYER.disconnected)
-    }
     
   }, [data])
   
@@ -148,7 +165,7 @@ export default function Player({pId, position, onClick}) {
     <mesh
       position={position} // Position it at the origin
       ref={planeRef}
-      onClick={onClick}
+      onClick={targetState == TARGET.choosing && health > 0 && onClick}
     >
       <planeGeometry args={[3 * scale, 4 * scale]} />
       <meshStandardMaterial
@@ -156,9 +173,14 @@ export default function Player({pId, position, onClick}) {
         map={variants[playerState].main}
         transparent={true}
       />
-      {lives < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {lives < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {lives < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} >
+        {name}
+      </Text>
+      {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
+    
+      {health < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {health < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {health < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
       </>}</>}</>}
       </mesh>
     <mesh
