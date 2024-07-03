@@ -3,6 +3,7 @@ import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
 import GameCanvas from "../components/GameCanvas";
+import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -58,15 +59,28 @@ const GamePage = () => {
     }
 
     const chooseTarget = (targetPID) => {
+        console.log("shooting", targetPID)
         setTarget(targetPID);
-        if(targetPID)
+        if(targetPID !== undefined)
             send(JSON.stringify({"type": "choose-card", "choice": "shoot", "target": targetPID}))
         return;
+    }
+    
+
+    const [loading, setLoading] = useState(true);
+
+    const OnLoaded = () => {
+        send(JSON.stringify({"type": "game-loaded"}))
+        setLoading(false);
     }
 
     return <div>
         <div className="canvas-container">
-            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target}/>
+            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded}/>
+            <div style={{background: "black"}}>
+                <ThisPlayerHealth />
+            </div>
+            {loading && "LOADING SCENE..."}
         </div>
         {options.map((option, index) => <>
             <Button key={index} onClick={() => sendChoice(option)} selected={choice == option}>{option}</Button>

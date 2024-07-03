@@ -21,7 +21,7 @@ export const PLAYER = {
   disconnected: 11,
 };
 
-const MAX_HEALTH = 3;
+export const MAX_HEALTH = 3;
 
 export default function Player({pId, position, onClick, name, targetState}) {
   
@@ -46,16 +46,20 @@ export default function Player({pId, position, onClick, name, targetState}) {
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
-  const [lives, setLives] = useState(MAX_HEALTH);
+  const [health, setHealth] = useState(MAX_HEALTH);
 
   const planeRef = useRef();
   const planeTopRef = useRef();
 
-  useEffect(() => {
+  const refreshLookAt = () => {
     if (planeRef.current) {
       planeRef.current.lookAt(0, position[1], 0);
       planeTopRef.current.lookAt(0, position[1], 0);
     }
+  }
+
+  useEffect(() => {
+    refreshLookAt();
   }, [planeRef])
 
   const scale = 1.3;
@@ -66,11 +70,16 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
   useEffect(() => {
     if(disconnected.current) return;
-    if(data?.type === "start-countdown"){
-      setLives(MAX_HEALTH);
-      setPlayerState(PLAYER.idle);
+    if(data?.type === "player-disconnect" && data?.player === pId){
+      disconnected.current = true;
+      setPlayerState(PLAYER.disconnected)
     }
-    if(lives <= 0) return;
+    else if(data?.type === "start-countdown"){
+      setHealth(MAX_HEALTH);
+      setPlayerState(PLAYER.idle);
+      refreshLookAt();
+    }
+    if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
       console.log(data?.data)
       data.data.forEach(action => {
@@ -103,7 +112,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
               return () => clearTimeout(timeoutId);
               break;
             case "finished-beer":
-              setLives(lives + 1);
+              setHealth(health + 1);
               setPlayerState(PLAYER.drinkBeer);
               break;
             default:
@@ -126,11 +135,11 @@ export default function Player({pId, position, onClick, name, targetState}) {
               break;
             
             case "shoot-damage":
-              setLives(lives - 1);
+              setHealth(action.targetHealth);
               break;
             case "shoot-death":
               setPlayerState(PLAYER.dead);
-              setLives(lives - 1);
+              setHealth(0);
               break;
             default:
               break;
@@ -145,10 +154,6 @@ export default function Player({pId, position, onClick, name, targetState}) {
     else if(data?.type === "stop-choice"){
       setPlayerState(PLAYER.playCard)
     }
-    else if(data?.type === "player-disconnect" && data?.player === pId){
-      disconnected.current = true;
-      setPlayerState(PLAYER.disconnected)
-    }
     
   }, [data])
   
@@ -156,7 +161,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
     <mesh
       position={position} // Position it at the origin
       ref={planeRef}
-      onClick={targetState == TARGET.choosing && lives > 0 && onClick}
+      onClick={targetState == TARGET.choosing && health > 0 && onClick}
     >
       <planeGeometry args={[3 * scale, 4 * scale]} />
       <meshStandardMaterial
@@ -167,11 +172,11 @@ export default function Player({pId, position, onClick, name, targetState}) {
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} >
         {name}
       </Text>
-      {lives > 0 && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
+      {health > 0 && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
     
-      {lives < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {lives < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {lives < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {health < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {health < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
+      {health < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
       </>}</>}</>}
       </mesh>
     <mesh

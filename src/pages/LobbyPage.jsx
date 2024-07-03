@@ -13,7 +13,7 @@ const LobbyPage = () => {
     const { data, send } = useContext(WebsocketContext);
 
     useEffect(() => {
-        if (data?.type === "start-countdown"){
+        if (data?.type === "load-game"){
             navigate(`/game/${id}/play`);
         }
     }, [data])
