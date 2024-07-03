@@ -15,7 +15,6 @@ export const ThisPlayerHealth = () => {
       setHealth(MAX_HEALTH);
     }
     else if(data?.type === "round-actions" && data?.data){
-      console.log(data?.data)
       data.data.forEach(action => {
         if(action.user == thisPID){
           switch (action.type) {

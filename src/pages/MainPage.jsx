@@ -17,9 +17,6 @@ const MainPage = () => {
 
     const changeName = (value) => {
 
-        console.log(value)
-        
-
         if (value.length > MAX_NAME_LENGTH) return;
 
         setName(value);

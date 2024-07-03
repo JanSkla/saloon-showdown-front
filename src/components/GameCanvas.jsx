@@ -35,7 +35,6 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
       name: enemy.name,
     }));
     
-    console.log("enemies", enemies)
     const offset = -(enemies.current.length - 1.8)/2;
   
     const angleOffset = angleRange/enemies.current.length;

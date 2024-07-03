@@ -59,7 +59,6 @@ const GamePage = () => {
     }
 
     const chooseTarget = (targetPID) => {
-        console.log("shooting", targetPID)
         setTarget(targetPID);
         if(targetPID !== undefined)
             send(JSON.stringify({"type": "choose-card", "choice": "shoot", "target": targetPID}))
@@ -82,6 +81,8 @@ const GamePage = () => {
             </div>
             {loading && "LOADING SCENE..."}
         </div>
+        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
+    
         {options.map((option, index) => <>
             <Button key={index} onClick={() => sendChoice(option)} selected={choice == option}>{option}</Button>
         </>)}
@@ -93,7 +94,6 @@ const GamePage = () => {
         logs:
         <br/>
         {logs.map((log, index) => <div key={index}>{log}</div>)}
-        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
     </div>
 }
 

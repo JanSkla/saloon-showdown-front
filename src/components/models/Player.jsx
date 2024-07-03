@@ -69,7 +69,6 @@ export default function Player({pId, position, onClick, name, targetState}) {
   const { data } = useContext(WebsocketContext);
 
   useEffect(() => {
-    console.log("Player",pId, data)
     if(data?.type === "player-disconnect" && data?.player === pId){
       disconnected.current = true;
       setPlayerState(PLAYER.disconnected)
@@ -83,7 +82,6 @@ export default function Player({pId, position, onClick, name, targetState}) {
     if(disconnected.current) return;
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
-      console.log(data?.data)
       data.data.forEach(action => {
         if(action.user == pId){
   
