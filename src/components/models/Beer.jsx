@@ -23,7 +23,7 @@ export default function Beer({pId, position, lookAt}) {
   
   const { data } = useContext(WebsocketContext);
 
-  const [beerState, setBeerState] = useState(BEER.none);
+  const [beerState, setBeerState] = useState(BEER.full);
 
   useEffect(() => {
 
@@ -65,19 +65,24 @@ export default function Beer({pId, position, lookAt}) {
     if (planeRef.current) {
       planeRef.current.lookAt(lookAt[0], lookAt[1], lookAt[2]);
     }
-  }, [planeRef])
+  }, [])
 
   // plane version
   return <mesh
     position={position} // Position it at the origin
     ref={planeRef}
+    renderOrder={1}
   >
     {!!variants[beerState] && <>
       <planeGeometry args={[1, 1]} />
       <meshStandardMaterial 
           side={THREE.DoubleSide}
           map={variants[beerState]}
-          transparent={true}/>
+          transparent
+          alphaTest={0.1}
+          depthWrite={false} // Disable depth writing
+          depthTest={false} // Disable depth testing
+          />
       </>}
   </mesh>
 

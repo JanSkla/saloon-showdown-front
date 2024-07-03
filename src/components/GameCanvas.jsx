@@ -15,10 +15,12 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
   const angleRange = 160;
 
   const radius = 3.8;
-  const beerRadius = 2;
+  const beerRadius = 2.8;
   // --- //
 
   const { thisPID } = useContext(RoomContext);
+
+  const [playingPlayers, setPlayingPlayers] = useState();
 
   const enemies = useRef([]);
   
@@ -29,6 +31,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
   const [positions, setPositions] = useState([]);
 
   const recalculatePlayers = (players) => {
+    if(!players) return;
 
     enemies.current = players.filter(player => player.pId !== thisPID).map(enemy => ({
       pId: enemy.pId,
@@ -45,7 +48,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
         a: radius * Math.sin(radians),
         b: radius * Math.cos(radians),
       };
-      const radiansBeer = toRadians(angleOffset * (i + offset) - 40);
+        const radiansBeer = toRadians(angleOffset * (i + offset) - 12 - (enemies.current.length - 1 - i) * 12);
       const beerPos = {
         a: beerRadius * Math.sin(radiansBeer),
         b: beerRadius * Math.cos(radiansBeer),
@@ -61,13 +64,13 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
   useEffect(() => {
     if(data?.type === "players-loaded"){
       
-      recalculatePlayers(data?.players);
+      setPlayingPlayers(data?.players);
     }
   }, [data])
 
-  // useEffect(() => {
-  //   recalculatePlayers();
-  // }, [])
+  useEffect(() => {
+    recalculatePlayers(playingPlayers);
+  }, [playingPlayers])
 
   const getTargetState = (pId) => {
     if(!choosing) return TARGET.none;
@@ -79,7 +82,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
 
   return <Canvas
   onCreated={({ gl, scene }) => {
-    scene.fog = new THREE.FogExp2(0x120c0c, 0.05); // Fog color and density
+    scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
   }}>
     {positions.map(({pId, pos, beerPos, name}) => <>
       <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)}/>
@@ -87,8 +90,8 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded}) => {
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
     <Room OnLoad={OnLoaded}/>
-    <ambientLight />
-    <Environment preset='apartment'/>
+    <pointLight position={[0,5.5,0]} intensity={40} color={0xfebbbb}/>
+    <pointLight position={[-1.4, 4.266, -5.225]} intensity={15} color={0xfedddd}/>
     <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[-1.4, 4.266, -5.225]} rotation={[-3.108, -0.271, -3.133]} scale={1.241} />
   </Canvas>
 }

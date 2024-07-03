@@ -171,9 +171,10 @@ export default function Player({pId, position, onClick, name, targetState}) {
       <meshStandardMaterial
         side={THREE.DoubleSide}
         map={variants[playerState].main}
-        transparent={true}
+        transparent
+        alphaTest={0.1}
       />
-      <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} >
+      <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} material={new THREE.MeshBasicMaterial({toneMapped: false, fog: false})}>
         {name}
       </Text>
       {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
@@ -195,7 +196,9 @@ export default function Player({pId, position, onClick, name, targetState}) {
           depthTest={false} // Disable depth testing
           side={THREE.DoubleSide}
           map={variants[playerState].top}
-          transparent={true}/>
+          transparent
+          alphaTest={0.1}
+          />
       </>}
     </mesh>
   </>

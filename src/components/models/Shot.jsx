@@ -22,6 +22,8 @@ export default function Shot({position, lookAt}) {
     <meshStandardMaterial 
         side={THREE.DoubleSide}
         map={shotTexture}
-        transparent={true}/>
+        transparent
+        alphaTest={0.1}
+        />
   </mesh>
 }
