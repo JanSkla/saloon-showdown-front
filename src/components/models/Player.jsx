@@ -82,7 +82,9 @@ export default function Player({pId, position, onClick, name, targetState}) {
     if(disconnected.current) return;
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
+      let dead = false;
       data.data.forEach(action => {
+        if(dead) return;
         if(action.user == pId){
   
           switch (action.type) {
@@ -138,8 +140,10 @@ export default function Player({pId, position, onClick, name, targetState}) {
               setHealth(action.targetHealth);
               break;
             case "shoot-death":
+              console.log("DEATH")
               setPlayerState(PLAYER.dead);
               setHealth(0);
+              dead = true;
               break;
             default:
               break;
@@ -172,7 +176,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} >
         {name}
       </Text>
-      {health > 0 && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
+      {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
     
       {health < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
       {health < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
