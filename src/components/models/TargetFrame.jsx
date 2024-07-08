@@ -16,7 +16,7 @@ export const TargetFrame = ({position, targetState}) => {
   texture.minFilter = THREE.NearestFilter;
   texture.generateMipmaps = false;
 
-  return <sprite position={position} scale={2} visible={targetState !== TARGET.none}>
+  return <sprite position={position} scale={2} visible={targetState !== TARGET.none} renderOrder={2}>
   <spriteMaterial
       attach="material"
       map={texture}

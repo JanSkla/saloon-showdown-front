@@ -39,7 +39,7 @@ export const ThisPlayerHealth = () => {
 
   return <div>
     {Array.from({ length: health }, (_, i) => i).map(el => (
-        <img key={el} src="/images/heart.png"/>
+        <img key={el} height={50} src="/images/heart.png"/>
     ))}
   </div>
 }

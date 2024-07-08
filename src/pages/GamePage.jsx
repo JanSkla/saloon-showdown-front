@@ -4,6 +4,7 @@ import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
 import GameCanvas from "../components/GameCanvas";
 import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
+import { MiddleCanvasText } from "../components/MiddleCanvasText";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -20,10 +21,20 @@ const GamePage = () => {
     const [choice, setChoice] = useState();
     
     const [target, setTarget] = useState([]);
+    
+    const [middleCanvasText, setMiddleCanvasText] = useState();
+
+    const startCountdown = () => {
+        setMiddleCanvasText(3)
+        setTimeout(() => setMiddleCanvasText(2), 1000)
+        setTimeout(() => setMiddleCanvasText(1), 2000)
+        setTimeout(() => setMiddleCanvasText(), 3000)
+    }
 
     useEffect(() => {
         setLogs([JSON.stringify(data), ...logs])
         if (data?.type === "choose"){
+            setMiddleCanvasText();
             setOptions(data?.options);
             setGameState(data?.type);
             setChoice();
@@ -37,9 +48,11 @@ const GamePage = () => {
             setGameState(data?.type);
         }
         else if (data?.type === "game-over"){
+            setMiddleCanvasText(data?.winner != undefined ? `WINNER IS ${players.find(player => player.pId === data.winner).name}!!` : "DRAW")
             setGameState(data?.type);
         }
         if (data?.type === "start-countdown"){
+            startCountdown();
             //setLogs([]);
         }
     }, [data])
@@ -76,9 +89,10 @@ const GamePage = () => {
     return <div>
         <div className="canvas-container">
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded}/>
-            <div style={{background: "black"}}>
+            <div style={{width: '100vw', height: '50vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
                 <ThisPlayerHealth />
             </div>
+            <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
             {loading && "LOADING SCENE..."}
         </div>
         {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
@@ -90,10 +104,10 @@ const GamePage = () => {
         game page
         <br/>
         game state: {gameState}
-        <br/>
+        {/* <br/>
         logs:
         <br/>
-        {logs.map((log, index) => <div key={index}>{log}</div>)}
+        {logs.map((log, index) => <div key={index}>{log}</div>)} */}
     </div>
 }
 
