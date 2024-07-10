@@ -88,8 +88,8 @@ const GamePage = () => {
 
     return <div>
         <div className="canvas-container">
-            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options}/>
-            <div style={{width: '100vw', height: '50vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
+            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} />
+            <div style={{width: '100vw', height: '70vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
                 <ThisPlayerHealth />
             </div>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
@@ -97,9 +97,6 @@ const GamePage = () => {
         </div>
         {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
     
-        {options.map((option, index) => <>
-            <Button key={index} onClick={() => sendChoice(option)} selected={choice == option}>{option}</Button>
-        </>)}
         <br/>
         game page
         <br/>

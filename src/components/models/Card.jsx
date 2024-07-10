@@ -19,7 +19,7 @@ const CARD = {
   back: 5
 }
 
-export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions}) {
+export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, sendChoice, cardChosen, isChosen}) {
   const textureLocation = '/images/cards/';
 
   const variants = [
@@ -34,7 +34,7 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions})
   const planeRef1 = useRef();
   
   const { data } = useContext(WebsocketContext);
-  const cardScale = 0.06;
+  const cardScale = 0.05;
 
   const [cardOption, setCardOption] = useState();
   // const [active, setActive] = useState(false);
@@ -47,11 +47,9 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions})
     from: {
       position: cardY,
     },
-    to: [{
-      position: cardY + 0.1,
-    }, {
-      position: cardY,
-    }],
+    to: {
+      position: cardY + 0.05,
+    }
   })
 
 
@@ -95,6 +93,11 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions})
     // 2 karty [-1.08, 3.85, -4.620 ], [-1.36, 3.85, -4.535]
     // 3 karty [-1.18, 3.85, -4.425], [-1.45, 3.85, -4.435], [-0.94, 3.85, -4.55]
     // 4 karty [-1.08, 3.85, -4.620 ], [-1.36, 3.85, -4.535], [-0.7, 3.81, -4.6], [-1.65, 3.82, -4.5]
+
+    const handleCardChosen = (option) => {
+      sendChoice(option);
+      
+    }
   return (
   <animated.mesh
   position-x={cardX}
@@ -102,8 +105,9 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions})
     position-z={cardZ}
     ref={planeRef1}
     renderOrder={1}
-    onPointerEnter={(e) => setCardY(cardY + 0.08)} // see note 1
-  onPointerLeave={(e) => setCardY(cardY - 0.08)} // see note 1
+    onPointerEnter={(e) => setCardY(cardY + 0.1)} 
+  onPointerLeave={(e) => setCardY(cardY - 0.1)} 
+  onClick={(e) => handleCardChosen(cardOptions)}
   >
           {!!variants[cardOption] && <>
       <planeGeometry args={[5 * cardScale, 7* cardScale]} />
@@ -114,6 +118,7 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions})
           alphaTest={0.1}
           depthWrite={false} // Disable depth writing
           depthTest={false} // Disable depth testing
+          flatShading={true}
           />
       </>}
   </animated.mesh>

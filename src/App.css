@@ -54,6 +54,6 @@
 .canvas-container {
   display: flex;
   width: 100vw;
-  height:50vh; /* Set the desired height */
+  height:70vh; /* Set the desired height */
   border: 1px solid #000; /* Optional: Add a border to see the canvas boundary */
 }
