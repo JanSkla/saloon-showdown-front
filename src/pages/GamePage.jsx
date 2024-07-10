@@ -88,7 +88,7 @@ const GamePage = () => {
 
     return <div>
         <div className="canvas-container">
-            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded}/>
+            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options}/>
             <div style={{width: '100vw', height: '50vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
                 <ThisPlayerHealth />
             </div>
