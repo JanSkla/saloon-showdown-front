@@ -5,6 +5,7 @@ import { Button } from "../components/Button";
 import GameCanvas from "../components/GameCanvas";
 import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 import { MiddleCanvasText } from "../components/MiddleCanvasText";
+import Timer from "../components/Timer";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -24,6 +25,8 @@ const GamePage = () => {
     
     const [middleCanvasText, setMiddleCanvasText] = useState();
 
+    const [timer, setTimer] = useState();
+
     const startCountdown = () => {
         setMiddleCanvasText(3)
         setTimeout(() => setMiddleCanvasText(2), 1000)
@@ -34,6 +37,7 @@ const GamePage = () => {
     useEffect(() => {
         setLogs([JSON.stringify(data), ...logs])
         if (data?.type === "choose"){
+            setTimer(data?.time)
             setMiddleCanvasText();
             setOptions(data?.options);
             setGameState(data?.type);
@@ -89,7 +93,10 @@ const GamePage = () => {
     return <div>
         <div className="canvas-container">
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} />
-            <div style={{width: '100vw', height: '70vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
+            <div style={{width: '100vw', height: '70vh', position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
+                <div style={{width: '1.5vh', height: '30vh', alignSelf: 'end', marginRight: 10}}>
+                    {timer && <Timer duration={timer} onAnimationComplete={() => setTimer()}/>}
+                </div>
                 <ThisPlayerHealth />
             </div>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
