@@ -23,7 +23,7 @@ export default function Beer({pId, position, lookAt}) {
   
   const { data } = useContext(WebsocketContext);
 
-  const [beerState, setBeerState] = useState(BEER.full);
+  const [beerState, setBeerState] = useState(BEER.none);
 
   useEffect(() => {
 

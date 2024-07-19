@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { Canvas } from "@react-three/fiber"
 import Room from "./models/Room"
-import { Environment, PerspectiveCamera, OrbitControls } from "@react-three/drei"
+import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
 import Player from "./models/Player"
-import { useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { RoomContext } from "../utilComponents/RoomDataProvider"
 import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
@@ -86,10 +86,16 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     return TARGET.unchosen
   }
 
+  const Loader = () => {
+    const { progress } = useProgress();
+    return <Html center>{progress} % loaded</Html>;
+  };
+
   return <Canvas
   onCreated={({ gl, scene }) => {
     scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
   }}>
+    <React.Suspense fallback={<Loader />}>
     {positions.map(({pId, pos, beerPos, name}) => <>
       <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)}/>
       <Beer pId={pId} position={[beerPos.a, 2.8, beerPos.b]} lookAt={[-0.35, 2.8, -1.3]} />
@@ -103,6 +109,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
     <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[-1.4, 4.266, -5.225]} rotation={[-3.108, -0.271, -3.133]} scale={1.241} />
     {/* <OrbitControls/> */}
+    </React.Suspense>
   </Canvas>
 }
 
