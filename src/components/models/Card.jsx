@@ -3,6 +3,8 @@ import { useLoader } from "@react-three/fiber";
 import { useContext, useEffect, useRef, useState } from 'react';
 import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
 import { useSpring, animated } from '@react-spring/three'
+import ThrowingCard from './CardThrow';
+
 
     const positions = [
         [[-1.18, 3.85, -4.425]],
@@ -27,8 +29,7 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
     useLoader(THREE.TextureLoader, textureLocation + 'shield.png'),
     useLoader(THREE.TextureLoader, textureLocation + 'beer-order.png'),
     useLoader(THREE.TextureLoader, textureLocation + 'beer-drink.png'),
-    useLoader(THREE.TextureLoader, textureLocation + 'shoot.png'),
-    useLoader(THREE.TextureLoader, textureLocation + 'back.png')
+    useLoader(THREE.TextureLoader, textureLocation + 'shoot.png')
   ];
 
   const planeRef1 = useRef();
@@ -52,7 +53,15 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
     }
   })
 
-
+  useEffect(() => {
+    if( isChosen !== undefined && isChosen !== cardOptions) {
+      setCardY(-1)
+    } else if(isChosen !== undefined && isChosen === cardOptions) {
+      setTimeout(() => {
+        setCardY(cardY - 0.4)
+      }, 150)
+    }
+  }, [isChosen])
 
   useEffect(() => {
     switch (cardOptions) {
@@ -96,9 +105,10 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
 
     const handleCardChosen = (option) => {
       sendChoice(option);
-      
+      cardChosen(option)
     }
   return (
+    <>
   <animated.mesh
   position-x={cardX}
     position-y={position} // Position it at the origin
@@ -111,16 +121,20 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
   >
           {!!variants[cardOption] && <>
       <planeGeometry args={[5 * cardScale, 7* cardScale]} />
+          
       <meshStandardMaterial 
-          side={THREE.DoubleSide}
+                side={THREE.DoubleSide}
           map={variants[cardOption]}
           transparent
           alphaTest={0.1}
           depthWrite={false} // Disable depth writing
           depthTest={false} // Disable depth testing
           flatShading={true}
+
           />
       </>}
   </animated.mesh>
+  {isChosen !== undefined && isChosen === cardOptions ? <ThrowingCard/> : null}
+  </>
 
 )}

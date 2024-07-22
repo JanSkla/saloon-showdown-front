@@ -3,6 +3,7 @@ import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate } from "../../node_modules/react-router-dom/dist/index";
 import { Button } from "../components/Button";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
+import MainPageCanvas from "../components/MainPageCanvas";
 
 const MAX_NAME_LENGTH = 16;
 
@@ -51,6 +52,7 @@ const MainPage = () => {
     return <>
         main page<br/><br/>
         name <br/>
+        <MainPageCanvas/>
         <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/>
         <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button><br/><br/>
         <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button><br/><br/>

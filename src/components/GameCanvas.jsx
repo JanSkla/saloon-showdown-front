@@ -10,7 +10,7 @@ import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
 
-const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, sendChoice}) => {
+const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, sendChoice, gameState}) => {
   // SETTINGS //
   const angleRange = 160;
 
@@ -23,12 +23,11 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
   const [playingPlayers, setPlayingPlayers] = useState();
   const enemies = useRef([]);
 
-  const [scale, setScale] = useState(1);
   const [chosen, setChosen] = useState();
   const cardChosen = (chosen) => {
-    setScale(0.8)
     setChosen(chosen)
   }
+
 
   function toRadians (angle) {
     return angle * (Math.PI / 180);
@@ -78,6 +77,13 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     recalculatePlayers(playingPlayers);
   }, [playingPlayers])
 
+  useEffect(() =>{
+    if(gameState === "stop-choice") {
+      setChosen(undefined)
+    }
+  }, [gameState])
+
+
   const getTargetState = (pId) => {
     if(!choosing) return TARGET.none;
 
@@ -102,13 +108,12 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
     {cardOptions.map((option, index) =>
-    <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen === option ? true : false}/>
+    <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
     )}
     <Room OnLoad={OnLoaded}/>
     <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
     <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[-1.4, 4.266, -5.225]} rotation={[-3.108, -0.271, -3.133]} scale={1.241} />
-    {/* <OrbitControls/> */}
     </React.Suspense>
   </Canvas>
 }
