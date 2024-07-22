@@ -18,7 +18,7 @@ const POV_SPRITE_SHEETS = [
   undefined,
   "/images/cowboy/pov/reload-Sheet.png",
   "/images/cowboy/pov/block-Sheet.png",
-  undefined,
+  "/images/cowboy/pov/block_shoot-Sheet.png",
   "/images/cowboy/pov/shoot-Sheet.png",
   "/images/cowboy/pov/drink-Sheet.png",
   "/images/cowboy/pov/drink_break-Sheet.png",
