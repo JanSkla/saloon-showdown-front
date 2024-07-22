@@ -5,36 +5,37 @@ Command: npx gltfjsx@6.4.1 teren.gltf
 
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useSpring, animated } from '@react-spring/three'
 
 export function Teren(props) {
   const { nodes, materials } = useGLTF('/models/teren/teren.gltf')
   return (
     <group {...props} dispose={null}>
-      <mesh geometry={nodes.Plane.geometry} material={materials['Material.001']} position={[0, 0, 54]} scale={13.556} renderOrder={1}/>
-      <mesh geometry={nodes.KAKTUS.geometry} material={materials['Material.002']} position={[8.605, 2.287, 96.034]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.174} />
-      <mesh geometry={nodes.KAKTUS002.geometry} material={materials['Material.002']} position={[-4.637, 3.377, 85.564]} rotation={[0, -0.594, 0]} scale={0.25} />
-      <mesh geometry={nodes.KAKTUS003.geometry} material={materials['Material.002']} position={[-9.805, 3.033, 68.619]} rotation={[-Math.PI, 0.581, -Math.PI]} scale={0.192} />
-      <mesh geometry={nodes.KAKTUS004.geometry} material={materials['Material.002']} position={[-31.327, 10.587, 68.964]} rotation={[-Math.PI, 1.449, -Math.PI]} scale={0.093} />
-      <mesh geometry={nodes.KAKTUS005.geometry} material={materials['Material.002']} position={[-27.983, 10.587, 79.299]} rotation={[0, 0.811, 0]} scale={0.093} />
-      <mesh geometry={nodes.KAKTUS006.geometry} material={materials['Material.002']} position={[-5.984, 7.084, 104.769]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.147} />
-      <mesh geometry={nodes.KAKTUS007.geometry} material={materials['Material.002']} position={[2.976, 3.033, 56.103]} rotation={[-Math.PI, 0.121, -Math.PI]} scale={0.152} />
-      <mesh geometry={nodes.KAKTUS008.geometry} material={materials['Material.002']} position={[17.525, 2.619, 71.08]} rotation={[Math.PI, -0.799, Math.PI]} scale={0.082} />
-      <mesh geometry={nodes.KAKTUS009.geometry} material={materials['Material.002']} position={[16.77, 3.033, 44.496]} rotation={[Math.PI, -1.109, Math.PI]} scale={0.152} />
-      <mesh geometry={nodes.KAKTUS010.geometry} material={materials['Material.002']} position={[1.327, 2.747, 39.58]} rotation={[Math.PI, -1.335, Math.PI]} scale={0.187} />
-      <mesh geometry={nodes.KAKTUS011.geometry} material={materials['Material.002']} position={[-9.805, 3.872, 37.047]} rotation={[-Math.PI, 0.581, -Math.PI]} scale={0.192} />
-      <mesh geometry={nodes.KAKTUS012.geometry} material={materials['Material.002']} position={[4.727, 2.744, 12.806]} rotation={[Math.PI, -0.236, Math.PI]} scale={0.206} />
-      <mesh geometry={nodes.KAKTUS001.geometry} material={materials['Material.002']} position={[20.165, 2.217, -4.797]} rotation={[Math.PI, -0.978, Math.PI]} scale={0.152} />
-      <mesh geometry={nodes.KAKTUS013.geometry} material={materials['Material.002']} position={[-3.65, 3.033, -2.378]} rotation={[-Math.PI, 0.497, -Math.PI]} scale={0.183} />
-      <mesh geometry={nodes.KAKTUS014.geometry} material={materials['Material.002']} position={[-31.327, 8.567, 24.9]} rotation={[-2.963, 0.896, -3.048]} scale={0.093} />
-      <mesh geometry={nodes.KAKTUS015.geometry} material={materials['Material.002']} position={[-14.266, 4.084, -17.741]} rotation={[-Math.PI, 0.113, -Math.PI]} scale={0.219} />
-      <mesh geometry={nodes.KAKTUS016.geometry} material={materials['Material.002']} position={[1.327, 4.128, -31.219]} rotation={[-Math.PI, 0.925, -Math.PI]} scale={0.161} />
-      <mesh geometry={nodes.KAKTUS017.geometry} material={materials['Material.002']} position={[21.663, 2.217, -40.125]} rotation={[-Math.PI, 0.305, -Math.PI]} scale={0.152} />
-      <mesh geometry={nodes.KAKTUS018.geometry} material={materials['Material.002']} position={[-0.716, 6.124, -74.556]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.257} />
-      <mesh geometry={nodes.KAKTUS019.geometry} material={materials['Material.002']} position={[10.5, 2.217, -57.049]} rotation={[-Math.PI, 0.305, -Math.PI]} scale={0.152} />
-      <mesh geometry={nodes.KAKTUS020.geometry} material={materials['Material.002']} position={[-0.227, 4.084, -64.41]} rotation={[0, -0.518, 0]} scale={0.205} />
-      <mesh geometry={nodes.KAKTUS021.geometry} material={materials['Material.002']} position={[-31.327, 8.875, -50.151]} rotation={[-Math.PI, 1.449, -Math.PI]} scale={0.093} />
-      <mesh geometry={nodes.KAKTUS022.geometry} material={materials['Material.002']} position={[23.196, 4.267, -84.571]} rotation={[0, 1.397, 0]} scale={0.152} />
-      <mesh geometry={nodes.Plane001.geometry} material={materials['Material.026']} position={[0, 0, 112.216]} rotation={[-0.003, -0.008, -0.07]} scale={[9.721, 10.759, 11.249]} />
+      <animated.mesh geometry={nodes.Plane.geometry} material={materials['Material.001']} position={[0, 0, 54]} scale={13.556} renderOrder={1}/>
+      <animated.mesh geometry={nodes.KAKTUS.geometry} material={materials['Material.002']} position={[8.605, 2.287, 96.034]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.174} />
+      <animated.mesh geometry={nodes.KAKTUS002.geometry} material={materials['Material.002']} position={[-4.637, 3.377, 85.564]} rotation={[0, -0.594, 0]} scale={0.25} />
+      <animated.mesh geometry={nodes.KAKTUS003.geometry} material={materials['Material.002']} position={[-9.805, 3.033, 68.619]} rotation={[-Math.PI, 0.581, -Math.PI]} scale={0.192} />
+      <animated.mesh geometry={nodes.KAKTUS004.geometry} material={materials['Material.002']} position={[-31.327, 10.587, 68.964]} rotation={[-Math.PI, 1.449, -Math.PI]} scale={0.093} />
+      <animated.mesh geometry={nodes.KAKTUS005.geometry} material={materials['Material.002']} position={[-27.983, 10.587, 79.299]} rotation={[0, 0.811, 0]} scale={0.093} />
+      <animated.mesh geometry={nodes.KAKTUS006.geometry} material={materials['Material.002']} position={[-5.984, 7.084, 104.769]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.147} />
+      <animated.mesh geometry={nodes.KAKTUS007.geometry} material={materials['Material.002']} position={[2.976, 3.033, 56.103]} rotation={[-Math.PI, 0.121, -Math.PI]} scale={0.152} />
+      <animated.mesh geometry={nodes.KAKTUS008.geometry} material={materials['Material.002']} position={[17.525, 2.619, 71.08]} rotation={[Math.PI, -0.799, Math.PI]} scale={0.082} />
+      <animated.mesh geometry={nodes.KAKTUS009.geometry} material={materials['Material.002']} position={[16.77, 3.033, 44.496]} rotation={[Math.PI, -1.109, Math.PI]} scale={0.152} />
+      <animated.mesh geometry={nodes.KAKTUS010.geometry} material={materials['Material.002']} position={[1.327, 2.747, 39.58]} rotation={[Math.PI, -1.335, Math.PI]} scale={0.187} />
+      <animated.mesh geometry={nodes.KAKTUS011.geometry} material={materials['Material.002']} position={[-9.805, 3.872, 37.047]} rotation={[-Math.PI, 0.581, -Math.PI]} scale={0.192} />
+      <animated.mesh geometry={nodes.KAKTUS012.geometry} material={materials['Material.002']} position={[4.727, 2.744, 12.806]} rotation={[Math.PI, -0.236, Math.PI]} scale={0.206} />
+      <animated.mesh geometry={nodes.KAKTUS001.geometry} material={materials['Material.002']} position={[20.165, 2.217, -4.797]} rotation={[Math.PI, -0.978, Math.PI]} scale={0.152} />
+      <animated.mesh geometry={nodes.KAKTUS013.geometry} material={materials['Material.002']} position={[-3.65, 3.033, -2.378]} rotation={[-Math.PI, 0.497, -Math.PI]} scale={0.183} />
+      <animated.mesh geometry={nodes.KAKTUS014.geometry} material={materials['Material.002']} position={[-31.327, 8.567, 24.9]} rotation={[-2.963, 0.896, -3.048]} scale={0.093} />
+      <animated.mesh geometry={nodes.KAKTUS015.geometry} material={materials['Material.002']} position={[-14.266, 4.084, -17.741]} rotation={[-Math.PI, 0.113, -Math.PI]} scale={0.219} />
+      <animated.mesh geometry={nodes.KAKTUS016.geometry} material={materials['Material.002']} position={[1.327, 4.128, -31.219]} rotation={[-Math.PI, 0.925, -Math.PI]} scale={0.161} />
+      <animated.mesh geometry={nodes.KAKTUS017.geometry} material={materials['Material.002']} position={[21.663, 2.217, -40.125]} rotation={[-Math.PI, 0.305, -Math.PI]} scale={0.152} />
+      <animated.mesh geometry={nodes.KAKTUS018.geometry} material={materials['Material.002']} position={[-0.716, 6.124, -74.556]} rotation={[Math.PI, -1.126, Math.PI]} scale={0.257} />
+      <animated.mesh geometry={nodes.KAKTUS019.geometry} material={materials['Material.002']} position={[10.5, 2.217, -57.049]} rotation={[-Math.PI, 0.305, -Math.PI]} scale={0.152} />
+      <animated.mesh geometry={nodes.KAKTUS020.geometry} material={materials['Material.002']} position={[-0.227, 4.084, -64.41]} rotation={[0, -0.518, 0]} scale={0.205} />
+      <animated.mesh geometry={nodes.KAKTUS021.geometry} material={materials['Material.002']} position={[-31.327, 8.875, -50.151]} rotation={[-Math.PI, 1.449, -Math.PI]} scale={0.093} />
+      <animated.mesh geometry={nodes.KAKTUS022.geometry} material={materials['Material.002']} position={[23.196, 4.267, -84.571]} rotation={[0, 1.397, 0]} scale={0.152} />
+      <animated.mesh geometry={nodes.Plane001.geometry} material={materials['Material.026']} position={[0, 0, 112.216]} rotation={[-0.003, -0.008, -0.07]} scale={[9.721, 10.759, 11.249]} />
     </group>
   )
 }
