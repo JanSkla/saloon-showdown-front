@@ -35,6 +35,7 @@ export default function Beer({pId, position, lookAt}) {
         
         if(action.target == pId){
           switch (action.type) {
+            case "shoot-drinking-beer":
             case "shoot-beer":
               setBeerState(BEER.destroy);
               const timeoutId = setTimeout(() => {
@@ -74,7 +75,7 @@ export default function Beer({pId, position, lookAt}) {
     renderOrder={1}
   >
     {!!variants[beerState] && <>
-      <planeGeometry args={[1, 1]} />
+      <planeGeometry args={[3.16/3.3, 5.12/3.3]} />
       <meshStandardMaterial 
           side={THREE.DoubleSide}
           map={variants[beerState]}

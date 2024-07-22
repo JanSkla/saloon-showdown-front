@@ -6,6 +6,7 @@ import GameCanvas from "../components/GameCanvas";
 import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 import { MiddleCanvasText } from "../components/MiddleCanvasText";
 import Timer from "../components/Timer";
+import POVCanvas from "../components/POVCanvas";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -103,6 +104,7 @@ const GamePage = () => {
                 </div>
                 <ThisPlayerHealth />
             </div>
+            <POVCanvas/>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
             {loading && "LOADING SCENE..."}
         </div>
