@@ -5,6 +5,8 @@ import { Button } from "../components/Button";
 import GameCanvas from "../components/GameCanvas";
 import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 import { MiddleCanvasText } from "../components/MiddleCanvasText";
+import Timer from "../components/Timer";
+import POVCanvas from "../components/POVCanvas";
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -24,6 +26,8 @@ const GamePage = () => {
     
     const [middleCanvasText, setMiddleCanvasText] = useState();
 
+    const [timer, setTimer] = useState({duration: 0});
+
     const startCountdown = () => {
         setMiddleCanvasText(3)
         setTimeout(() => setMiddleCanvasText(2), 1000)
@@ -34,17 +38,20 @@ const GamePage = () => {
     useEffect(() => {
         setLogs([JSON.stringify(data), ...logs])
         if (data?.type === "choose"){
+            setTimer({duration: data?.time})
             setMiddleCanvasText();
             setOptions(data?.options);
             setGameState(data?.type);
             setChoice();
-            setTarget();
+            setTarget(); 
         }
         else if (data?.type === "stop-choice"){
+            setTimer({duration: data?.time})
             setOptions([]);
             setGameState(data?.type);
         }
         else if (data?.type === "processing"){
+            setTimer({duration: data?.time})
             setGameState(data?.type);
         }
         else if (data?.type === "game-over"){
@@ -86,25 +93,22 @@ const GamePage = () => {
         setLoading(false);
     }
 
+    useEffect(() => console.log(timer), [timer])
+
     return <div>
         <div className="canvas-container">
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
-            <div style={{width: '100vw', height: '70vh', position: "absolute", alignContent: "flex-end", pointerEvents: "none"}}>
+            <div style={{width: '100vw', height: '80vh', position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
+                <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>
+                    {timer?.duration !== undefined && <Timer timer={timer}/>}
+                </div>
                 <ThisPlayerHealth />
             </div>
+            <POVCanvas/>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
             {loading && "LOADING SCENE..."}
         </div>
         {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
-    
-        <br/>
-        game page
-        <br/>
-        game state: {gameState}
-        {/* <br/>
-        logs:
-        <br/>
-        {logs.map((log, index) => <div key={index}>{log}</div>)} */}
     </div>
 }
 
