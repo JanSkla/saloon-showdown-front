@@ -103,16 +103,6 @@ export default function Player({pId, position, onClick, name, targetState}) {
               setPlayerState(PLAYER.orderBeer);
               break;
             case "started-beer":
-            case "shoot-drinking-beer":
-              setPlayerState(PLAYER.shootBeer);
-              
-              const timeoutId = setTimeout(() => {
-                setPlayerState(PLAYER.shootBeer2);
-              }, 500);
-          
-              // Cleanup function to clear the timeout if the component unmounts
-              return () => clearTimeout(timeoutId);
-              break;
             case "finished-beer":
               setHealth(health + 1);
               setPlayerState(PLAYER.drinkBeer);
@@ -130,7 +120,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
               
               const timeoutId = setTimeout(() => {
                 setPlayerState(PLAYER.shootBeer2);
-              }, 500);
+              }, 1000);
           
               // Cleanup function to clear the timeout if the component unmounts
               return () => clearTimeout(timeoutId);
