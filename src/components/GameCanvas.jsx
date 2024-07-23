@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Canvas } from "@react-three/fiber"
+import { Canvas, useFrame } from "@react-three/fiber"
 import Room from "./models/Room"
 import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
 import Player from "./models/Player"
@@ -9,6 +9,7 @@ import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
+import MainCamera from './MainCamera';
 
 const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, sendChoice, gameState}) => {
   // SETTINGS //
@@ -113,7 +114,7 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     <Room OnLoad={OnLoaded}/>
     <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
-    <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[-1.4, 4.266, -5.225]} rotation={[-3.108, -0.271, -3.133]} scale={1.241} />
+    <MainCamera />
     </React.Suspense>
   </Canvas>
 }

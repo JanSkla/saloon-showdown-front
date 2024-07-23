@@ -64,6 +64,9 @@ const POVCanvas = () => {
             case "shoot-drinking-beer":
               playVariant(POV.shootBeer);
               break;
+            case "shoot-block":
+              playVariant(POV.blockShoot);
+              break;
           }
         }
       })
