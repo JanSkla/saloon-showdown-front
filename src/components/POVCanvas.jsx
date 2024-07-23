@@ -22,7 +22,7 @@ const POV_SPRITE_SHEETS = [
   "/images/cowboy/pov/shoot-Sheet.png",
   "/images/cowboy/pov/drink-Sheet.png",
   "/images/cowboy/pov/drink_break-Sheet.png",
-  undefined,
+  "/images/cowboy/pov/order_beer-Sheet.png",
 ]
 
 const POVCanvas = () => {
@@ -52,6 +52,9 @@ const POVCanvas = () => {
             case "shoot-death":
             case "shoot-block":
               playVariant(POV.shoot);
+              break;
+            case "order-beer":
+              playVariant(POV.orderBeer);
               break;
             case "finished-beer":
               playVariant(POV.drinkBeer);
