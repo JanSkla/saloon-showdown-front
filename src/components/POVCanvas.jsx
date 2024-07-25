@@ -39,8 +39,21 @@ const POVCanvas = () => {
       playVariant(POV.none);
     }
     else if(data?.type === "round-actions" && data?.data){
-      data.data.forEach(action => {
-        if(action.user == thisPID){
+      data.data.every(action => {
+        
+        if(action.target == thisPID){
+          
+          switch (action.type) {
+            case "shoot-drinking-beer":
+              playVariant(POV.shootBeer);
+              return;
+            case "shoot-block":
+              console.log("aaa")
+              playVariant(POV.blockShoot);
+              return;
+          }
+        }
+        else if(action.user == thisPID){
           switch (action.type) {
             case "ammo":
               playVariant(POV.ammo);
@@ -61,17 +74,8 @@ const POVCanvas = () => {
               break;
           }
         }
-        else if(action.target == thisPID){
-          
-          switch (action.type) {
-            case "shoot-drinking-beer":
-              playVariant(POV.shootBeer);
-              break;
-            case "shoot-block":
-              playVariant(POV.blockShoot);
-              break;
-          }
-        }
+
+        return true;
       })
     }
   }, [data]);

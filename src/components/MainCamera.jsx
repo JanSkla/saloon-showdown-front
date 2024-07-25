@@ -18,7 +18,6 @@ const MainCamera = () => {
   useEffect(() => {
     document.addEventListener('mousemove', event => {
       cursor.current = {x:event.clientX/window.innerWidth*2 - 1, y:event.clientY/window.innerHeight*2 - 1}
-      console.log(Math.sign(cursor.current.y) * Math.pow(cursor.current.y - Math.sign(cursor.current.y), 2)) // THIS should do what you want     
   })
   }, [])
 
