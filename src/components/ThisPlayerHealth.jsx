@@ -15,6 +15,23 @@ export const ThisPlayerHealth = () => {
       setHealth(MAX_HEALTH);
     }
     else if(data?.type === "round-actions" && data?.data){
+
+      let hp = health;
+
+      const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == thisPID);
+      if(sdb){
+        console.log("AA", hp-1)
+          setHealth(hp-1);
+          
+          const timeoutId = setTimeout(() => {
+            console.log("AAa", hp)
+            setHealth(hp);
+          }, 1000);
+      
+          // Cleanup function to clear the timeout if the component unmounts
+          return () => clearTimeout(timeoutId);
+      }
+
       data.data.forEach(action => {
         if(action.user == thisPID){
           switch (action.type) {
