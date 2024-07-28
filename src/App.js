@@ -8,6 +8,8 @@ import LobbyPage from './pages/LobbyPage';
 import GameOverPage from './pages/GameOverPage';
 import GameWrapperPage from './pages/GameWrapperPage';
 import { RoomDataProvider } from './utilComponents/RoomDataProvider';
+import JoinPage from './pages/JoinPage';
+import MainPageWrapper from './pages/MainPageWrapper';
 
 function App() {
   return (
@@ -16,7 +18,10 @@ function App() {
       <WebsocketProvider>
         <RoomDataProvider>
           <Routes>
-            <Route path="/" element={<MainPage/>}/>
+            <Route element={<MainPageWrapper/>}>
+              <Route path="/" element={<MainPage/>}/>
+              <Route path="/join" element={<JoinPage/>}/>
+            </Route>
             <Route path="/game/:id" element={<GameWrapperPage/>}>
               <Route path="" element={<LobbyPage/>}/>
               <Route path="play" element={<GamePage/>}/>
