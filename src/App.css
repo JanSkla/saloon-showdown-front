@@ -68,6 +68,25 @@
 
 .button {
   height: 20vh;
-  width: 25vh;
-  font-size: 7vh;
+  width: auto;
+  font-size: 10vh;
+  
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  background: none;
+  color: white;
+  text-shadow: 1px 1px 4px #282c34;
+}
+
+.button:hover {
+  color: rgb(238, 213, 213);
+  cursor: pointer;
+}
+
+.buton:active {
+  color: #282c34;
 }

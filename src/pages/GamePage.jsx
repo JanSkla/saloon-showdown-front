@@ -106,11 +106,14 @@ const GamePage = () => {
                 </div>
                 <ThisPlayerHealth />
             </div>
-            <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
+            <MiddleCanvasText>
+                {middleCanvasText}
+                {gameState === "game-over" && thisPlayer?.isLeadPlayer && <div style={{pointerEvents: 'all'}}><Button onClick={playAgain}>play again</Button></div>}
+            </MiddleCanvasText>
+            
             </React.Suspense>
             {loading && "LOADING SCENE..."}
         </div>
-        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
     </div>
 }
 
