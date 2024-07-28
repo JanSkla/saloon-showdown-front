@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Spritesheet from 'react-responsive-spritesheet';
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { RoomContext } from '../utilComponents/RoomDataProvider';
@@ -30,11 +30,22 @@ const POVCanvas = () => {
   const { data } = useContext(WebsocketContext);
   const { thisPID } = useContext(RoomContext);
   
-  const [variant, setVariant] = useState(POV_SPRITE_SHEETS[POV.none]);
+  const [variant, setVariant] = useState(POV.none);
 
-  const playVariant = type => setVariant(POV_SPRITE_SHEETS[type]);
+  const spritesheetRef = useRef(new Array(POV_SPRITE_SHEETS.length));
+
+  const playVariant = type => {
+    setVariant(type);
+  };
+
+  useEffect(()=> {
+    console.log(variant)
+    if(spritesheetRef.current[variant] === undefined) return;
+    spritesheetRef.current[variant].goToAndPlay(0);
+  }, [variant])
   
   useEffect(() => {
+    console.log(spritesheetRef)
     if(data?.type === "choose"){
       playVariant(POV.none);
     }
@@ -82,15 +93,19 @@ const POVCanvas = () => {
   
   return <div style={{width: '100vw', height: '80vh', position: "absolute", pointerEvents: "none"}}>
     <div style={{position: 'relative', height: '100%'}}>
-    {variant && <Spritesheet
-      image={variant}
+    {POV_SPRITE_SHEETS.map((image, i) => image && <Spritesheet
+      key={image}
+      getInstance={spritesheet => {
+        spritesheetRef.current[i] = spritesheet;
+      }}
+      autoplay={false}
+      image={image}
       heightFrame={900}
       widthFrame={1600}
       steps={28}
       fps={12}
       style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: 1200, height: 675}}
-    />
-    }
+    />)}
     </div>
   </div>
 }
