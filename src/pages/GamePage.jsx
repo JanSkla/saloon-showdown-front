@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
@@ -97,6 +97,7 @@ const GamePage = () => {
 
     return <div>
         <div className="canvas-container">
+            <React.Suspense loading={<>loading ...</>}>
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
             <div style={{width: '100vw', height: '80vh', position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>
@@ -106,6 +107,7 @@ const GamePage = () => {
             </div>
             <POVCanvas/>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
+            </React.Suspense>
             {loading && "LOADING SCENE..."}
         </div>
         {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
