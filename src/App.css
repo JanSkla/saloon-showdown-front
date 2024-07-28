@@ -51,15 +51,42 @@
   font-style: normal;
 }
 
+.full-screen {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100%;
+  max-width:100%;
+}
+
 .canvas-container {
   display: flex;
   width: 100vw;
-  height:80vh; /* Set the desired height */
-  border: 1px solid #000; /* Optional: Add a border to see the canvas boundary */
+  height: 100vh;
+  max-height: 100%;
+  max-width:100%;
 }
 
 .button {
   height: 20vh;
-  width: 25vh;
-  font-size: 7vh;
+  width: auto;
+  font-size: 10vh;
+  
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  background: none;
+  color: white;
+  text-shadow: 1px 1px 4px #282c34;
+}
+
+.button:hover {
+  color: rgb(238, 213, 213);
+  cursor: pointer;
+}
+
+.buton:active {
+  color: #282c34;
 }

@@ -19,11 +19,10 @@ const GameWrapperPage = () =>{
         if(id.length == 4) setRoomCode(id);
             
         navigate("/");
-    })
+    }, [])
 
     return <>
         <Outlet />
-        AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY AHOJ JONY 
     </>
 }
 

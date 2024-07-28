@@ -91,7 +91,7 @@ const POVCanvas = () => {
     }
   }, [data]);
   
-  return <div style={{width: '100vw', height: '80vh', position: "absolute", pointerEvents: "none"}}>
+  return <div className='full-screen' style={{ position: "absolute", pointerEvents: "none"}}>
     <div style={{position: 'relative', height: '100%'}}>
     {POV_SPRITE_SHEETS.map((image, i) => image && <Spritesheet
       key={image}

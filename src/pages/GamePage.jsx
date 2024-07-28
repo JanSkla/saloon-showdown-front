@@ -100,17 +100,20 @@ const GamePage = () => {
             <React.Suspense loading={<>loading ...</>}>
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
             <POVCanvas/>
-            <div style={{width: '100vw', height: '80vh', position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
+            <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>
                     {timer?.duration !== undefined && <Timer timer={timer}/>}
                 </div>
                 <ThisPlayerHealth />
             </div>
-            <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
+            <MiddleCanvasText>
+                {middleCanvasText}
+                {gameState === "game-over" && thisPlayer?.isLeadPlayer && <div style={{pointerEvents: 'all'}}><Button onClick={playAgain}>play again</Button></div>}
+            </MiddleCanvasText>
+            
             </React.Suspense>
             {loading && "LOADING SCENE..."}
         </div>
-        {gameState === "game-over" && thisPlayer?.isLeadPlayer && <Button onClick={playAgain}>play again</Button>}
     </div>
 }
 
