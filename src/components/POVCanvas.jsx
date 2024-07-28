@@ -104,7 +104,7 @@ const POVCanvas = () => {
       widthFrame={1600}
       steps={28}
       fps={12}
-      style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: 1200, height: 675}}
+      style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: '99%', height: 675}}
     />)}
     </div>
   </div>
