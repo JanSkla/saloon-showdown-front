@@ -99,13 +99,13 @@ const GamePage = () => {
         <div className="canvas-container">
             <React.Suspense loading={<>loading ...</>}>
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
+            <POVCanvas/>
             <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>
                     {timer?.duration !== undefined && <Timer timer={timer}/>}
                 </div>
                 <ThisPlayerHealth />
             </div>
-            <POVCanvas/>
             <MiddleCanvasText>{middleCanvasText}</MiddleCanvasText>
             </React.Suspense>
             {loading && "LOADING SCENE..."}

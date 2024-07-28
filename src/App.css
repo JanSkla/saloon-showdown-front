@@ -65,3 +65,9 @@
   max-height: 100%;
   max-width:100%;
 }
+
+.button {
+  height: 20vh;
+  width: 25vh;
+  font-size: 7vh;
+}
