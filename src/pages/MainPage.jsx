@@ -49,14 +49,14 @@ const MainPage = () => {
 
     const codeInputRef = useRef();
 
-    return <div className="canvas-container" style={{justifyContent: "center"}}>
+    return <div className="canvas-container" style={{justifyContent: "end"}}>
         <MainPageCanvas/>
-        <div style={{position: "absolute", display: "flex", flexDirection: "column"}}>
-            main page<br/><br/>
-            name <br/>
-            <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/>
-            <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button><br/><br/>
-            <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button><br/><br/>
+        <div style={{position: "absolute", display: "flex", flexDirection: "column", right: 100, top: 100, alignItems: "center"}}>
+            <span>name:</span>
+            <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input>
+            <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
+            <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
+            <span>room code:</span>
             <input type="text" ref={codeInputRef} defaultValue={roomCode}></input>
         </div>
     </div>
