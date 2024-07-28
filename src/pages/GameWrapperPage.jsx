@@ -22,7 +22,7 @@ const GameWrapperPage = () =>{
     }, [])
 
     return <>
-        <Outlet />
+        {exists && <Outlet />}
     </>
 }
 
