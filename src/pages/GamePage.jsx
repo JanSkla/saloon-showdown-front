@@ -2,7 +2,7 @@ import React, { lazy, useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
-import GameCanvas from "../components/GameCanvas";
+//import GameCanvas from "../components/GameCanvas";
 import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 import { MiddleCanvasText } from "../components/MiddleCanvasText";
 import Timer from "../components/Timer";
@@ -10,6 +10,8 @@ import POVCanvas from "../components/POVCanvas";
 import { useNavigate } from "react-router-dom";
 
 const LazyPOVCanvas = lazy(() => import("../components/POVCanvas"))
+
+const LazyGameCanvas = lazy(() => import("../components/GameCanvas"))
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -105,7 +107,7 @@ const GamePage = () => {
     return <div>
         <div className="canvas-container">
             <React.Suspense loading={<>loading ...</>}>
-            <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
+            <LazyGameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} cardOptions={options} sendChoice={sendChoice} gameState={gameState} OnLoaded={OnLoaded}/>
             <LazyPOVCanvas/>
             <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>

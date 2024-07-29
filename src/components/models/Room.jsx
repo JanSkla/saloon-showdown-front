@@ -8,7 +8,7 @@ import {  useGLTF } from '@react-three/drei'
 
 export default function Room(props) {
   
-  const { nodes, materials } = useGLTF('/models/room/room.gltf', undefined, undefined, gltf => {props.OnLoad()})
+  const { nodes, materials } = useGLTF('/models/room/room.gltf', undefined, undefined)
 
   return (
     <group {...props} dispose={null}>

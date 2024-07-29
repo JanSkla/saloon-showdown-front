@@ -3,7 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import Room from "./models/Room"
 import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
 import Player from "./models/Player"
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { lazy, useContext, useEffect, useRef, useState } from "react"
 import { RoomContext } from "../utilComponents/RoomDataProvider"
 import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
@@ -11,7 +11,9 @@ import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
 import MainCamera from './MainCamera';
 
-const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, sendChoice, gameState}) => {
+const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
+
+const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, gameState, OnLoaded}) => {
   // SETTINGS //
   const angleRange = 160;
 
@@ -111,10 +113,11 @@ const GameCanvas = ({chooseTarget, choosing, target, OnLoaded, cardOptions, send
     {cardOptions.map((option, index) =>
     <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
     )}
-    <Room OnLoad={OnLoaded}/>
+    <Room/>
     <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
     <MainCamera />
+    <EmptyLazy OnLoaded={OnLoaded}/>
     </React.Suspense>
   </Canvas>
 }
