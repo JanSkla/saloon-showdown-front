@@ -13,7 +13,7 @@ const JoinPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-      if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
+      if ((data?.type === "join-room") && data?.status === 200){
           navigate("/game/" + data?.code)
       }
   }, [data])
