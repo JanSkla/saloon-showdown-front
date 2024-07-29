@@ -25,6 +25,9 @@ const LobbyPage = () => {
     }
 
     return <div>
+            <div style={{position: "absolute", top: 0, left:40}}>
+        <Button onClick={()=>navigate("/")}>{"<"}</Button>
+        </div>
         lobbyPage
         {players.map(player => <div key={player.pId}>id: {player.pId} name: {player.name} {player.isLeadPlayer && "🎖️"}, {player.pId == thisPID && "YOU"}</div>)}
         <br/>

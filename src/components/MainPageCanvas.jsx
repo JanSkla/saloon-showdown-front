@@ -6,6 +6,7 @@ import Kun from './models/Kun';
 import { useLoader } from "@react-three/fiber";
 import { useSpring, animated } from '@react-spring/three'
 import CowboyCloseup from './models/CowboyCloseup';
+import React from 'react';
 
 
 const MainPageCanvas = () => {
@@ -24,10 +25,16 @@ const MainPageCanvas = () => {
         },
       })
 
+      const Loader = () => {
+        const { progress } = useProgress();
+        return <Html center>{progress} % loaded</Html>;
+      };
+
     return (
         <div className="canvas-container">
         <Canvas style={{backgroundColor: '#8bc3e0'}}>
-          <CowboyCloseup/>
+          <React.Suspense fallback={<Loader />}>
+            <CowboyCloseup/>
             <animated.mesh         
               position={[0, 25, -120]}
               renderOrder={1}
@@ -45,6 +52,7 @@ const MainPageCanvas = () => {
             <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[0, 0.7, 0]} rotation={[0, 0, 0]} scale={1.241} />
             {/* <OrbitControls position={position} rotation={[0, 1.5, 0]} scale={1.241}/> */}
             <Kun></Kun>
+          </React.Suspense>
         </Canvas>
         </div>
     )

@@ -30,8 +30,6 @@ const CowboyCloseup = () => {
     planeRef.current.rotation.x = originalRot[0] +(cursor.current.y*2 -1 -1.7)*MULTIPLIER;
     planeRef.current.rotation.y = originalRot[1] +(cursor.current.x*2 -1 +2.8)*MULTIPLIER;
 
-    console.log(cursor.current.y, window.innerWidth/3*2)
-
     if(cursor.current.y > 1/3*2)
       setVariant(textureDown)
     else if(cursor.current.y > 1/4)
