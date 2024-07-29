@@ -39,9 +39,8 @@ const POVCanvas = () => {
   };
 
   useEffect(()=> {
-    console.log(variant)
     if(spritesheetRef.current[variant] === undefined) return;
-    spritesheetRef.current[variant].goToAndPlay(0);
+    spritesheetRef.current[variant].goToAndPlay(1);
   }, [variant])
   
   useEffect(() => {

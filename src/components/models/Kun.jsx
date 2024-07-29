@@ -28,14 +28,15 @@ export default function Kun() {
 
       const {position} = useSpring({
         from: {
-          position: [-5, 0.5, 2]
+          position: [-20, -2.9, -30]
         },
         to: {
-          position: [-5, 0.5, -140]
+          position: [60, -2.9, -30]
         },
         config: {
-          friction: 200,
+          friction: 60,
           tension: 5,
+          loop: true,
         },
       })
 
@@ -45,18 +46,14 @@ export default function Kun() {
     return (
         <animated.mesh
         position={position}
-        rotation-y={1.5}
         rotation-x={rotation}
-          renderOrder={1}
         ><>
-        <planeGeometry args={[4, 5]} />   
+        <planeGeometry args={[6, 5]} />   
         <meshStandardMaterial 
             side={THREE.DoubleSide}
             map={texture}
             transparent
             alphaTest={0.1}
-            depthWrite={false} // Disable depth writing
-            depthTest={false} // Disable depth testing
             flatShading={true}
       
         />

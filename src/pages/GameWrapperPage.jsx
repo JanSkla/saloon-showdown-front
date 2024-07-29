@@ -18,7 +18,7 @@ const GameWrapperPage = () =>{
         
         if(id.length == 4) setRoomCode(id);
             
-        navigate("/");
+        navigate("/join");
     }, [])
 
     return <>
