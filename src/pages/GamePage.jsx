@@ -34,10 +34,11 @@ const GamePage = () => {
     const [timer, setTimer] = useState({duration: 0});
 
     const startCountdown = () => {
-        setMiddleCanvasText(3)
-        setTimeout(() => setMiddleCanvasText(2), 1000)
-        setTimeout(() => setMiddleCanvasText(1), 2000)
-        setTimeout(() => setMiddleCanvasText(), 3000)
+        setMiddleCanvasText(<span style={{fontSize: '8vh'}}>3</span>);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '10vh'}}>2</span>), 1000);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '20vh'}}>1</span>), 2000);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontFamily: "Bevan", fontSize: '20vh', fontWeight: 400}}>SHOWDOWN!</span>), 3000);
+        setTimeout(() => setMiddleCanvasText(), 4000);
     }
 
     useEffect(() => {
