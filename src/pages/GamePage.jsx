@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { lazy, useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
@@ -7,6 +7,9 @@ import { ThisPlayerHealth } from "../components/ThisPlayerHealth";
 import { MiddleCanvasText } from "../components/MiddleCanvasText";
 import Timer from "../components/Timer";
 import POVCanvas from "../components/POVCanvas";
+import { useNavigate } from "react-router-dom";
+
+const LazyPOVCanvas = lazy(() => import("../components/POVCanvas"))
 
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
@@ -93,13 +96,17 @@ const GamePage = () => {
         setLoading(false);
     }
 
+    const navigate = useNavigate();
+
     useEffect(() => console.log(timer), [timer])
+
+    const [leaving, setLeaving] = useState(false);
 
     return <div>
         <div className="canvas-container">
             <React.Suspense loading={<>loading ...</>}>
             <GameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} OnLoaded={OnLoaded} cardOptions={options} sendChoice={sendChoice} gameState={gameState}/>
-            <POVCanvas/>
+            <LazyPOVCanvas/>
             <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>
                     {timer?.duration !== undefined && <Timer timer={timer}/>}
@@ -113,6 +120,17 @@ const GamePage = () => {
             
             </React.Suspense>
             {loading && "LOADING SCENE..."}
+            <div style={{position: "absolute", top: 0, left:40}}>
+                <Button onClick={()=>setLeaving(true)}>{"<"}</Button>
+            </div>
+            {leaving &&
+            <MiddleCanvasText pointerEvents style={{backgroundColor: '#000000aa'}}>
+                Do you really want to leave the game?
+                <div>
+                    <Button style={{backgroundColor: 'gray', marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
+                    <Button style={{backgroundColor: 'red'}} onClick={()=>setLeaving(false)}>CANCEL</Button>
+                </div>
+            </MiddleCanvasText>}
         </div>
     </div>
 }

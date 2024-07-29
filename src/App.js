@@ -10,6 +10,7 @@ import GameWrapperPage from './pages/GameWrapperPage';
 import { RoomDataProvider } from './utilComponents/RoomDataProvider';
 import JoinPage from './pages/JoinPage';
 import MainPageWrapper from './pages/MainPageWrapper';
+import { Suspense } from 'react';
 
 function App() {
   return (
@@ -17,18 +18,20 @@ function App() {
       
       <WebsocketProvider>
         <RoomDataProvider>
-          <Routes>
-            <Route element={<MainPageWrapper/>}>
-              <Route path="/" element={<MainPage/>}/>
-              <Route path="/join" element={<JoinPage/>}/>
-            </Route>
-            <Route path="/game/:id" element={<GameWrapperPage/>}>
-              <Route path="" element={<LobbyPage/>}/>
-              <Route path="play" element={<GamePage/>}/>
-              <Route path="over" element={<GameOverPage/>}/>
-            </Route>
-            <Route path='*' element={<NoPage/>} />
-          </Routes>
+          <Suspense>
+            <Routes>
+              <Route element={<MainPageWrapper/>}>
+                <Route path="/" element={<MainPage/>}/>
+                <Route path="/join" element={<JoinPage/>}/>
+              </Route>
+              <Route path="/game/:id" element={<GameWrapperPage/>}>
+                <Route path="" element={<LobbyPage/>}/>
+                <Route path="play" element={<GamePage/>}/>
+                <Route path="over" element={<GameOverPage/>}/>
+              </Route>
+              <Route path='*' element={<NoPage/>} />
+            </Routes>
+          </Suspense>
         </RoomDataProvider>
       </WebsocketProvider>
     </div>

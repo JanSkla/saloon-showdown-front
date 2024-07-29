@@ -10,11 +10,13 @@ const MAX_NAME_LENGTH = 16;
 const MainPage = () => {
     const navigate = useNavigate();
 
-    const { isOpen, data, send, open } = useContext(WebsocketContext);
+    const { isOpen, data, send, open, close } = useContext(WebsocketContext);
     const { roomCode } = useContext(RoomContext);
 
 
     const [name, setName] = useOutletContext();
+
+    const isMountingRef = useRef(false);
 
     const changeName = (value) => {
 
@@ -34,9 +36,18 @@ const MainPage = () => {
     }
 
     useEffect(() => {
-        if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
-            navigate("game/" + data?.code)
-        }
+        if (isOpen) close()
+        isMountingRef.current = true;
+      }, []);
+
+    useEffect(() => {
+        if (!isMountingRef.current) {
+            if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
+                navigate("game/" + data?.code)
+            }
+        } else {
+        isMountingRef.current = false;
+    }
     }, [data])
 
     const codeInputRef = useRef();

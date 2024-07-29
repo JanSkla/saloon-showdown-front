@@ -31,7 +31,10 @@ const JoinPage = () => {
   }
 
   const codeInputRef = useRef();
-  return <div style={{display: "flex", flexDirection: "column", alignItems: "center", marginTop: "25vh"}}>
+  return <div style={{display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "25vh", backgroundColor: 'black', height: '75vh', opacity: 0.7}}>
+    <div style={{position: "absolute", top: 0, left:40}}>
+        <Button onClick={()=>navigate("/")}>{"<"}</Button>
+    </div>
     <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
     <span>room code:</span>
     <input type="text" ref={codeInputRef} defaultValue={roomCode} autoFocus onBlur={e => e.target.focus()} maxLength={4} style={{textTransform: "uppercase", fontSize: "20vh", width: "60vh"}}></input>
