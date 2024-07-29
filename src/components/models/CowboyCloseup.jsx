@@ -16,9 +16,11 @@ const CowboyCloseup = () => {
   })
   }, [])
 
-  const textureUp =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup2.png');
-  const textureMid =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup1.png');
-  const textureDown =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0.png');
+  const textureUp =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0004.png');
+  const textureUpish =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0003.png');
+  const textureMid =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0002.png');
+  const textureDownish =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0001.png');
+  const textureDown =  useLoader(THREE.TextureLoader, '/images/cowboy/closeup/cowboy-closeup0000.png');
 
   const [variant, setVariant] = useState(textureMid)
 
@@ -30,10 +32,14 @@ const CowboyCloseup = () => {
     planeRef.current.rotation.x = originalRot[0] +(cursor.current.y*2 -1 -1.7)*MULTIPLIER;
     planeRef.current.rotation.y = originalRot[1] +(cursor.current.x*2 -1 +2.8)*MULTIPLIER;
 
-    if(cursor.current.y > 1/3*2)
+    if(cursor.current.y > 5.5/6)
       setVariant(textureDown)
-    else if(cursor.current.y > 1/4)
+    else if(cursor.current.y > 5/6)
+      setVariant(textureDownish)
+    else if(cursor.current.y > 4/6)
       setVariant(textureMid)
+    else if(cursor.current.y > 1/10)
+      setVariant(textureUpish)
     else
       setVariant(textureUp)
   })
