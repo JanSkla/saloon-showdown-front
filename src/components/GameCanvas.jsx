@@ -9,7 +9,7 @@ import Beer from "./models/Beer"
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
-import MainCamera from './MainCamera';
+import MainCamera from './models/MainCamera';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 

@@ -1,8 +1,8 @@
 import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
 import { useContext, useEffect, useRef, useState } from "react";
-import { WebsocketContext } from "../utilComponents/WebsocketProvider";
-import { RoomContext } from "../utilComponents/RoomDataProvider";
+import { WebsocketContext } from "../../utilComponents/WebsocketProvider";
+import { RoomContext } from "../../utilComponents/RoomDataProvider";
 
 const MainCamera = () => {
   const { data } = useContext(WebsocketContext);
