@@ -10,6 +10,7 @@ import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
 import MainCamera from './MainCamera';
+import Bartender from './models/Bartender';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -101,6 +102,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
   };
 
   return <Canvas
+  style={{backgroundColor: '#8bc3e0'}}
   onCreated={({ gl, scene }) => {
     scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
   }}>
@@ -113,12 +115,18 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     {cardOptions.map((option, index) =>
     <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
     )}
-    <Room/>
+    <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
     <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
+    <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
+    {/* <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/> */}
+    <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
+
     <MainCamera />
     <EmptyLazy OnLoaded={OnLoaded}/>
     </React.Suspense>
+    <Bartender/>
+     {/* <OrbitControls/> */}
   </Canvas>
 }
 
