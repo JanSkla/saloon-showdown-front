@@ -59,6 +59,7 @@ const MainPage = () => {
             <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/><br/>
             <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
             <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
+            
         </div>
     </div>
 }
