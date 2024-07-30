@@ -12,19 +12,6 @@ import React from 'react';
 const MainPageCanvas = () => {
     const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
 
-    const {position} = useSpring({
-        from: {
-          position: [0, 0.7, 0]
-        },
-        to: {
-          position: [0, 0.7, -142]
-        },
-        config: {
-          friction: 200,
-          tension: 5,
-        },
-      })
-
       const Loader = () => {
         const { progress } = useProgress();
         return <Html center>{progress} % loaded</Html>;
@@ -50,7 +37,6 @@ const MainPageCanvas = () => {
             <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[0,0,1]}/>
             <Teren position={[0,-6,-20]} rotation={[0,-1.5,0]}/>       
             <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[0, 0.7, 0]} rotation={[0, 0, 0]} scale={1.241} />
-            {/* <OrbitControls position={position} rotation={[0, 1.5, 0]} scale={1.241}/> */}
             <Kun></Kun>
           </React.Suspense>
         </Canvas>

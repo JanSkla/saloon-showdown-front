@@ -26,18 +26,24 @@ export default function Kun() {
         loop: true
       })
 
-      const {position} = useSpring({
+      const {position, rotationY} = useSpring({
         from: {
-          position: [-20, -2.9, -30]
+          position: [-20, -2.9, -30],
+          rotationY: 0
         },
-        to: {
-          position: [60, -2.9, -30]
-        },
+        to: [{
+          position: [60, -2.9, -30],
+          rotationY: 0
+        },{
+          position: [-20, -2.9, -30],
+          rotationY: 4
+        }],
         config: {
           friction: 60,
-          tension: 5,
-          loop: true,
+          tension: 25
         },
+        loop: true,
+
       })
 
       //init pos [-1, 2.8, -4]
@@ -47,6 +53,7 @@ export default function Kun() {
         <animated.mesh
         position={position}
         rotation-x={rotation}
+        rotation-y={rotationY}
         ><>
         <planeGeometry args={[6, 5]} />   
         <meshStandardMaterial 
