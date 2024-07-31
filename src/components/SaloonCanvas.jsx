@@ -11,7 +11,7 @@ const SaloonCanvas = () => {
     const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
 
     return <div className="canvas-container">        
-        <Canvas style={{backgroundColor: '#8bc3e0'}}>
+        <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
         <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[1,0,1]}/>
         <LobbyCamera />
         <Saloon />
