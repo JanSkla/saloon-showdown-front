@@ -102,7 +102,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
   };
 
   return <Canvas
-  style={{backgroundColor: '#8bc3e0'}}
+  style={{backgroundColor: '#0d0a0a'}}
   onCreated={({ gl, scene }) => {
     scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
   }}>
@@ -123,9 +123,9 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
 
     <MainCamera />
+    <Bartender/>
     <EmptyLazy OnLoaded={OnLoaded}/>
     </React.Suspense>
-    <Bartender/>
      {/* <OrbitControls/> */}
   </Canvas>
 }
