@@ -128,10 +128,12 @@ const GamePage = () => {
             </div>
             {leaving &&
             <MiddleCanvasText pointerEvents style={{backgroundColor: '#000000aa'}}>
-                Do you really want to leave the game?
-                <div>
-                    <Button style={{backgroundColor: 'gray', marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
-                    <Button style={{backgroundColor: 'red'}} onClick={()=>setLeaving(false)}>CANCEL</Button>
+                <div style={{display: "flex", flexDirection: "column", backgroundColor: "black", alignItems: "center", paddingTop: 25, paddingBottom: 8}}>
+                    <div>Do you really want to leave the game?</div>
+                    <div>
+                        <Button red style={{ marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
+                        <Button style={{}} onClick={()=>setLeaving(false)}>CANCEL</Button>
+                    </div>
                 </div>
             </MiddleCanvasText>}
         </div>
