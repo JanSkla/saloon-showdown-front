@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { WebsocketContext } from "../utilComponents/WebsocketProvider"
 import { MAX_HEALTH } from "./models/Player";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
@@ -8,7 +8,14 @@ export const ThisPlayerHealth = () => {
   const { data } = useContext(WebsocketContext);
   const { thisPID } = useContext(RoomContext);
 
-  const [health, setHealth] = useState(MAX_HEALTH);
+  const [health, _setHealth] = useState(MAX_HEALTH);
+
+  const healthRef = useRef(MAX_HEALTH);
+
+  const setHealth = newVal => {
+    healthRef.current = newVal;
+    _setHealth(newVal);
+  }
 
   useEffect(() => {
     if(data?.type === "start-countdown"){
@@ -16,41 +23,43 @@ export const ThisPlayerHealth = () => {
     }
     else if(data?.type === "round-actions" && data?.data){
 
-      let hp = health;
-
       const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == thisPID);
       if(sdb){
-        console.log("AA", hp-1)
-          setHealth(hp-1);
+        console.log("AA", healthRef.current-1)
           
           const timeoutId = setTimeout(() => {
-            console.log("AAa", hp)
-            setHealth(hp);
+            console.log("AAa", healthRef.current)
+            setHealth(healthRef.current + 1);
           }, 1000);
-      
-          // Cleanup function to clear the timeout if the component unmounts
-          return () => clearTimeout(timeoutId);
       }
 
+      let tempHealth = healthRef.current;
+
       data.data.forEach(action => {
-        if(action.user == thisPID){
+        if(action.user == thisPID && !sdb){
           switch (action.type) {
             case "finished-beer":
-              setHealth(health + 1);
+              tempHealth += 1;
               break;
           }
         }
         else if(action.target == thisPID){
           
           switch (action.type) {
+            case "shoot-drinking-beer":
+              tempHealth  -= 1;
+              console.log("HAHAA",tempHealth)
+              break;
             case "shoot-damage":
-              setHealth(action.targetHealth);
+              tempHealth = action.targetHealth;
               break;
             case "shoot-death":
-              setHealth(0);
+              tempHealth = 0;
           }
         }
       })
+      console.log(healthRef.current, tempHealth, 'tempHealth')
+      setHealth(tempHealth);
     }
   }, [data]);
 

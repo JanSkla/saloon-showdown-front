@@ -23,7 +23,6 @@ const Timer = ({timer}) => {
   }
 
   useEffect(() => {
-    console.log("AAAA", timer.duration)
     play(timer.duration);
   },[timer]);
 

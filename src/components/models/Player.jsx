@@ -46,7 +46,15 @@ export default function Player({pId, position, onClick, name, targetState}) {
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
-  const [health, setHealth] = useState(MAX_HEALTH);
+  
+  const [health, _setHealth] = useState(MAX_HEALTH);
+
+  const healthRef = useRef(MAX_HEALTH);
+
+  const setHealth = newVal => {
+    healthRef.current = newVal;
+    _setHealth(newVal);
+  }
 
   const planeRef = useRef();
   const planeTopRef = useRef();
@@ -87,16 +95,13 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
       const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == pId);
       if(sdb){
-          setPlayerState(PLAYER.shootBeer);
-          setHealth(hp-1);
+        console.log("AA", healthRef.current-1)
           
           const timeoutId = setTimeout(() => {
+            console.log("AAa", healthRef.current);
             setPlayerState(PLAYER.shootBeer2);
-            setHealth(hp);
+            setHealth(healthRef.current + 1);
           }, 1000);
-      
-          // Cleanup function to clear the timeout if the component unmounts
-          return () => clearTimeout(timeoutId);
       }
 
       data.data.forEach(action => {
@@ -121,7 +126,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
             case "started-beer":
             case "finished-beer":
               setPlayerState(PLAYER.drinkBeer);
-              setHealth(health + 1);
+              setHealth(healthRef.current + 1);
               break;
             default:
               break;
@@ -131,6 +136,9 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
         if(action.target == pId){
           switch (action.type) {
+            case "shoot-drinking-beer":
+              setHealth(healthRef.current-1);
+              break;
             case "shoot-damage":
               setHealth(action.targetHealth);
               break;
