@@ -101,8 +101,6 @@ const GamePage = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => console.log(timer), [timer])
-
     const [leaving, setLeaving] = useState(false);
 
     return <div>
