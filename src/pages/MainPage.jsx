@@ -11,7 +11,7 @@ const MainPage = () => {
     const navigate = useNavigate();
 
     const { isOpen, data, send, open, close } = useContext(WebsocketContext);
-    const { roomCode } = useContext(RoomContext);
+    const { roomCode, setRoomCode } = useContext(RoomContext);
 
 
     const [name, setName] = useOutletContext();
@@ -25,14 +25,21 @@ const MainPage = () => {
         setName(value);
     }
 
+    const [publicSetting, setPublicSetting] = useState(false);
+
+    const publicSwitch = () => {
+        setPublicSetting(!publicSetting);
+    }
+
     const onCreateClick = () => {
         
         if(open) open();
-        send(`{"type": "create-room"${name ? `, "name": "${name}"` : ""}}`);
+        send(`{"type": "create-room"${name ? `, "name": "${name}"` : ""}, "isPublic": ${publicSetting}}`);
     }
 
     const onJoinClick = () => {
-        navigate("join")
+        setRoomCode();
+        navigate("join");
     }
 
     useEffect(() => {
@@ -58,6 +65,7 @@ const MainPage = () => {
             <span>name:</span>
             <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/><br/>
             <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
+            <div style={{backgroundColor: publicSetting ? "green" : "red", marginTop: "-4vh"}}><Button disabled={!!isOpen} style={{fontSize: '3vh'}} onClick={publicSwitch}>{publicSetting ? "public" : "private"}</Button></div>
             <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
             
         </div>
