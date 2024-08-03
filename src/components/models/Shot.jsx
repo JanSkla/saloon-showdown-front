@@ -2,9 +2,9 @@ import * as THREE from 'three';
 import { useLoader } from "@react-three/fiber"
 import { createRef, useEffect } from 'react';
 
-export default function Shot({position, lookAt}) {
+export default function Shot({position, lookAt, shield = false}) {
 
-  const shotTexture = useLoader(THREE.TextureLoader, '/images/shot/shot.png');
+  const shotTexture = useLoader(THREE.TextureLoader, shield ? '/images/shot/shield.png' : '/images/shot/shot.png');
 
   const planeRef = createRef();
 
