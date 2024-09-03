@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { Canvas, useFrame } from "@react-three/fiber"
 import Room from "./models/Room"
-import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
+import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html, Text } from "@react-three/drei"
 import Player from "./models/Player"
 import React, { lazy, useContext, useEffect, useRef, useState } from "react"
 import { RoomContext } from "../utilComponents/RoomDataProvider"
@@ -11,8 +11,10 @@ import { TARGET } from './models/TargetFrame';
 import Card from './models/Card';
 import Bartender from './models/Bartender';
 import MainCamera from './models/MainCamera';
+import ReadyText from './models/ReadyText';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
+
 
 const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, gameState, OnLoaded}) => {
   // SETTINGS //
@@ -24,7 +26,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
 
   const { thisPID } = useContext(RoomContext);
 
-  const [playingPlayers, setPlayingPlayers] = useState();
+  const [playingPlayers, setPlayingPlayers] = useState([]);
   const enemies = useRef([]);
 
   const [chosen, setChosen] = useState();
@@ -68,16 +70,21 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     setPositions(poss);
   }
 
-  const { data } = useContext(WebsocketContext);
+  const { data, send } = useContext(WebsocketContext);
+
+  const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {
-    if(data?.type === "players-loaded"){
-
+    if(data?.type === "loaded-data"){
       setPlayingPlayers(data?.players);
+    }
+    else if(data?.type === "load-game"){
+      setIsReady(false);
     }
   }, [data])
 
   useEffect(() => {
+    console.log(playingPlayers)
     recalculatePlayers(playingPlayers);
   }, [playingPlayers])
 
@@ -115,6 +122,11 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     {cardOptions.map((option, index) =>
     <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
     )}
+    {!isReady && <ReadyText onClick={e => {
+      send(JSON.stringify({type: "ready"}));
+      setIsReady(true)
+      document.body.style.cursor = 'auto';
+    }}>Ready</ReadyText>}
     <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
     <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>

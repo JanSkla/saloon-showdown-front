@@ -96,11 +96,14 @@ export default function Player({pId, position, onClick, name, targetState}) {
     }
     else if(data?.type === "start-countdown"){
       setHealth(MAX_HEALTH);
-      setPlayerState(PLAYER.idle);
+      setPlayerState(PLAYER.cards);
       refreshLookAt();
       disconnected.current = false;
     }
     if(disconnected.current) return;
+    if(data?.type === "player-ready" && data?.player === pId){
+      setPlayerState(PLAYER.cards)
+    }
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
       let dead = false;

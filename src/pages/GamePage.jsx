@@ -81,6 +81,7 @@ const GamePage = () => {
     const playAgain = () => {
         //setLogs([]);
         setGameState("loading");
+        setMiddleCanvasText('');
         send('{"type": "start-game"}');
     }
 
