@@ -23,6 +23,19 @@ export const PLAYER = {
 
 export const MAX_HEALTH = 3;
 
+const poss = [
+  [0.5, -0.15, 0.0],
+  [0.3, 0.2, 0.0],
+  [0.0, 0.0, 0.0],
+  [-0.05, 0.3, 0.0],
+  [0.3, 0.2, 0.0],
+  [0.0, 0.0, 0.0],
+  [0.4, -0.1, 0.0],
+  [0.1, 0.1, 0.0],
+  [0.2, 0.2, 0.0],
+  [0.1, -0.1, 0.04]
+]
+
 export default function Player({pId, position, onClick, name, targetState}) {
   
   const disconnected = useRef(false);
@@ -46,7 +59,15 @@ export default function Player({pId, position, onClick, name, targetState}) {
   ]
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
-  const [health, setHealth] = useState(MAX_HEALTH);
+  
+  const [health, _setHealth] = useState(MAX_HEALTH);
+
+  const healthRef = useRef(MAX_HEALTH);
+
+  const setHealth = newVal => {
+    healthRef.current = newVal;
+    _setHealth(newVal);
+  }
 
   const planeRef = useRef();
   const planeTopRef = useRef();
@@ -87,16 +108,13 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
       const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == pId);
       if(sdb){
-          setPlayerState(PLAYER.shootBeer);
-          setHealth(hp-1);
+        console.log("AA", healthRef.current-1)
           
           const timeoutId = setTimeout(() => {
+            console.log("AAa", healthRef.current);
             setPlayerState(PLAYER.shootBeer2);
-            setHealth(hp);
+            setHealth(healthRef.current + 1);
           }, 1000);
-      
-          // Cleanup function to clear the timeout if the component unmounts
-          return () => clearTimeout(timeoutId);
       }
 
       data.data.forEach(action => {
@@ -121,7 +139,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
             case "started-beer":
             case "finished-beer":
               setPlayerState(PLAYER.drinkBeer);
-              setHealth(health + 1);
+              setHealth(healthRef.current + 1);
               break;
             default:
               break;
@@ -131,6 +149,9 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
         if(action.target == pId){
           switch (action.type) {
+            case "shoot-drinking-beer":
+              setHealth(healthRef.current-1);
+              break;
             case "shoot-damage":
               setHealth(action.targetHealth);
               break;
@@ -155,6 +176,23 @@ export default function Player({pId, position, onClick, name, targetState}) {
     }
     
   }, [data])
+
+  const HealthDisplay = () => {
+    const rows = []
+
+    if(health>3){
+      for (let hp = 4; hp <= health; hp++){
+        rows.push(<Shot shield position={poss[hp-1].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>)
+      }
+    }
+    else if (health<3){
+      for (let hp = health; hp < 3; hp++){
+        rows.push(<Shot position={poss[hp].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>)
+      }
+    }
+
+    return rows;
+  }
   
   return <>
     <mesh
@@ -174,10 +212,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
       </Text>
       {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
     
-      {health < 3 && <><Shot position={[0, 0, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {health < 2 && <><Shot position={[0.3, 0.2, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      {health < 1 && <><Shot position={[0.5, -0.15, 0].map((a, i) => a + shotsOffset[i])} lookAt={[0, position[1], 0]}/>
-      </>}</>}</>}
+      <HealthDisplay />
       </mesh>
     <mesh
       position={position} // Position it at the origin

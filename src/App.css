@@ -65,6 +65,7 @@
   height: 100vh;
   max-height: 100%;
   max-width:100%;
+  overflow: hidden;
 }
 
 .button {
@@ -84,12 +85,43 @@
 }
 
 .button:hover {
-  color: rgb(238, 213, 213);
+  background-color: #000000;
+  color: transparent;
+  text-shadow: 1px 1px 1px white;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
   cursor: pointer;
 }
 
 .buton:active {
   color: #282c34;
+}
+
+.redButton {
+  height: auto;
+  width: auto;
+  font-size: 10vh;
+  
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  text-align: center;
+  border: none;
+  background: none;
+  color: red;
+  text-shadow: 1px 1px 4px #282c34;
+}
+
+.redButton:hover {
+  background-color: black;
+  color: transparent;
+  text-shadow: 1px 1px 1px red;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  cursor: pointer;
 }
 
 input {

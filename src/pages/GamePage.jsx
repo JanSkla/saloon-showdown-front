@@ -34,10 +34,11 @@ const GamePage = () => {
     const [timer, setTimer] = useState({duration: 0});
 
     const startCountdown = () => {
-        setMiddleCanvasText(3)
-        setTimeout(() => setMiddleCanvasText(2), 1000)
-        setTimeout(() => setMiddleCanvasText(1), 2000)
-        setTimeout(() => setMiddleCanvasText(), 3000)
+        setMiddleCanvasText(<span style={{fontSize: '8vh'}}>3</span>);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '10vh'}}>2</span>), 1000);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '20vh'}}>1</span>), 2000);
+        setTimeout(() => setMiddleCanvasText(<span style={{fontFamily: "Bevan", fontSize: '20vh', fontWeight: 400}}>SHOWDOWN!</span>), 3000);
+        setTimeout(() => setMiddleCanvasText(), 4000);
     }
 
     useEffect(() => {
@@ -100,8 +101,6 @@ const GamePage = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => console.log(timer), [timer])
-
     const [leaving, setLeaving] = useState(false);
 
     return <div>
@@ -127,10 +126,12 @@ const GamePage = () => {
             </div>
             {leaving &&
             <MiddleCanvasText pointerEvents style={{backgroundColor: '#000000aa'}}>
-                Do you really want to leave the game?
-                <div>
-                    <Button style={{backgroundColor: 'gray', marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
-                    <Button style={{backgroundColor: 'red'}} onClick={()=>setLeaving(false)}>CANCEL</Button>
+                <div style={{display: "flex", flexDirection: "column", backgroundColor: "black", alignItems: "center", paddingTop: 25, paddingBottom: 8}}>
+                    <div>Do you really want to leave the game?</div>
+                    <div>
+                        <Button red style={{ marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
+                        <Button style={{}} onClick={()=>setLeaving(false)}>CANCEL</Button>
+                    </div>
                 </div>
             </MiddleCanvasText>}
         </div>

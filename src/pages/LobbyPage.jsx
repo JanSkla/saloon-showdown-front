@@ -3,6 +3,7 @@ import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate, useParams } from "../../node_modules/react-router-dom/dist/index";
 import { Button } from "../components/Button";
+import SaloonCanvas from "../components/SaloonCanvas";
 
 const LobbyPage = () => {
     const { id } = useParams(); 
@@ -25,13 +26,14 @@ const LobbyPage = () => {
     }
 
     return <div>
+        <div className="full-screen" style={{position: "absolute"}}>
+        <SaloonCanvas/>
             <div style={{position: "absolute", top: 0, left:40}}>
         <Button onClick={()=>navigate("/")}>{"<"}</Button>
         </div>
-        lobbyPage
-        {players.map(player => <div key={player.pId}>id: {player.pId} name: {player.name} {player.isLeadPlayer && "🎖️"}, {player.pId == thisPID && "YOU"}</div>)}
-        <br/>
-        {thisPlayer?.isLeadPlayer && <Button onClick={onStartGameClick}>Start game</Button>}
+            {thisPlayer?.isLeadPlayer && <Button onClick={onStartGameClick} style={{position: "absolute", bottom: 3}}>Start game</Button>}
+
+        </div>
     </div>
 }
 

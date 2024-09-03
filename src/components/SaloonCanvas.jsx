@@ -1,0 +1,39 @@
+import { Saloon } from './models/Saloon';
+import * as THREE from 'three';
+import { Canvas, useFrame } from "@react-three/fiber"
+import Room from "./models/Room"
+import LobbyPositions from "./models/LobbyPositions"
+import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
+import { useLoader } from "@react-three/fiber";
+import LobbyCamera from './models/LobbyCamera';
+
+const SaloonCanvas = () => {
+    const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
+
+    return <div className="canvas-container">        
+        <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
+        <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[1,0,1]}/>
+        <LobbyCamera />
+        <Saloon />
+        <LobbyPositions />
+        <mesh
+              position={[-100, 16, 0]}
+              rotation-y={1.6}
+              renderOrder={1}
+            > 
+              <planeGeometry args={[500, 62.5]}/>
+              <meshStandardMaterial 
+              side={THREE.DoubleSide}
+              map={texture}
+              transparent
+              alphaTest={0.1}
+              flatShading={true}/>
+            </mesh>
+            <pointLight position={[15,13.5,0]} intensity={5} color={0xfebbbb}/>
+
+    </Canvas>
+    
+        </div>
+}
+
+export default SaloonCanvas;
