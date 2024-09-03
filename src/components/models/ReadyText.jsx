@@ -7,13 +7,13 @@ const ReadyText = ({onClick}) => {
 
   const [isHovered, setIsHovered] = useState();
   
-  return <Text position={[0, 4, 0]} rotation={[-3.108, -0.271, Math.PI]} color="white" fontSize={0.5} fontWeight={isHovered ? 800 : 700} material={whiteMaterial} onClick={onClick} onPointerEnter={() => {
+  return <Text position={[0, 4, 0]} rotation={[-3.108, -0.271, Math.PI]} scale={isHovered ? 1.1 : 1} color="white" fontSize={0.5} fontWeight={790} outlineColor={'black'} outlineWidth={0.01} material={whiteMaterial} onClick={onClick} onPointerEnter={() => {
     setIsHovered(true)
     document.body.style.cursor = 'pointer';
   }} onPointerLeave={() => {
     setIsHovered(false)
     document.body.style.cursor = 'auto';
-  }}>Ready up!</Text>
+  }}>READY UP!</Text>
 }
 
 export default ReadyText;
