@@ -33,6 +33,8 @@ const GamePage = () => {
 
     const [timer, setTimer] = useState({duration: 0});
 
+    const [death, setDeath] = useState(false);
+
     const startCountdown = () => {
         setMiddleCanvasText(<span style={{fontSize: '8vh'}}>3</span>);
         setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '10vh'}}>2</span>), 1000);
@@ -64,9 +66,26 @@ const GamePage = () => {
             setMiddleCanvasText(data?.winner != undefined ? `WINNER IS ${players.find(player => player.pId === data.winner).name}!!` : "DRAW")
             setGameState(data?.type);
         }
-        if (data?.type === "start-countdown"){
+        else if (data?.type === "start-countdown"){
             startCountdown();
             //setLogs([]);
+        }
+        else if(data?.type === "round-actions" && data?.data){
+            data.data.forEach(action => {
+                if(action.target == thisPID){
+                  switch (action.type) {
+                    case "shoot-death":
+                      setDeath(true);
+                      break;
+                  }
+                }
+            }
+        )
+        }
+        else if(data?.type === "load-game"){
+            setGameState("loading");
+            setMiddleCanvasText('');
+            setDeath(false);
         }
     }, [data])
 
@@ -83,6 +102,7 @@ const GamePage = () => {
         setGameState("loading");
         setMiddleCanvasText('');
         send('{"type": "start-game"}');
+        setDeath(false);
     }
 
     const chooseTarget = (targetPID) => {
@@ -103,6 +123,7 @@ const GamePage = () => {
     const navigate = useNavigate();
 
     const [leaving, setLeaving] = useState(false);
+    
 
     return <div>
         <div className="canvas-container">
@@ -115,7 +136,13 @@ const GamePage = () => {
                 </div>
                 <ThisPlayerHealth />
             </div>
+            {death && <MiddleCanvasText className="deathScreen">
+            </MiddleCanvasText>}
             <MiddleCanvasText>
+                {death && gameState == "game-over" && <div>
+                        <span className="bevan" style={{fontSize: '8vh', color: 'red', textShadow: 'none'}}>WASTED</span>
+                        <img height={60} src="/images/exp_death.png"/>
+                    </div>}
                 {middleCanvasText}
                 {gameState === "game-over" && thisPlayer?.isLeadPlayer && <div style={{pointerEvents: 'all'}}><Button onClick={playAgain}>play again</Button></div>}
             </MiddleCanvasText>

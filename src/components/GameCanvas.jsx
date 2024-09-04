@@ -79,6 +79,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       setPlayingPlayers(data?.players);
     }
     else if(data?.type === "load-game"){
+      setPlayingPlayers(data?.players);
       setIsReady(false);
     }
   }, [data])
