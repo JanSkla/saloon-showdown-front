@@ -5,6 +5,7 @@ import { WebsocketContext } from '../../utilComponents/WebsocketProvider';
 import Shot from './Shot';
 import { Text } from '@react-three/drei';
 import { TARGET, TargetFrame } from './TargetFrame';
+import Sound from '../Sound';
 
 export const PLAYER = {
   cards: 0,
@@ -20,6 +21,7 @@ export const PLAYER = {
   dead: 10,
   disconnected: 11,
 };
+
 
 export const MAX_HEALTH = 3;
 
@@ -57,6 +59,23 @@ export default function Player({pId, position, onClick, name, targetState}) {
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_dead.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
   ]
+
+  const sounds = [
+    undefined,
+    undefined,
+    "/sounds/reload-other.wav",
+    "/sounds/shield.wav",
+    "/sounds/shooting-other.wav",
+    "/sounds/drink-other.wav",
+    "/sounds/drink-other-shot.wav",
+    "/sounds/whistle.wav",
+    undefined,
+    "/sounds/drink-other-shot.wav",
+    undefined,
+    undefined
+
+  ]
+
 
   const [playerState, setPlayerState] = useState(PLAYER.idle);
   
@@ -209,7 +228,9 @@ export default function Player({pId, position, onClick, name, targetState}) {
         map={variants[playerState].main}
         transparent
         alphaTest={0.1}
-      />
+      >
+        {sounds[playerState] && <Sound url={sounds[playerState]} isPlayer={false}/>}
+      </meshStandardMaterial>
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} material={new THREE.MeshBasicMaterial({toneMapped: false, fog: false})}>
         {name}
       </Text>

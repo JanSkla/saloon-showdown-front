@@ -67,7 +67,6 @@ const MainPage = () => {
             <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
             <div style={{backgroundColor: publicSetting ? "green" : "red", marginTop: "-4vh"}}><Button disabled={!!isOpen} style={{fontSize: '3vh'}} onClick={publicSwitch}>{publicSetting ? "public" : "private"}</Button></div>
             <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
-            
         </div>
     </div>
 }
