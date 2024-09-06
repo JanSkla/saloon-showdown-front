@@ -12,7 +12,7 @@ const Sound = ({url, isPlayer}) => {
       sound.current.setBuffer(buffer)
       sound.current.setRefDistance(1)
       sound.current.setLoop(false)
-      sound.current.setDetune(isPlayer ? 0 : -400)
+      sound.current.setDetune(isPlayer ? 0 : -100)
       sound.current.play()
       camera.add(listener)
       return () => camera.remove(listener)

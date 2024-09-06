@@ -43,7 +43,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
   const disconnected = useRef(false);
 
   const textureLocation = '/images/cowboy/';
-  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png');
+  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards2.png');
 
   const variants = [
     {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_hand.png')},
@@ -130,10 +130,8 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
       const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == pId);
       if(sdb){
-        console.log("AA", healthRef.current-1)
           
           const timeoutId = setTimeout(() => {
-            console.log("AAa", healthRef.current);
             setPlayerState(PLAYER.shootBeer2);
             setHealth(healthRef.current + 1);
           }, 1000);
