@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import Spritesheet from 'react-responsive-spritesheet';
 import { WebsocketContext } from '../utilComponents/WebsocketProvider';
 import { RoomContext } from '../utilComponents/RoomDataProvider';
+import Sound from './Sound';
+import { Canvas } from '@react-three/fiber';
 
 export const POV = {
   none: 0,
@@ -14,6 +16,7 @@ export const POV = {
   orderBeer: 7
 }
 
+
 const POV_SPRITE_SHEETS = [
   undefined,
   "/images/cowboy/pov/reload-Sheet.png",
@@ -24,6 +27,17 @@ const POV_SPRITE_SHEETS = [
   "/images/cowboy/pov/drink_break-Sheet.png",
   "/images/cowboy/pov/order_beer-Sheet.png",
 ]
+const POV_SOUNDS = [
+  undefined,
+  "/sounds/reload-self.mp3",
+  "/sounds/shield.wav",
+  "/sounds/shot-shield.wav",
+  "/sounds/shooting-player.wav",
+  "/sounds/drink-self.wav",
+  "/sounds/drink-self-shot.wav",
+  "/sounds/whistle.wav",
+
+]
 
 const POVCanvas = () => {
 
@@ -31,8 +45,12 @@ const POVCanvas = () => {
   const { thisPID } = useContext(RoomContext);
   
   const [variant, setVariant] = useState(POV.none);
+  const [soundVariant, setSoundVariant] = useState(POV_SOUNDS.none)
 
   const spritesheetRef = useRef(new Array(POV_SPRITE_SHEETS.length));
+  const soundsRef = useRef(new Array(POV_SOUNDS.length))
+
+  const audio = new Audio(POV_SOUNDS[variant])
 
   const playVariant = type => {
     setVariant(type);
@@ -43,8 +61,11 @@ const POVCanvas = () => {
     spritesheetRef.current[variant].goToAndPlay(1);
   }, [variant])
   
+  useEffect(()=> {
+    if(POV_SOUNDS[variant]){   audio.play()}
+  }, [variant])
+  
   useEffect(() => {
-    console.log(spritesheetRef)
     if(data?.type === "choose"){
       playVariant(POV.none);
     }
@@ -58,7 +79,6 @@ const POVCanvas = () => {
               playVariant(POV.shootBeer);
               return;
             case "shoot-block":
-              console.log("aaa")
               playVariant(POV.blockShoot);
               return;
           }
@@ -106,6 +126,11 @@ const POVCanvas = () => {
       style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: '99%', height: 675}}
     />)}
     </div>
+{/* { POV_SOUNDS[variant] &&   <mesh>
+      <Canvas>
+      <Sound url={POV_SOUNDS[variant]} isPlayer={true}/>
+      </Canvas>
+    </mesh>} */}
   </div>
 }
 

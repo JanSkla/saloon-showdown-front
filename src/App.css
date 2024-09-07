@@ -142,3 +142,15 @@ input {
 .deathScreen {
   background: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 0, 0) 0%, rgba(255, 0, 0, 0.2) 100%);
 }
+
+.howtoText {
+  font-weight: 400;
+  font-size: 20px;
+}
+
+.howtoTitle {
+  padding-top: 24px;
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-size: 48px;
+}

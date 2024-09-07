@@ -8,6 +8,8 @@ import { MiddleCanvasText } from "../components/MiddleCanvasText";
 import Timer from "../components/Timer";
 import POVCanvas from "../components/POVCanvas";
 import { useNavigate } from "react-router-dom";
+import { Canvas } from "@react-three/fiber";
+import Sound from "../components/Sound";
 
 const LazyPOVCanvas = lazy(() => import("../components/POVCanvas"))
 
@@ -35,13 +37,18 @@ const GamePage = () => {
 
     const [death, setDeath] = useState(false);
 
+    const [play, setPlay] = useState(false);
+
     const startCountdown = () => {
+        audio.play();
         setMiddleCanvasText(<span style={{fontSize: '8vh'}}>3</span>);
         setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '10vh'}}>2</span>), 1000);
         setTimeout(() => setMiddleCanvasText(<span style={{fontSize: '20vh'}}>1</span>), 2000);
         setTimeout(() => setMiddleCanvasText(<span style={{fontFamily: "Bevan", fontSize: '20vh', fontWeight: 400}}>SHOWDOWN!</span>), 3000);
         setTimeout(() => setMiddleCanvasText(), 4000);
     }
+
+    const audio = new Audio("/sounds/countdown.wav");
 
     useEffect(() => {
         setLogs([JSON.stringify(data), ...logs])
@@ -103,6 +110,7 @@ const GamePage = () => {
         setMiddleCanvasText('');
         send('{"type": "start-game"}');
         setDeath(false);
+        setPlay(false)
     }
 
     const chooseTarget = (targetPID) => {
@@ -146,7 +154,6 @@ const GamePage = () => {
                 {middleCanvasText}
                 {gameState === "game-over" && thisPlayer?.isLeadPlayer && <div style={{pointerEvents: 'all'}}><Button onClick={playAgain}>play again</Button></div>}
             </MiddleCanvasText>
-            
             </React.Suspense>
             {loading && "LOADING SCENE..."}
             <div style={{position: "absolute", top: 0, left:40}}>
