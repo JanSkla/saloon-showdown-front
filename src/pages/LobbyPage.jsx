@@ -31,8 +31,8 @@ const LobbyPage = () => {
             <div style={{position: "absolute", top: 0, left:40}}>
         <Button onClick={()=>navigate("/")}>{"<"}</Button>
         </div>
-            {thisPlayer?.isLeadPlayer && <Button onClick={onStartGameClick} style={{position: "absolute", bottom: 3}}>Start game</Button>}
-
+            {thisPlayer?.isLeadPlayer ? <Button onClick={onStartGameClick} style={{position: "absolute", bottom: 3}}>Start game</Button>:
+                <div style={{position: "absolute", bottom: 24, right: 40, color: 'white', textShadow: '1px 1px 4px #282c34'}}>Waiting for SHERIFF to start the game...</div>}
         </div>
     </div>
 }
