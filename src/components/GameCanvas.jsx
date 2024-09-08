@@ -52,6 +52,8 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     const offset = -(enemies.current.length - 1.8)/2;
 
     const angleOffset = angleRange/enemies.current.length;
+    
+    const rightPIDS = []
 
     const poss = enemies.current.map((enemy, i) => {
       const radians = toRadians(angleOffset * (i + offset));
@@ -64,7 +66,9 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
         a: beerRadius * Math.sin(radiansBeer),
         b: beerRadius * Math.cos(radiansBeer),
       };
-      return { pId: enemy.pId, pos, beerPos, name: enemy.name };
+      const returnrightPIDS = [...rightPIDS];
+      rightPIDS.push(enemy.pId);
+      return { pId: enemy.pId, pos, beerPos, name: enemy.name, rightPIDS: returnrightPIDS};
     });
 
     setPositions(poss);
@@ -115,8 +119,8 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
   }}>
     <React.Suspense fallback={<Loader />}>
-    {positions.map(({pId, pos, beerPos, name}) => <>
-      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)}/>
+    {positions.map(({pId, pos, beerPos, name, rightPIDS}) => <>
+      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)} rightPIDS={rightPIDS}/>
       <Beer pId={pId} position={[beerPos.a, 2.8, beerPos.b]} lookAt={[-0.35, 2.8, -1.3]} />
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
