@@ -29,7 +29,7 @@ export const PLAYER = {
 export const MAX_HEALTH = 3;
 
 const poss = [
-  [0.5, -0.15, 0.0],
+  [-1.1, 0.85, -0.0],
   [0.3, 0.2, 0.0],
   [0.0, 0.0, 0.0],
   [-0.05, 0.3, 0.0],
@@ -90,7 +90,12 @@ export default function Player({pId, position, onClick, name, targetState, right
 
   const setHealth = newVal => {
     healthRef.current = newVal;
-    _setHealth(newVal);
+    setTimeout(() => {
+      _setHealth(newVal);
+      if(newVal === 0){
+        setPlayerState(PLAYER.dead);
+      }
+    },1000)
   }
 
   const planeRef = useRef();
@@ -109,7 +114,7 @@ export default function Player({pId, position, onClick, name, targetState, right
 
   const scale = 1.3;
 
-  const shotsOffset = [-0.1, -0.6, 0.3];
+  const shotsOffset = [-0.1, -0.6, 0.03];
   
   const { data } = useContext(WebsocketContext);
 
@@ -128,7 +133,10 @@ export default function Player({pId, position, onClick, name, targetState, right
     }
     if(disconnected.current) return;
     if(data?.type === "player-ready" && data?.player === pId){
-      setPlayerState(PLAYER.cards)
+      setHealth(MAX_HEALTH);
+      setPlayerState(PLAYER.cards);
+      refreshLookAt();
+      disconnected.current = false;
     }
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
@@ -192,8 +200,6 @@ export default function Player({pId, position, onClick, name, targetState, right
               setHealth(action.targetHealth);
               break;
             case "shoot-death":
-              console.log("DEATH")
-              setPlayerState(PLAYER.dead);
               setHealth(0);
               dead = true;
               break;
