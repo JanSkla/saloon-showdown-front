@@ -6,16 +6,21 @@ import LobbyPositions from "./models/LobbyPositions"
 import { Environment, PerspectiveCamera, OrbitControls, useProgress, Html } from "@react-three/drei"
 import { useLoader } from "@react-three/fiber";
 import LobbyCamera from './models/LobbyCamera';
+import { Radio } from './models/Radio';
+import { useRef, useState } from 'react';
 
 const SaloonCanvas = () => {
     const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
+  
+
 
     return <div className="canvas-container">        
         <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
         <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[1,0,1]}/>
-        <LobbyCamera />
+        <LobbyCamera/>
         <Saloon />
         <LobbyPositions />
+        <Radio position={[13.5, 1.13, -3.1]} scale={2.5}/>
         <mesh
               position={[-100, 16, 0]}
               rotation-y={1.6}

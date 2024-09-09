@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { PerspectiveCamera } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useAtom } from 'jotai';
+import { radioHoverAtom } from '../../atoms/atoms';
 
 const states = [
   {m: 0.025, f: 32.5},
@@ -17,6 +19,14 @@ const ZOOM = {
 
 const LobbyCamera = () => {
   const { scene } = useThree();
+
+  const [radioHover, setRadioHover] = useAtom(radioHoverAtom);// Ref to store the current value of radioHover
+  const radioHoverRef = useRef(radioHover);
+
+  // Keep the ref updated with the latest value
+  useEffect(() => {
+    radioHoverRef.current = radioHover;
+  }, [radioHover]);
 
   const [zoom, _setZoom] = useState(ZOOM.default);
 
@@ -50,16 +60,20 @@ const LobbyCamera = () => {
   const cursor = useRef({x:0, y:0});
   const MULTIPLIER = states[zoom].m;
 
+  const onMouseDown = () => {
+    if (radioHoverRef.current) return;
+    setZoom(ZOOM.mid);
+    document.body.style.cursor = 'none';
+  }
+
   useEffect(() => {
     document.addEventListener('mousemove', event => {
       cursor.current = {x:event.clientX/window.innerWidth*2 - 1, y:event.clientY/window.innerHeight*2 - 1}
-  })
-
-    document.getElementById("saloon_canvas").addEventListener("mousedown", () => {
-      setZoom(ZOOM.mid);
-      document.body.style.cursor = 'none';
     })
+    document.getElementById("saloon_canvas").addEventListener("mousedown", onMouseDown)
+
     document.getElementById("saloon_canvas").addEventListener("mouseup", () => {
+      if(zoomRef.current === ZOOM.default) return;
       setZoom(ZOOM.default);
       document.body.style.cursor = 'auto';
     })
