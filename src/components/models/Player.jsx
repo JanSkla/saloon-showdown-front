@@ -6,6 +6,7 @@ import Shot from './Shot';
 import { Text } from '@react-three/drei';
 import { TARGET, TargetFrame } from './TargetFrame';
 import Sound from '../Sound';
+import { RoomContext } from '../../utilComponents/RoomDataProvider';
 
 export const PLAYER = {
   cards: 0,
@@ -20,13 +21,15 @@ export const PLAYER = {
   shootBeer2: 9,
   dead: 10,
   disconnected: 11,
+  shootLeft: 12,
+  shootRight: 13
 };
 
 
 export const MAX_HEALTH = 3;
 
 const poss = [
-  [0.5, -0.15, 0.0],
+  [-1.1, 0.85, -0.0],
   [0.3, 0.2, 0.0],
   [0.0, 0.0, 0.0],
   [-0.05, 0.3, 0.0],
@@ -38,7 +41,7 @@ const poss = [
   [0.1, -0.1, 0.04]
 ]
 
-export default function Player({pId, position, onClick, name, targetState}) {
+export default function Player({pId, position, onClick, name, targetState, rightPIDS = []}) {
   
   const disconnected = useRef(false);
 
@@ -58,6 +61,8 @@ export default function Player({pId, position, onClick, name, targetState}) {
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_drink_beer2.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_dead.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_left.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_left_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_right.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_right_hand.png')},
   ]
 
   const sounds = [
@@ -85,7 +90,12 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
   const setHealth = newVal => {
     healthRef.current = newVal;
-    _setHealth(newVal);
+    setTimeout(() => {
+      _setHealth(newVal);
+      if(newVal === 0){
+        setPlayerState(PLAYER.dead);
+      }
+    },1000)
   }
 
   const planeRef = useRef();
@@ -104,9 +114,11 @@ export default function Player({pId, position, onClick, name, targetState}) {
 
   const scale = 1.3;
 
-  const shotsOffset = [-0.1, -0.6, 0.3];
+  const shotsOffset = [-0.1, -0.6, 0.03];
   
   const { data } = useContext(WebsocketContext);
+
+  const { thisPID } = useContext(RoomContext);
 
   useEffect(() => {
     if(data?.type === "player-disconnect" && data?.player === pId){
@@ -121,7 +133,10 @@ export default function Player({pId, position, onClick, name, targetState}) {
     }
     if(disconnected.current) return;
     if(data?.type === "player-ready" && data?.player === pId){
-      setPlayerState(PLAYER.cards)
+      setHealth(MAX_HEALTH);
+      setPlayerState(PLAYER.cards);
+      refreshLookAt();
+      disconnected.current = false;
     }
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
@@ -153,7 +168,14 @@ export default function Player({pId, position, onClick, name, targetState}) {
             case "shoot-damage":
             case "shoot-death":
             case "shoot-block":
-              setPlayerState(PLAYER.shoot);
+              if (action.target === thisPID)
+                setPlayerState(PLAYER.shoot);
+              else if (rightPIDS.includes(action.target)){
+                setPlayerState(PLAYER.shootRight);
+              }
+              else{
+                setPlayerState(PLAYER.shootLeft);
+              }
               break;
             case "order-beer":
               setPlayerState(PLAYER.orderBeer);
@@ -178,8 +200,6 @@ export default function Player({pId, position, onClick, name, targetState}) {
               setHealth(action.targetHealth);
               break;
             case "shoot-death":
-              console.log("DEATH")
-              setPlayerState(PLAYER.dead);
               setHealth(0);
               dead = true;
               break;
@@ -232,7 +252,7 @@ export default function Player({pId, position, onClick, name, targetState}) {
         {sounds[playerState] && <Sound url={sounds[playerState]} isPlayer={false}/>}
       </meshStandardMaterial>
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} material={new THREE.MeshBasicMaterial({toneMapped: false, fog: false})}>
-        {name}
+        {name}{JSON.stringify(rightPIDS)}
       </Text>
       {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
     
