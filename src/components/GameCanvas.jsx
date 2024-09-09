@@ -12,6 +12,7 @@ import Card from './models/Card';
 import Bartender from './models/Bartender';
 import MainCamera from './models/MainCamera';
 import ReadyText from './models/ReadyText';
+import { Radio } from './models/Radio';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -142,6 +143,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     <MainCamera />
     <Bartender/>
     <EmptyLazy OnLoaded={OnLoaded}/>
+    <Radio position={[11.8, 4.18, 4]} scale={1.7} rotation={[0,3,0]}/>
     </React.Suspense>
      {/* <OrbitControls/> */}
   </Canvas>

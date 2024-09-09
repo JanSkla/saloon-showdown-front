@@ -125,18 +125,17 @@ export default function Player({pId, position, onClick, name, targetState, right
       disconnected.current = true;
       setPlayerState(PLAYER.disconnected)
     }
-    else if(data?.type === "start-countdown"){
+    if(data?.type === "player-ready" && data?.player === pId){
       setHealth(MAX_HEALTH);
       setPlayerState(PLAYER.cards);
       refreshLookAt();
       disconnected.current = false;
     }
     if(disconnected.current) return;
-    if(data?.type === "player-ready" && data?.player === pId){
+    else if(data?.type === "start-countdown"){
       setHealth(MAX_HEALTH);
       setPlayerState(PLAYER.cards);
       refreshLookAt();
-      disconnected.current = false;
     }
     if(health <= 0) return;
     else if(data?.type === "round-actions" && data?.data){
@@ -252,7 +251,7 @@ export default function Player({pId, position, onClick, name, targetState, right
         {sounds[playerState] && <Sound url={sounds[playerState]} isPlayer={false}/>}
       </meshStandardMaterial>
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} material={new THREE.MeshBasicMaterial({toneMapped: false, fog: false})}>
-        {name}{JSON.stringify(rightPIDS)}
+        {name}
       </Text>
       {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
     
