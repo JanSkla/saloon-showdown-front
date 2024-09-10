@@ -10,6 +10,9 @@ import POVCanvas from "../components/POVCanvas";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
 import Sound from "../components/Sound";
+import { WaitToLoad } from "../utils/waitToLoad";
+import { BackButton } from "../components/BackButton";
+import { FadeContext } from "../utilComponents/FadeScreenProvider";
 
 const LazyPOVCanvas = lazy(() => import("../components/POVCanvas"))
 
@@ -18,6 +21,7 @@ const LazyGameCanvas = lazy(() => import("../components/GameCanvas"))
 const GamePage = () => {
     const { data, send } = useContext(WebsocketContext);
     const { players, thisPID } = useContext(RoomContext);
+    const { setOpacityThenCall } = useContext(FadeContext);
 
     const thisPlayer = players.find(player => player.pId === thisPID);
 
@@ -135,7 +139,7 @@ const GamePage = () => {
 
     return <div>
         <div className="canvas-container">
-            <React.Suspense loading={<>loading ...</>}>
+            <WaitToLoad/>
             <LazyGameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} cardOptions={options} sendChoice={sendChoice} gameState={gameState} OnLoaded={OnLoaded}/>
             <LazyPOVCanvas/>
             <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
@@ -154,17 +158,15 @@ const GamePage = () => {
                 {middleCanvasText}
                 {gameState === "game-over" && thisPlayer?.isLeadPlayer && <div style={{pointerEvents: 'all'}}><Button onClick={playAgain}>play again</Button></div>}
             </MiddleCanvasText>
-            </React.Suspense>
-            {loading && "LOADING SCENE..."}
             <div style={{position: "absolute", top: 0, left:40}}>
-                <Button onClick={()=>setLeaving(true)}>{"<"}</Button>
+                <BackButton onClick={()=>setLeaving(true)}/>
             </div>
             {leaving &&
             <MiddleCanvasText pointerEvents style={{backgroundColor: '#000000aa'}}>
                 <div style={{display: "flex", flexDirection: "column", backgroundColor: "black", alignItems: "center", paddingTop: 25, paddingBottom: 8}}>
                     <div>Do you really want to leave the game?</div>
                     <div>
-                        <Button red style={{ marginRight: 30, marginTop: 20}} onClick={()=>navigate("/")}>LEAVE</Button>
+                        <Button red style={{ marginRight: 30, marginTop: 20}} onClick={()=>setOpacityThenCall(0,() => navigate("/"))}>LEAVE</Button>
                         <Button style={{}} onClick={()=>setLeaving(false)}>CANCEL</Button>
                     </div>
                 </div>

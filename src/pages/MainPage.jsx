@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext } from "../../node_modules/react-router-d
 import { Button } from "../components/Button";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import MainPageCanvas from "../components/MainPageCanvas";
+import { FadeContext } from "../utilComponents/FadeScreenProvider";
 
 const MAX_NAME_LENGTH = 16;
 
@@ -57,15 +58,17 @@ const MainPage = () => {
         setPublicSetting(!publicSetting);
     }
 
+    const {setOpacityThenCall} = useContext(FadeContext);
+
     const onCreateClick = () => {
         
         if(open) open();
-        send(`{"type": "create-room"${name ? `, "name": "${name}"` : ""}, "isPublic": ${publicSetting}}`);
+        setOpacityThenCall(0, () => send(`{"type": "create-room"${name ? `, "name": "${name}"` : ""}, "isPublic": ${publicSetting}}`));
     }
 
     const onJoinClick = () => {
         setRoomCode();
-        navigate("join");
+        setOpacityThenCall(0, () => navigate("join"));
     }
 
     useEffect(() => {

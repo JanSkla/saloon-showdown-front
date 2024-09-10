@@ -3,12 +3,15 @@ import { Button } from "../components/Button";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { WaitToLoad } from "../utils/waitToLoad";
+import { BackButton } from "../components/BackButton";
+import { FadeContext } from "../utilComponents/FadeScreenProvider";
 
 const JoinPage = () => {
   const { isOpen, data, send, open } = useContext(WebsocketContext);
   
   const { roomCode } = useContext(RoomContext);
-  
+  const { setOpacityThenCall } = useContext(FadeContext);
 
   const [name, setName] = useOutletContext();
   const navigate = useNavigate();
@@ -31,9 +34,8 @@ const JoinPage = () => {
 
     const code = codeInputRef?.current?.value;
 
-    if(!code) console.log("zadej kode pyco");
-    else {
-        joinWithCode(code);
+    if(code){
+      setOpacityThenCall(0,() => joinWithCode(code));
     }
   }
 
@@ -51,8 +53,9 @@ const JoinPage = () => {
 
   const codeInputRef = useRef();
   return <div style={{display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "25vh", backgroundColor: 'black', height: '75vh', opacity: 0.9}}>
+    <WaitToLoad/>
     <div style={{position: "absolute", top: 0, left:40}}>
-        <Button onClick={()=>navigate("/")}>{"<"}</Button>
+        <BackButton willSetOpacity onClick={()=>navigate("/")}/>
     </div>
     <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
     <span>room code:</span>

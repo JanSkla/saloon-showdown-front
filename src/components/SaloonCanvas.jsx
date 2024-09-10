@@ -8,14 +8,16 @@ import { useLoader } from "@react-three/fiber";
 import LobbyCamera from './models/LobbyCamera';
 import { Radio } from './models/Radio';
 import { useRef, useState } from 'react';
+import { WaitToLoad } from '../utils/waitToLoad';
 
 const SaloonCanvas = () => {
-    const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
-  
+  const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
 
 
-    return <div className="canvas-container">        
-        <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
+
+  return <div className="canvas-container">        
+    <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
+        <WaitToLoad/>
         <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[1,0,1]}/>
         <LobbyCamera/>
         <Saloon />
@@ -37,8 +39,7 @@ const SaloonCanvas = () => {
             <pointLight position={[15,13.5,0]} intensity={5} color={0xfebbbb}/>
 
     </Canvas>
-    
-        </div>
+  </div>
 }
 
 export default SaloonCanvas;
