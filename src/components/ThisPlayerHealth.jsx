@@ -12,6 +12,8 @@ export const ThisPlayerHealth = () => {
 
   const healthRef = useRef(MAX_HEALTH);
 
+  const hurtAudio = new Audio("/sounds/getting-shot.wav")
+
   const setHealth = newVal => {
     healthRef.current = newVal;
     _setHealth(newVal);
@@ -48,12 +50,14 @@ export const ThisPlayerHealth = () => {
           switch (action.type) {
             case "shoot-drinking-beer":
               tempHealth  -= 1;
-              console.log("HAHAA",tempHealth)
+              hurtAudio.play();
               break;
             case "shoot-damage":
               tempHealth = action.targetHealth;
+              hurtAudio.play();
               break;
             case "shoot-death":
+              hurtAudio.play();
               tempHealth = 0;
           }
         }
