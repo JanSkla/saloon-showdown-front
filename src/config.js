@@ -1,1 +1,1 @@
-export const wssAddress = "ws://16.16.92.156:8080";
+export const wssAddress = "ws://localhost:8080";
