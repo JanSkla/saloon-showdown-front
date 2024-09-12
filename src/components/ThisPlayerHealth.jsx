@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react"
 import { WebsocketContext } from "../utilComponents/WebsocketProvider"
 import { MAX_HEALTH } from "./models/Player";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
+import { isPhone } from "../utils/utils";
 
 export const ThisPlayerHealth = () => {
 
@@ -69,7 +70,7 @@ export const ThisPlayerHealth = () => {
 
   return <div>
     {Array.from({ length: health }, (_, i) => i).map(el => (
-        <img key={el} height={80} src="/images/heart.png"/>
+        <img key={el} height={isPhone ? 50 : 80} src="/images/heart.png"/>
     ))}
   </div>
 }

@@ -5,6 +5,7 @@ import { Button } from "../components/Button";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import MainPageCanvas from "../components/MainPageCanvas";
 import { FadeContext } from "../utilComponents/FadeScreenProvider";
+import { isPhone } from "../utils/utils";
 
 const MAX_NAME_LENGTH = 16;
 
@@ -94,10 +95,10 @@ const MainPage = () => {
     return <div className="canvas-container" style={{justifyContent: "end"}}>
         <MainPageCanvas/>
         <div style={{position: "absolute", display: "flex", flexDirection: "column", right: 100, top: 100, alignItems: "center"}}>
-            <span>name:</span>
-            <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)}></input><br/><br/>
+            <span style={isPhone ? {fontSize: '3vh'}: undefined}>name:</span>
+            <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)} style={isPhone ? {fontSize: '3vh'}: undefined}></input>
             <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
-            <div style={{backgroundColor: publicSetting ? "green" : "red", marginTop: "-4vh"}}><Button disabled={!!isOpen} style={{fontSize: '3vh'}} onClick={publicSwitch}>{publicSetting ? "public" : "private"}</Button></div>
+            <div style={{backgroundColor: publicSetting ? "green" : "red", marginTop: "-4vh", fontSize: '3vh'}}><Button disabled={!!isOpen} style={{fontSize: '3vh'}} onClick={publicSwitch}>{publicSetting ? "public" : "private"}</Button></div>
             <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
             <Button style={{fontSize: '3vh'}} disabled={!!isOpen} onClick={() => setTutorial(!tutorial)}>How to play</Button>
         </div>

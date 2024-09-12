@@ -4,6 +4,7 @@ import { PerspectiveCamera } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAtom } from 'jotai';
 import { radioHoverAtom } from '../../atoms/atoms';
+import { isPhone } from '../../utils/utils';
 
 const states = [
   {m: 0.025, f: 32.5},
@@ -67,9 +68,11 @@ const LobbyCamera = () => {
   }
 
   useEffect(() => {
-    document.addEventListener('mousemove', event => {
-      cursor.current = {x:event.clientX/window.innerWidth*2 - 1, y:event.clientY/window.innerHeight*2 - 1}
-    })
+    if(!isPhone){
+      document.addEventListener('mousemove', event => {
+        cursor.current = {x:event.clientX/window.innerWidth*2 - 1, y:event.clientY/window.innerHeight*2 - 1}
+      })
+    }
     document.getElementById("saloon_canvas").addEventListener("mousedown", onMouseDown)
 
     document.getElementById("saloon_canvas").addEventListener("mouseup", () => {

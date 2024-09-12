@@ -10,13 +10,13 @@ import GameWrapperPage from './pages/GameWrapperPage';
 import { RoomDataProvider } from './utilComponents/RoomDataProvider';
 import JoinPage from './pages/JoinPage';
 import MainPageWrapper from './pages/MainPageWrapper';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { FadeProvider } from './utilComponents/FadeScreenProvider';
 
 function App() {
+
   return (
-    <div className="App">
-      
+    <div className="App">    
       <WebsocketProvider>
         <RoomDataProvider>
           <FadeProvider>
