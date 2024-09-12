@@ -13,6 +13,7 @@ import Bartender from './models/Bartender';
 import MainCamera from './models/MainCamera';
 import ReadyText from './models/ReadyText';
 import { Radio } from './models/Radio';
+import Ambiance from './Ambiance';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -134,12 +135,12 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       document.body.style.cursor = 'auto';
     }}>Ready</ReadyText>}
     <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
-    <pointLight position={[0,5.5,0]} intensity={45} color={0xfebbbb}/>
-    <pointLight position={[-1.4, 4.266, -5.225]} intensity={1.5} color={0xffffff}/>
+    <pointLight position={[0,5.5,0]} intensity={35} color={0xfebbbb}/>
+    <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
     <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
     {/* <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/> */}
     <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
-
+    <Ambiance/>
     <MainCamera />
     <Bartender/>
     <EmptyLazy OnLoaded={OnLoaded}/>

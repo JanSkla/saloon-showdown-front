@@ -123,7 +123,7 @@ const GamePage = () => {
             send(JSON.stringify({"type": "choose-card", "choice": "shoot", "target": targetPID}))
         return;
     }
-    
+        
 
     const [loading, setLoading] = useState(true);
 

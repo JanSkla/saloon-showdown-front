@@ -28,10 +28,8 @@ export const ThisPlayerHealth = () => {
 
       const sdb = data.data.find(action => action.type == "shoot-drinking-beer" && action.target == thisPID);
       if(sdb){
-        console.log("AA", healthRef.current-1)
           
           const timeoutId = setTimeout(() => {
-            console.log("AAa", healthRef.current)
             setHealth(healthRef.current + 1);
           }, 1000);
       }
