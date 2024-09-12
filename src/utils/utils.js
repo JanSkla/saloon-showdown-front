@@ -1,0 +1,1 @@
+export const isPhone = typeof window.orientation !== 'undefined';

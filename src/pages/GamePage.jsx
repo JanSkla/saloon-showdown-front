@@ -10,9 +10,9 @@ import POVCanvas from "../components/POVCanvas";
 import { useNavigate } from "react-router-dom";
 import { Canvas } from "@react-three/fiber";
 import Sound from "../components/Sound";
-import { WaitToLoad } from "../utils/waitToLoad";
 import { BackButton } from "../components/BackButton";
 import { FadeContext } from "../utilComponents/FadeScreenProvider";
+import { WaitToLoad } from "../utils/waitToLoad";
 
 const LazyPOVCanvas = lazy(() => import("../components/POVCanvas"))
 

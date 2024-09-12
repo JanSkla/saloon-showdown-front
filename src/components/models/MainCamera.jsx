@@ -3,6 +3,7 @@ import { PerspectiveCamera } from "@react-three/drei";
 import { useContext, useEffect, useRef, useState } from "react";
 import { WebsocketContext } from "../../utilComponents/WebsocketProvider";
 import { RoomContext } from "../../utilComponents/RoomDataProvider";
+import { isPhone } from "../../utils/utils";
 
 const MainCamera = () => {
   const { data } = useContext(WebsocketContext);
@@ -16,6 +17,7 @@ const MainCamera = () => {
   const MULTIPLIER = 0.05;
 
   useEffect(() => {
+    if(isPhone) return;
     document.addEventListener('mousemove', event => {
       cursor.current = {x:event.clientX/window.innerWidth*2 - 1, y:event.clientY/window.innerHeight*2 - 1}
   })
