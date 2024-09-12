@@ -16,7 +16,10 @@ const cards = [
     { name: 'beer-order', img: 'images/cards/beer-order.png'},
 ]
 
-const ShootImage = () => {
+
+
+const ShootImage = ({sizeMultiplier}) => {
+    console.log(sizeMultiplier)
     const [state, setState] = useState(0);
 
     useEffect(()=>{
@@ -28,10 +31,10 @@ const ShootImage = () => {
     return <div style={{
         backgroundImage: 'url("images/howto/shoot'+state+'.png")',
         backgroundSize: 'cover',
-        width: 379,
-        height: 256,
-        marginTop: -180,
-        marginLeft: 330
+        width: 379*sizeMultiplier,
+        height: 256*sizeMultiplier,
+        marginTop: -180*sizeMultiplier,
+        marginLeft: 330*sizeMultiplier
     }}/>
 }
 
@@ -92,6 +95,8 @@ const MainPage = () => {
 
     const codeInputRef = useRef();
 
+    const sizeMultiplier = isPhone ? 0.6 : 1;
+
     return <div className="canvas-container" style={{justifyContent: "end"}}>
         <MainPageCanvas/>
         <div style={{position: "absolute", display: "flex", flexDirection: "column", right: 100, top: 100, alignItems: "center"}}>
@@ -123,131 +128,129 @@ const MainPage = () => {
             zIndex: 0
         }} onClick={() => setTutorial(!tutorial)}/>
 
-            <div style={{marginTop: tutorial ? 0 : '100vh',
+        <div style={{marginTop: tutorial ? 0 : 100*sizeMultiplier + 'vh',
             transition: 'margin-top 0.5s ease', // Transition for opacity change
             height: '100%', 
-            width: 1036,
+            width: 1036*sizeMultiplier,
             overflowY: 'scroll',
             scrollbarWidth: 'none',
-            zIndex: 1
+            zIndex: 1,
+        }}>
+            <div style={{
+                backgroundImage: 'url(images/howto/background.png)',
+                width: '100%',
+                height: 2850*sizeMultiplier,
+                backgroundSize: 'cover',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 9*sizeMultiplier
             }}>
-                <div style={{
-                    backgroundImage: 'url(images/howto/background.png)',
-                    width: '100%',
-                    height: 2850,
-                    backgroundSize: 'cover',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 9
-                    }}>
-                        <Button style={{marginLeft: 80, color: 'black', fontSize: 48, marginTop: 200, width: 40}} onClick={()=>setTutorial(false)}>{"x"}</Button>
-                        <div style={{marginRight: 20}}>
-                            <div style={{textAlign: 'left', paddingTop: 140, paddingLeft: 146, width: 713}}>
-                                <div className="howtoText">Saloon showdown is a party multiplayer game for 2-5 people</div>
-                                <br/>
-                                <div className="howtoText">You can play in public or private lobbies with your friends and/or enemies</div>
-                                <br/>
-                                <div className="howtoText">The players choose an action every round by selecting a card corresponding to the action</div>
-                            </div>
-                            <div className="howtoTitle">Cards</div>
-                            
-                            <div style={{flexDirection: 'column', display: 'flex', alignItems: "center", gap: 48}}>
-                                <div style={{flexDirection: 'row', alignItems: "center", display: 'flex', justifyContent: 'center', gap: 10, height: 307}}>
-                                    {cards.map(e => <img className="howtoCard" style={{
-                                        cursor: 'pointer',
-                                        height: card === e.name ? 307 : 285,
-                                        transition: 'height 0.5s ease', // Transition for opacity change
-                                        filter: card === e.name ? 'drop-shadow(0px 4px 8px #000000)' : 'drop-shadow(0px 4px 8px #00000055)'
-                                    }} src={e.img} onClick={() => setCard(e.name)}/>
-                                    )}
-                                </div>
-                                <div style={{
-                                    width: 793,
-                                    backgroundColor: '#362B20',
-                                    borderRadius: 24,
-                                    transition: 'height 0.5s ease', // Transition for opacity change
-                                }}>
-                                    <div style={{
-                                        marginTop: -20,
-                                        marginLeft: card === 'ammo' ? 55 : card === 'shoot' ? 265 : card === 'shield' ? 480 : 690,
-                                        height: 40,
-                                        aspectRatio: 1,
-                                        backgroundColor: '#362B20',
-                                        transform: 'rotate(45deg)',
-                                        transition: 'margin-left 0.5s ease', // Transition for opacity change
-                                    }}>
-                                    </div>
-                                    <div style={{paddingLeft: 36, paddingBottom: 40, color: 'white', textAlign: 'left'}}>
-                                    {card === 'ammo' ? <>
-                                            <div className="howtoTitle" style={{paddingTop: 20}}>Ammo</div>
-                                            <div className="howtoText" style={{width: 314, paddingTop: 24}}>Use ammo to load up your gun.</div>
-                                            <div style={{
-                                                backgroundImage: 'url("images/howto/ammo.png")',
-                                                backgroundSize: 'cover',
-                                                width: 315,
-                                                height: 123,
-                                                marginTop: -110,
-                                                marginLeft: 350
-                                            }}/>
-                                    </> : card === 'shoot' ? <>
-                                            <div className="howtoTitle" style={{paddingTop: 20}}>Shoot</div>
-                                            <div className="howtoText" style={{width: 314, paddingTop: 24}}>
-                                                Select a target and damage your opponents.
-                                            </div>
-                                            <ShootImage />
-                                    </> : card === 'shield' ? <>
-                                            <div className="howtoTitle" style={{paddingTop: 20}}>Shield</div>
-                                            <div className="howtoText" style={{width: 314, paddingTop: 24}}>Use shield to block shots.</div>
-                                            <div style={{
-                                                backgroundImage: 'url("images/howto/shield.png")',
-                                                backgroundSize: 'cover',
-                                                width: 416,
-                                                height: 171,
-                                                marginTop: -158,
-                                                marginLeft: 290
-                                            }}/>
-                                    </> : <>
-                                            <div className="howtoTitle" style={{paddingTop: 20}}>Beer</div>
-                                            <div className="howtoText" style={{width: 314, paddingTop: 24, paddingBottom: 20}}>Drink beer to increase your hearts.<br/>
-                                                <br/>
-                                                <br/>
-                                                After playing this card, it will take 1 extra round for the bartender to prepare you the beer. After that you’ll recieve an extra ‘Drink beer’ card.<br/>
-                                                <br/><br/>
-                                                But be careful. When anyone shoots you, your beer breaks! <br/>
-                                                <br/><br/>
-                                                Playing the shield protects your beer from breaking.
-                                            </div>
-                                            <div style={{
-                                                backgroundImage: 'url("images/howto/beer.png")',
-                                                backgroundSize: 'cover',
-                                                width: 384,
-                                                height: 439,
-                                                marginTop: -458,
-                                                marginLeft: 340
-                                            }}/>
-                                    </>}
-                                    </div>
-                                </div>
-                            </div>
-                            <div style={{textAlign: 'left',marginTop: 20, marginBottom: 16, paddingLeft: 146, width: 800}}>
-                                <div className="howtoText">To pick a card, there is only 4 soconds. Be fast!</div>
-                            </div>
-                            <div className="howtoTitle" style={{paddingTop: 20}}>Health</div>
+                <Button style={{marginLeft: 80*sizeMultiplier, color: 'black', fontSize: 48*sizeMultiplier, marginTop: 200*sizeMultiplier, width: 40*sizeMultiplier}} onClick={()=>setTutorial(false)}>{"x"}</Button>
+                <div style={{marginRight: 20*sizeMultiplier}}>
+                    <div style={{textAlign: 'left', paddingTop: 140*sizeMultiplier, paddingLeft: 146*sizeMultiplier, width: 713*sizeMultiplier}}>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>Saloon showdown is a party multiplayer game for 2-5 people</div>
+                        <br/>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>You can play in public or private lobbies with your friends and/or enemies</div>
+                        <br/>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>The players choose an action every round by selecting a card corresponding to the action</div>
+                    </div>
+                    <div className="howtoTitle" style={{fontSize: 48*sizeMultiplier}}>Cards</div>
+                    
+                    <div style={{flexDirection: 'column', display: 'flex', alignItems: "center", gap: 48*sizeMultiplier}}>
+                        <div style={{flexDirection: 'row', alignItems: "center", display: 'flex', justifyContent: 'center', gap: 10*sizeMultiplier, height: 307*sizeMultiplier}}>
+                            {cards.map(e => <img className="howtoCard" style={{
+                                cursor: 'pointer',
+                                height: card === e.name ? 307*sizeMultiplier : 285*sizeMultiplier,
+                                transition: 'height 0.5s ease', // Transition for opacity change
+                                filter: card === e.name ? 'drop-shadow(0px 4px 8px #000000)' : 'drop-shadow(0px 4px 8px #00000055)'
+                            }} src={e.img} onClick={() => setCard(e.name)}/>)}
+                        </div>
+                        <div style={{
+                            width: 793*sizeMultiplier,
+                            backgroundColor: '#362B20',
+                            borderRadius: 24*sizeMultiplier,
+                            transition: 'height 0.5s ease', // Transition for opacity change
+                        }}>
                             <div style={{
-                                backgroundImage: 'url("images/howto/healthframe.png")',
-                                backgroundSize: 'cover',
-                                width: 1036,
-                                height: 460
-                            }}/>
-                            <div style={{textAlign: 'left', marginTop: -405, paddingLeft: 146, width: 800}}>
-                                <div className="howtoText">Everyone starts with 3 lives</div>
+                                marginTop: -20*sizeMultiplier,
+                                marginLeft: card === 'ammo' ? 55*sizeMultiplier : card === 'shoot' ? 265*sizeMultiplier : card === 'shield' ? 480*sizeMultiplier : 690*sizeMultiplier,
+                                height: 40*sizeMultiplier,
+                                aspectRatio: 1,
+                                backgroundColor: '#362B20',
+                                transform: 'rotate(45deg)',
+                                transition: 'margin-left 0.5s ease', // Transition for opacity change
+                            }}>
                             </div>
-                            <div style={{textAlign: 'left', paddingTop: 220, paddingLeft: 146, width: 261, paddingBottom: 80}}>
-                                <div className="howtoText">To know how maly lives your enemy has, look at their chest for a bullet hole or a star</div>
+                            <div style={{paddingLeft: 36*sizeMultiplier, paddingBottom: 40*sizeMultiplier, color: 'white', textAlign: 'left'}}>
+                                {card === 'ammo' ? <>
+                                    <div className="howtoTitle" style={{paddingTop: 20*sizeMultiplier, fontSize: 48*sizeMultiplier}}>Ammo</div>
+                                    <div className="howtoText" style={{width: 314*sizeMultiplier, paddingTop: 24*sizeMultiplier, fontSize: 20*sizeMultiplier}}>Use ammo to load up your gun.</div>
+                                    <div style={{
+                                        backgroundImage: 'url("images/howto/ammo.png")',
+                                        backgroundSize: 'cover',
+                                        width: 315*sizeMultiplier,
+                                        height: 123*sizeMultiplier,
+                                        marginTop: -110*sizeMultiplier,
+                                        marginLeft: 350*sizeMultiplier
+                                    }}/>
+                                </> : card === 'shoot' ? <>
+                                    <div className="howtoTitle" style={{paddingTop: 20*sizeMultiplier, fontSize: 48*sizeMultiplier}}>Shoot</div>
+                                    <div className="howtoText" style={{width: 314*sizeMultiplier, paddingTop: 24*sizeMultiplier, fontSize: 20*sizeMultiplier}}>Select a target and damage your opponents.</div>
+                                    <ShootImage sizeMultiplier={sizeMultiplier}/>
+                                </> : card === 'shield' ? <>
+                                    <div className="howtoTitle" style={{paddingTop: 20*sizeMultiplier, fontSize: 48*sizeMultiplier}}>Shield</div>
+                                    <div className="howtoText" style={{width: 314*sizeMultiplier, paddingTop: 24*sizeMultiplier, fontSize: 20*sizeMultiplier}}>Use shield to block shots.</div>
+                                    <div style={{
+                                        backgroundImage: 'url("images/howto/shield.png")',
+                                        backgroundSize: 'cover',
+                                        width: 416*sizeMultiplier,
+                                        height: 171*sizeMultiplier,
+                                        marginTop: -158*sizeMultiplier,
+                                        marginLeft: 290*sizeMultiplier
+                                    }}/>
+                                </> : <>
+                                    <div className="howtoTitle" style={{paddingTop: 20*sizeMultiplier, fontSize: 48*sizeMultiplier}}>Beer</div>
+                                    <div className="howtoText" style={{width: 314*sizeMultiplier, paddingTop: 24*sizeMultiplier, paddingBottom: 20*sizeMultiplier, fontSize: 20*sizeMultiplier}}>Drink beer to increase your hearts.<br/>
+                                        <br/>
+                                        <br/>
+                                        After playing this card, it will take 1 extra round for the bartender to prepare you the beer. After that you’ll receive an extra ‘Drink beer’ card.<br/>
+                                        <br/><br/>
+                                        But be careful. When anyone shoots you, your beer breaks! <br/>
+                                        <br/><br/>
+                                        Playing the shield protects your beer from breaking.
+                                    </div>
+                                    <div style={{
+                                        backgroundImage: 'url("images/howto/beer.png")',
+                                        backgroundSize: 'cover',
+                                        width: 384*sizeMultiplier,
+                                        height: 439*sizeMultiplier,
+                                        marginTop: -458*sizeMultiplier,
+                                        marginLeft: 340*sizeMultiplier
+                                    }}/>
+                                </>}
                             </div>
                         </div>
                     </div>
+                    <div style={{textAlign: 'left', marginTop: 20*sizeMultiplier, marginBottom: 16*sizeMultiplier, paddingLeft: 146*sizeMultiplier, width: 800*sizeMultiplier}}>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>To pick a card, there is only 4 seconds. Be fast!</div>
+                    </div>
+                    <div className="howtoTitle" style={{paddingTop: 20*sizeMultiplier}}>Health</div>
+                    <div style={{
+                        backgroundImage: 'url("images/howto/healthframe.png")',
+                        backgroundSize: 'cover',
+                        width: 1036*sizeMultiplier,
+                        height: 460*sizeMultiplier
+                    }}/>
+                    <div style={{textAlign: 'left', marginTop: -405*sizeMultiplier, paddingLeft: 146*sizeMultiplier, width: 800*sizeMultiplier}}>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>Everyone starts with 3 lives</div>
+                    </div>
+                    <div style={{textAlign: 'left', paddingTop: 220*sizeMultiplier, paddingLeft: 146*sizeMultiplier, width: 261*sizeMultiplier, paddingBottom: 80*sizeMultiplier}}>
+                        <div className="howtoText" style={{fontSize: 20*sizeMultiplier}}>To know how many lives your enemy has, look at their chest for a bullet hole or a star</div>
+                    </div>
+                </div>
             </div>
+        </div>
+
         </div>
     </div>
 }
