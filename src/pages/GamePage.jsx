@@ -151,7 +151,7 @@ const GamePage = () => {
             {death && <MiddleCanvasText className="deathScreen">
             </MiddleCanvasText>}
             <MiddleCanvasText>
-                {death && gameState == "game-over" && <div>
+                {death && <div>
                         <span className="bevan" style={{fontSize: '8vh', color: 'red', textShadow: 'none'}}>WASTED</span>
                         <img height={60} src="/images/exp_death.png"/>
                     </div>}

@@ -23,7 +23,7 @@ const JoinPage = () => {
   useEffect(() => {
     console.log('AA')
     if (joining && (data?.type === "join-room") && data?.status === 200){
-      navigate("/game/" + data?.code)
+      setOpacityThenCall(0, () => navigate("/game/" + data?.code));
     }
     if ((data?.type === "public-lobbies")){
       setPublicLobies(data?.lobbies);
