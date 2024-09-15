@@ -47,10 +47,12 @@ const POVCanvas = () => {
   const [variant, setVariant] = useState(POV.none);
   const [soundVariant, setSoundVariant] = useState(POV_SOUNDS.none)
 
-  const spritesheetRef = useRef(new Array(POV_SPRITE_SHEETS.length));
+  const spritesheetRef = useRef(new Array(POV_SPRITE_SHEETS.length + 1));
   const soundsRef = useRef(new Array(POV_SOUNDS.length))
 
   const audio = new Audio(POV_SOUNDS[variant])
+
+  const ammoCountRef = useRef(0);
 
   const playVariant = type => {
     setVariant(type);
@@ -58,6 +60,19 @@ const POVCanvas = () => {
 
   useEffect(()=> {
     if(spritesheetRef.current[variant] === undefined) return;
+    if(variant === POV.ammo){
+      spritesheetRef.current[POV.ammo].goToAndPlay(1);
+      if(ammoCountRef.current > 1){
+        setTimeout(() => {
+          spritesheetRef.current[8].setEndAt((ammoCountRef.current - 1) * 11);
+          spritesheetRef.current[8].goToAndPlay(2 + (ammoCountRef.current - 2) * 11);
+          setTimeout(() => {
+            spritesheetRef.current[8].goToAndPause('0');
+          }, 1000/12*11);
+        }, 1000/12*2);
+      }
+      return;
+    }
     spritesheetRef.current[variant].goToAndPlay(1);
   }, [variant])
   
@@ -86,6 +101,7 @@ const POVCanvas = () => {
         else if(action.user == thisPID){
           switch (action.type) {
             case "ammo":
+              ammoCountRef.current++;
               playVariant(POV.ammo);
               break;
             case "block":
@@ -94,6 +110,7 @@ const POVCanvas = () => {
             case "shoot-damage":
             case "shoot-death":
             case "shoot-block":
+              ammoCountRef.current--;
               playVariant(POV.shoot);
               break;
             case "order-beer":
@@ -125,6 +142,18 @@ const POVCanvas = () => {
       fps={12}
       style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: '99%', height: 675}}
     />)}
+    <Spritesheet
+    key={"reload_variants"}
+    getInstance={spritesheet => {
+      spritesheetRef.current[8] = spritesheet;
+    }}
+    autoplay={false}
+    image={"/images/cowboy/pov/reload_variants-Sheet.png"}
+    heightFrame={900}
+    widthFrame={1600}
+    fps={12}
+    style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: '99%', height: 675}}
+  />
     </div>
 {/* { POV_SOUNDS[variant] &&   <mesh>
       <Canvas>

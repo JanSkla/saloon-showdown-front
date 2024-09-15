@@ -17,6 +17,7 @@ export const RoomDataProvider = ({ children }) => {
     if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
       setPlayers(data?.players);
       setThisPID(data?.pId);
+      setRoomCode(data?.code);
       console.log("room players loaded", data?.players)
     }
     else if(data?.type === "player-join"){

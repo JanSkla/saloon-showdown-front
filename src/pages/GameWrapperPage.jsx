@@ -5,21 +5,14 @@ import { RoomContext } from "../utilComponents/RoomDataProvider";
 
 const GameWrapperPage = () =>{
 
-    const navigate = useNavigate();
-    const {id} = useParams();
+    const navigate= useNavigate();
 
     const { exists } = useContext(WebsocketContext);
+    const { roomCode }= useContext(RoomContext);
 
-    const { setRoomCode } = useContext(RoomContext);
-
-    
     useEffect(() => {
-        if (exists) return;
-        
-        if(id.length == 4) setRoomCode(id);
-            
-        navigate("/join");
-    }, [])
+        if (!roomCode) navigate('/');
+    },[]);
 
     return <>
         {exists && <Outlet />}
