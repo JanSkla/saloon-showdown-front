@@ -23,7 +23,9 @@ const Ambiance = () =>{
           amb.pause();
           scr.pause();
           amb.currentTime = 0;
+          amb.volume = 0.6;
           scr.currentTime = 0;
+          scr.volume = 0.5;
         };
       }, []);
 
@@ -38,7 +40,7 @@ const Ambiance = () =>{
                     case "shoot-death":
                         screamRef.current.play();
                         setTimeout(() => ambianceRef.current.pause(), 500);
-                        setTimeout(() => screamRef.current.volume = 0.3, 1500);
+                        setTimeout(() => screamRef.current.volume = 0.1, 1500);
                         setFirstShot(true)
                         break;
                     default:

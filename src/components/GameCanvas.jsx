@@ -135,7 +135,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       document.body.style.cursor = 'auto';
     }}>Ready</ReadyText>}
     <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
-    <pointLight position={[0,5.5,0]} intensity={35} color={0xfebbbb}/>
+    <pointLight position={[0,5.5,0]} intensity={30} color={0xf79707}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
     <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
     {/* <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/> */}

@@ -46,7 +46,7 @@ export default function Player({pId, position, onClick, name, targetState, right
   const disconnected = useRef(false);
 
   const textureLocation = '/images/cowboy/';
-  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards2.png');
+  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png');
 
   const variants = [
     {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_hand.png')},
