@@ -11,7 +11,7 @@ export default function LobbyPositions() {
   const { nodes, materials } = useGLTF('/models/lobbyPositions/lobbyPositions.gltf')
   const whiteMaterial = new THREE.MeshBasicMaterial({toneMapped: false, fog: false, side: THREE.DoubleSide, depthTest: false});
 
-  const {players} = useContext(RoomContext);
+  const {players, thisPID} = useContext(RoomContext);
 
   if(!Array.isArray(players)) return;
 
@@ -23,11 +23,11 @@ export default function LobbyPositions() {
   players.unshift(leader);
 
   const getPlayerTag = (player) => {
-    return `${player.isLeadPlayer ? "🎖️" : ""}${player.name}`;
+    return `${player.pId === thisPID ? "(YOU)" : ''}${player.isLeadPlayer ? "🎖️" : ""}${player.name}`;
   }
 
   return (
-    <group dispose={null}>
+    <group dispose={null} renderOrder={1}>
       {players[0] &&
       <mesh geometry={nodes['cowboy-idle0001001'].geometry} material={materials['cowboy-idle0001']} position={[14.102, 3.3, 0.469]} rotation={[-Math.PI / 2, 0, 1.745]} scale={-5.771}>
         <Text rotation={[-Math.PI / 2, Math.PI, 0]} position={[0,0,-0.6]} color="white" fontSize={0.1} material={whiteMaterial}>{getPlayerTag(players[0])}</Text>

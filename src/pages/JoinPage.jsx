@@ -10,8 +10,8 @@ import { FadeContext } from "../utilComponents/FadeScreenProvider";
 const JoinPage = () => {
   const { isOpen, data, send, open } = useContext(WebsocketContext);
   
-  const { roomCode } = useContext(RoomContext);
-  const { setOpacityThenCall } = useContext(FadeContext);
+  const { roomCode, setRoomCode } = useContext(RoomContext);
+  const { setOpacity, setOpacityThenCall } = useContext(FadeContext);
 
   const [name, setName] = useOutletContext();
   const navigate = useNavigate();
@@ -23,7 +23,8 @@ const JoinPage = () => {
   useEffect(() => {
     console.log('AA')
     if (joining && (data?.type === "join-room") && data?.status === 200){
-      setOpacityThenCall(0, () => navigate("/game/" + data?.code));
+      setRoomCode(data?.code);
+      setOpacityThenCall(0, () => navigate("/game"));
     }
     if ((data?.type === "public-lobbies")){
       setPublicLobies(data?.lobbies);
@@ -35,7 +36,7 @@ const JoinPage = () => {
     const code = codeInputRef?.current?.value;
 
     if(code){
-      setOpacityThenCall(0,() => joinWithCode(code));
+      joinWithCode(code);
     }
   }
 

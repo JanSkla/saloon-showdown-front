@@ -12,6 +12,7 @@ import JoinPage from './pages/JoinPage';
 import MainPageWrapper from './pages/MainPageWrapper';
 import { Suspense, useEffect, useState } from 'react';
 import { FadeProvider } from './utilComponents/FadeScreenProvider';
+import CodeRedirectPage from './pages/CodeRedirectPage';
 
 function App() {
 
@@ -26,7 +27,8 @@ function App() {
                   <Route path="/" element={<MainPage/>}/>
                   <Route path="/join" element={<JoinPage/>}/>
                 </Route>
-                <Route path="/game/:id" element={<GameWrapperPage/>}>
+                <Route path="/game/:id" element={<CodeRedirectPage/>}/>
+                <Route path="/game" element={<GameWrapperPage/>}>
                   <Route path="" element={<LobbyPage/>}/>
                   <Route path="play" element={<GamePage/>}/>
                   <Route path="over" element={<GameOverPage/>}/>

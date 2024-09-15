@@ -83,7 +83,8 @@ const MainPage = () => {
     useEffect(() => {
         if (!isMountingRef.current) {
             if ((data?.type === "create-room" || data?.type === "join-room") && data?.status === 200){
-                navigate("game/" + data?.code)
+                setRoomCode(data?.code);
+                navigate("game")
             }
         } else {
         isMountingRef.current = false;
