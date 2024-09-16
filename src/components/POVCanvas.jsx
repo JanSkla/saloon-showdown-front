@@ -81,6 +81,9 @@ const POVCanvas = () => {
   }, [variant])
   
   useEffect(() => {
+    if(data?.type === "load-game"){
+      ammoCountRef.current = 0;
+    }
     if(data?.type === "choose"){
       playVariant(POV.none);
     }
