@@ -116,7 +116,6 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
 
 
     useFrame(({ clock }) => {
-      console.log(clock.oldTime - startTimeRef.current)
       if(clock.oldTime - startTimeRef.current < 3300) return;
       setFireSize(1 + Math.abs(Math.sin((clock.oldTime - startTimeRef.current - 3300)/500))/16)
       if(clock.oldTime - startTimeRef.current > 7900)
@@ -132,7 +131,10 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
     ref={planeRef1}
     renderOrder={1}
     onPointerEnter={(e) => setCardY(cardY + 0.1)} 
-  onPointerLeave={(e) => setCardY(cardPosition[1])} 
+  onPointerLeave={(e) => {
+    if (!isChosen)
+      setCardY(cardPosition[1])
+  }} 
   onClick={(e) => handleCardChosen(cardOptions)}
   >
           {!!variants[cardOption] && <>
@@ -153,7 +155,7 @@ export default function Card({lookAt, cardNumber, cardsHeldNumber, cardOptions, 
       <planeGeometry args={[5 * cardScale, 7* cardScale]} />
           
       <meshStandardMaterial 
-                side={THREE.DoubleSide}
+          side={THREE.DoubleSide}
           map={variants[cardOption]}
           transparent
           alphaTest={0.1}
