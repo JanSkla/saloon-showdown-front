@@ -14,6 +14,7 @@ import MainCamera from './models/MainCamera';
 import ReadyText from './models/ReadyText';
 import { Radio } from './models/Radio';
 import Ambiance from './Ambiance';
+import { Cardpack } from './models/Cardpack';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -29,6 +30,8 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
   const { thisPID } = useContext(RoomContext);
 
   const [playingPlayers, setPlayingPlayers] = useState([]);
+  const [readyCount, setReadyCount] = useState(0);
+
   const enemies = useRef([]);
 
   const [chosen, setChosen] = useState();
@@ -85,8 +88,12 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       setPlayingPlayers(data?.players);
     }
     else if(data?.type === "load-game"){
+      setReadyCount(0);
       setPlayingPlayers(data?.players);
       setIsReady(false);
+    }
+    else if (data?.type === "player-ready" && data?.readycount !== undefined){
+      setReadyCount(data?.readycount)
     }
   }, [data])
 
@@ -135,6 +142,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       document.body.style.cursor = 'auto';
     }}>Ready</ReadyText>}
     <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
+    {playingPlayers.filter((_val, index) => index >= readyCount).map((_val, index) => <Cardpack position={[0, 2.77 + index*0.07, 0]} rotation={[0,index*15,0]}/>)}
     <pointLight position={[0,5.5,0]} intensity={30} color={0xf79707}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
     <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>

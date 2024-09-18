@@ -22,7 +22,9 @@ export const PLAYER = {
   dead: 10,
   disconnected: 11,
   shootLeft: 12,
-  shootRight: 13
+  shootRight: 13,
+  cardsOnTable: 14,
+  blockShot: 15,
 };
 
 
@@ -46,10 +48,10 @@ export default function Player({pId, position, onClick, name, targetState, right
   const disconnected = useRef(false);
 
   const textureLocation = '/images/cowboy/';
-  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png');
+  const defaultTexture = useLoader(THREE.TextureLoader, textureLocation + 'cowboy_no_hands.png');
 
   const variants = [
-    {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_hand.png')},
     {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_play_card_hand.png')},
     {main: defaultTexture, top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_ammo_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_block.png'), top: undefined},
@@ -63,6 +65,8 @@ export default function Player({pId, position, onClick, name, targetState, right
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_disconnected.png'), top: undefined},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_left.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_left_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_right.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_shoot_right_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_table.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_table_hand.png')},
+    {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_block_shot.png'), top: undefined},
   ]
 
   const sounds = [
@@ -95,7 +99,7 @@ export default function Player({pId, position, onClick, name, targetState, right
       if(newVal === 0){
         setPlayerState(PLAYER.dead);
       }
-    },1000)
+    }, 1000)
   }
 
   const planeRef = useRef();
@@ -126,15 +130,15 @@ export default function Player({pId, position, onClick, name, targetState, right
       setPlayerState(PLAYER.disconnected)
     }
     if(data?.type === "player-ready" && data?.player === pId){
-      setHealth(MAX_HEALTH);
-      setPlayerState(PLAYER.cards);
+      healthRef.current = MAX_HEALTH;
+      _setHealth(MAX_HEALTH);
+      setPlayerState(PLAYER.cardsOnTable);
       refreshLookAt();
       disconnected.current = false;
     }
     if(disconnected.current) return;
     else if(data?.type === "start-countdown"){
-      setHealth(MAX_HEALTH);
-      setPlayerState(PLAYER.cards);
+      setPlayerState(PLAYER.cardsOnTable);
       refreshLookAt();
     }
     if(health <= 0) return;
@@ -200,6 +204,11 @@ export default function Player({pId, position, onClick, name, targetState, right
               setHealth(0);
               dead = true;
               break;
+            case "shoot-block":
+              setTimeout(() => {
+                setPlayerState(PLAYER.blockShot);
+              }, 1000);
+              break;
             default:
               break;
           }
@@ -251,7 +260,7 @@ export default function Player({pId, position, onClick, name, targetState, right
       <Text position={[0.3,1.7,0.1]} color="white" anchorX="center" anchorY="middle" fontSize={0.2} material={new THREE.MeshBasicMaterial({toneMapped: false, fog: false})}>
         {name}
       </Text>
-      {health > 0 && playerState != PLAYER.idle && <TargetFrame position={[0.4,0,0.3]} targetState={targetState}/>}
+      <TargetFrame position={[0.4,0,0.3]} targetState={targetState} visible={health > 0 && playerState != PLAYER.idle}/>
     
       <HealthDisplay />
       </mesh>

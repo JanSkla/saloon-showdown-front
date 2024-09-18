@@ -17,7 +17,7 @@ const LobbyPage = () => {
 
     useEffect(() => {
         if (data?.type === "load-game"){
-            navigate(`/game/play`);
+            setOpacityThenCall(0 , () => navigate(`/game/play`));
         }
     }, [data])
 
