@@ -8,7 +8,7 @@ export const TARGET = {
   none: 3,
 }
 
-export const TargetFrame = ({position, targetState}) => {
+export const TargetFrame = ({position, targetState, visible}) => {
 
   const texture = useLoader(THREE.TextureLoader, targetState === TARGET.chosen ? '/images/frame/frame_target.png' : '/images/frame/frame.png');
   // Adjust texture filtering for a pixelated look
@@ -16,7 +16,7 @@ export const TargetFrame = ({position, targetState}) => {
   texture.minFilter = THREE.NearestFilter;
   texture.generateMipmaps = false;
 
-  return <sprite position={position} scale={2} visible={targetState !== TARGET.none} renderOrder={2}>
+  return <sprite position={position} scale={2} visible={visible && targetState !== TARGET.none} renderOrder={2}>
   <spriteMaterial
       attach="material"
       map={texture}

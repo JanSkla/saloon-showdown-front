@@ -140,7 +140,7 @@ const GamePage = () => {
     return <div>
         <div className="canvas-container">
             <WaitToLoad/>
-            <LazyGameCanvas chooseTarget={chooseTarget} choosing={choice === "shoot"} target={target} cardOptions={options} sendChoice={sendChoice} gameState={gameState} OnLoaded={OnLoaded}/>
+            <LazyGameCanvas chooseTarget={chooseTarget} choosing={gameState === "choose" && choice === "shoot"} target={target} cardOptions={options} sendChoice={sendChoice} gameState={gameState} OnLoaded={OnLoaded}/>
             <LazyPOVCanvas/>
             <div className="full-screen" style={{position: "absolute", display: 'flex', flexDirection: "column", justifyContent: "end", pointerEvents: "none"}}>
                 <div style={{width: '1.5vw', height: '40vh', alignSelf: 'end', marginRight: '1vw'}}>

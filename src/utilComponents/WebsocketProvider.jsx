@@ -1,6 +1,9 @@
-import { createContext, useRef, useState } from "react"
+import { createContext, useEffect, useRef, useState } from "react"
 import { wssAddress } from "../config"
 import useStateWithQueue from "../utils/useStateWithQueue";
+import { useNavigate } from "react-router-dom";
+import { BackButton } from "../components/BackButton";
+import { Button } from "../components/Button";
 
 export const WebsocketContext = createContext({
   isOpen: false,
@@ -11,10 +14,17 @@ export const WebsocketContext = createContext({
 });
 
 export const WebsocketProvider = ({ children }) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const isOpenRef = useRef(false);
+  const [isOpen, _setIsOpen] = useState(isOpenRef.current)
   const [data, setData] = useStateWithQueue(null)
+  const [error, setError] = useState('')
 
-  const ws = useRef(null)
+  const setIsOpen = (value) => {
+    isOpenRef.current = value;
+    _setIsOpen(value);
+  }
+
+  const ws = useRef(null) 
 
   const setOpen = () => {
     
@@ -27,6 +37,8 @@ export const WebsocketProvider = ({ children }) => {
     waitingMessagesForConnection.length = 0; //delete sent messages
   }
 
+  const navigate = useNavigate()
+
   const open = () => {
 
     if(isOpen) return;
@@ -38,8 +50,11 @@ export const WebsocketProvider = ({ children }) => {
         setOpen()
     }
     socket.onclose = () => {
-        console.log("closed")
-        setIsOpen(false)
+        console.log("closed");
+        
+        if(isOpenRef.current) setError('disconnected');;
+        setIsOpen(false);
+        navigate('/');
     }
     socket.onmessage = (event) => {
         console.log("recieved: ",event.data)
@@ -57,8 +72,9 @@ export const WebsocketProvider = ({ children }) => {
   }
 
   const close = () => {
-    if(!isOpen) return;
+    if(!isOpenRef.current) return;
 
+    setIsOpen(false);
     ws.current?.close();
   }
 
@@ -80,6 +96,12 @@ export const WebsocketProvider = ({ children }) => {
   return (
     <WebsocketContext.Provider value={{exists, isOpen, data, send, open, close}}>
       {children}
+      {error && <div style={{position: 'absolute', backgroundColor: '#FF0000AA', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', textAlign: 'left'}}>
+        <Button style={{position: 'absolute', fontSize: '0.8em', top: '0.6em'}} onClick={() => setError('')}>X</Button>
+        <div style={{padding: '0.5em', paddingInline: '1.5em'}}>
+          {error}
+        </div>
+      </div>}
     </WebsocketContext.Provider>
   )
 }
