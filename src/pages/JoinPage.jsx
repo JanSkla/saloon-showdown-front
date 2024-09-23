@@ -6,6 +6,8 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { WaitToLoad } from "../utils/waitToLoad";
 import { BackButton } from "../components/BackButton";
 import { FadeContext } from "../utilComponents/FadeScreenProvider";
+import { isPhone } from "../utils/utils";
+import { MAX_NAME_LENGTH } from "../config";
 
 const JoinPage = () => {
   const { isOpen, data, send, open } = useContext(WebsocketContext);
@@ -52,15 +54,24 @@ const JoinPage = () => {
     send(`{"type": "get-public-lobbies"}`);
   }
 
+  const changeName = (value) => {
+
+      if (value.length > MAX_NAME_LENGTH) return;
+
+      setName(value);
+  }
+
   const codeInputRef = useRef();
-  return <div style={{display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "25vh", backgroundColor: 'black', height: '75vh', opacity: 0.9}}>
+  return <div style={{display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "20vh", backgroundColor: 'black', height: '75vh', opacity: 0.9}}>
     <WaitToLoad/>
+            <span style={isPhone ? {fontSize: '3vh', color: 'white'}: {color: 'white'}}>name:</span>
+            <input type="text" value={name} onChange={e => changeName(e.target.value)} style={isPhone ? {fontSize: '3vh'}: undefined}></input>
     <div style={{position: "absolute", top: 0, left:40}}>
         <BackButton willSetOpacity onClick={()=>navigate("/")}/>
     </div>
+    <br/>
     <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
-    <span>room code:</span>
-    <input type="text" ref={codeInputRef} defaultValue={roomCode} autoFocus onBlur={e => e.target.focus()} maxLength={4} style={{textTransform: "uppercase", fontSize: "20vh", width: "60vh"}}></input>
+    <input type="text" ref={codeInputRef} defaultValue={roomCode} autoFocus maxLength={4} style={{textTransform: "uppercase", fontSize: "20vh", width: "60vh"}}></input>
     
     <Button onClick={onLobbySearch} style={{fontSize: '5vh'}}>{hasSearched ? "refresh lobby search" : "find public lobbies"}</Button>
     {publicLobbies[0] === undefined && hasSearched && <div style={{color: "white"}}>NO PUBLIC LOBBIES</div>}

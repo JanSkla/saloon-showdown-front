@@ -6,8 +6,7 @@ import { RoomContext } from "../utilComponents/RoomDataProvider";
 import MainPageCanvas from "../components/MainPageCanvas";
 import { FadeContext } from "../utilComponents/FadeScreenProvider";
 import { isPhone } from "../utils/utils";
-
-const MAX_NAME_LENGTH = 16;
+import { MAX_NAME_LENGTH } from "../config";
 
 const cards = [
     { name: 'ammo', img: 'images/cards/ammo.png'},
