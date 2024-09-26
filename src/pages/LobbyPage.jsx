@@ -39,8 +39,8 @@ const LobbyPage = () => {
         <BackButton willSetOpacity onClick={()=>navigate("/")}/>
         </div>
             <div style={{position: "absolute", bottom: 0, left: '5vw'}}>
-                <div style={{color: 'white', marginBottom: -10, fontSize: '3vh'}}>click code to copy link:</div>
-                <Button onClick={() => navigator.clipboard.writeText("http://localhost:3000/game/" + roomCode)} style={{ width: 400 }}>{codeVisible ? roomCode: 'XXXX'}</Button>
+                <div style={{color: 'white', marginBottom: -10, fontSize: '3vh'}}>click here to copy code:</div>
+                <Button onClick={() => navigator.clipboard.writeText(roomCode)} style={{ width: 400 }}>{codeVisible ? roomCode: 'XXXX'}</Button>
                 <div style={{backgroundColor: codeVisible ? "green" : "red", width: 'min-content', whiteSpace: 'nowrap', marginLeft: '50%' ,transform: 'translate(-50%, -80%)', fontSize: '3vh'}}><Button style={{fontSize: '3vh'}} onClick={() => setCodeVisible(!codeVisible)}>{codeVisible ? "hide code" : "show code"}</Button></div>
             </div>
             {thisPlayer?.isLeadPlayer ? <Button onClick={onStartGameClick} style={{position: "absolute", bottom: '5vh', right: '5vw'}}>Start game</Button>:

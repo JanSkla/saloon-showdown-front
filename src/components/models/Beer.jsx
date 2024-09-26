@@ -73,6 +73,7 @@ export default function Beer({pId, position, lookAt}) {
     position={position} // Position it at the origin
     ref={planeRef}
     renderOrder={1}
+    scale={0.7}
   >
     {!!variants[beerState] && <>
       <planeGeometry args={[3.16/3.3, 5.12/3.3]} />

@@ -158,11 +158,6 @@ const POVCanvas = () => {
     style={{position: 'absolute', bottom: 0, left: '50%',transform: 'translate(-50%)', width: '99%', height: 675}}
   />
     </div>
-{/* { POV_SOUNDS[variant] &&   <mesh>
-      <Canvas>
-      <Sound url={POV_SOUNDS[variant]} isPlayer={true}/>
-      </Canvas>
-    </mesh>} */}
   </div>
 }
 

@@ -130,7 +130,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     <React.Suspense fallback={<Loader />}>
     {positions.map(({pId, pos, beerPos, name, rightPIDS}) => <>
       <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)} rightPIDS={rightPIDS}/>
-      <Beer pId={pId} position={[beerPos.a, 2.8, beerPos.b]} lookAt={[-0.35, 2.8, -1.3]} />
+      <Beer pId={pId} position={[beerPos.a - 0.3, 2.8, beerPos.b - 0.3]} lookAt={[-0.35, 2.8, -1.3]} />
     </>)}
     <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
     {cardOptions.map((option, index) =>
