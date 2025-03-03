@@ -12,7 +12,7 @@ import { useLoader } from "@react-three/fiber";
 
 
 const MainPageCanvas = () => {
-    const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
+    const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains2.png')
 
     const listener = new THREE.AudioListener();
       

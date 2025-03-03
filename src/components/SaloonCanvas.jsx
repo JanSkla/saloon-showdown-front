@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 import { WaitToLoad } from '../utils/waitToLoad';
 
 const SaloonCanvas = () => {
-  const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains.png')
+  const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains2.png')
 
 
 

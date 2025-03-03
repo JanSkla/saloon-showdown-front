@@ -12,22 +12,33 @@ import { useAtom } from 'jotai'
 import { radioHoverAtom } from '../../atoms/atoms'
 
 export function Radio(props) {
-  
-  const audioRef = useRef(new Audio("/sounds/title-theme.mp3"));
+  //tady přidáš songy, asi bude chytřejší způsob jak to udělal ale IDC for now jsou jen 2
+  const songs = ["/sounds/drink-self.wav", "/sounds/title-theme.mp3", "/sounds/soundtrack-2.wav"]
+  const audioRef =[ useRef(new Audio("/sounds/title-theme.mp3")), useRef(new Audio("/sounds/soundtrack-2.wav"))];
 
   const [radioHover, setRadioHover] = useAtom(radioHoverAtom);
   
+  const [songNum, setSongNum] = useState(1);
+  const maxSongNum = 1;
   useEffect(() => {
-    const audio = audioRef.current;
-    audio.loop = true;
-    audio.volume = 0.5;
-
+    const audio = audioRef[songNum].current;
+    audio.volume = 0.4;
+    audioRef[songNum].current.onended = function() {
+      if(songNum+1 > maxSongNum) {
+        setSongNum(0)
+      }
+      else {
+        setSongNum(songNum+1)
+      }
+      // setTimeout(() => playOn(), 1000)
+    }
+    
     // Clean up audio when component unmounts
     return () => {
       audio.pause();
       audio.currentTime = 0; // Reset audio if necessary
     };
-  }, []);
+  }, [songNum]);
 
   const { data, send } = useContext(WebsocketContext);
  
@@ -58,7 +69,7 @@ export function Radio(props) {
     actions['on'].setLoop(LoopOnce);
     actions['on'].clampWhenFinished = true;
     actions['on'].play();
-    audioRef.current.play();
+    audioRef[songNum].current.play();
   }
 
   const playOff = () => {
@@ -66,7 +77,7 @@ export function Radio(props) {
     actions['off'].setLoop(LoopOnce);
     actions['off'].clampWhenFinished = true;
     actions['off'].play();
-    audioRef.current.pause();
+    audioRef[songNum].current.pause();
   }
 
   const onCLick = (event) => {

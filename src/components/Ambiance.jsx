@@ -13,19 +13,25 @@ const Ambiance = () =>{
     
     const ambianceRef = useRef(new Audio('/sounds/ambiance.wav'));
     const screamRef = useRef(new Audio('/sounds/crowd-scream.wav'));
+    const cricketsRef = useRef(new Audio('/sounds/ambiance-crickets.wav'))
 
     useEffect(() => {
         const amb = ambianceRef.current;
         const scr = screamRef.current;
+        const crick = cricketsRef.current;
         amb.loop = true;
+        crick.loop = true;
         // Clean up audio when component unmounts
         return () => {
           amb.pause();
           scr.pause();
+          crick.pause();
           amb.currentTime = 0;
           amb.volume = 0.6;
           scr.currentTime = 0;
-          scr.volume = 0.5;
+          scr.volume = 0.3;
+          crick.currentTime = 0;
+          crick.volume = 0.2;
         };
       }, []);
 
@@ -39,10 +45,11 @@ const Ambiance = () =>{
                     case "shoot-block":
                     case "shoot-death":
                         screamRef.current.play();
-                        setTimeout(() => ambianceRef.current.pause(), 500);
-                        setTimeout(() => screamRef.current.volume = 0.1, 1500);
                         setFirstShot(true)
+                        setTimeout(() => ambianceRef.current.pause(), 500);
+                        setTimeout(() => cricketsRef.current.play(), 10000);
                         break;
+
                     default:
                         break;
                 }
