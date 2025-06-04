@@ -10,13 +10,7 @@ export function Saloon(props) {
   const { nodes, materials } = useGLTF('/models/salonOutside/saloon.gltf')
   return (
     <group {...props} dispose={null}>
-      <group position={[0, 0, 54]} scale={13.556}>
-        <mesh geometry={nodes.Plane_1.geometry} material={materials['Material.032']} />
-        <mesh geometry={nodes.Plane_2.geometry} material={materials['Material.011']} />
-        <mesh geometry={nodes.Plane_3.geometry} material={materials['Material.002']} />
-        <mesh geometry={nodes.Plane_4.geometry} material={materials['Material.004']} />
-        <mesh geometry={nodes.Plane_5.geometry} material={materials['Material.005']} />
-      </group>
+
       <group position={[13.356, 1.591, 5.999]} rotation={[0, 0.194, 0]}>
         <mesh geometry={nodes.Cube003.geometry} material={materials['Material.030']} />
         <mesh geometry={nodes.Cube003_1.geometry} material={materials['Material.029']} />

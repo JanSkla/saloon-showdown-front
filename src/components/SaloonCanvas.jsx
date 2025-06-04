@@ -9,6 +9,7 @@ import LobbyCamera from './models/LobbyCamera';
 import { Radio } from './models/Radio';
 import { useRef, useState } from 'react';
 import { WaitToLoad } from '../utils/waitToLoad';
+import Sun from './models/Sun';
 
 const SaloonCanvas = () => {
   const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains2.png')
@@ -16,13 +17,14 @@ const SaloonCanvas = () => {
 
 
   return <div className="canvas-container">        
-    <Canvas id='saloon_canvas' style={{backgroundColor: '#8bc3e0'}} >
+    <Canvas id='saloon_canvas' style={{background: 'linear-gradient(rgb(212, 202, 166),rgb(174, 149, 107))'}} >
         <WaitToLoad/>
         <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[1,0,1]}/>
         <LobbyCamera/>
         <Saloon />
         <LobbyPositions />
         <Radio position={[13.5, 1.13, -3.1]} scale={2.5}/>
+        <Sun/>
         <mesh
               position={[-100, 16, 0]}
               rotation-y={1.6}

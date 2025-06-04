@@ -12,27 +12,21 @@ import { useAtom } from 'jotai'
 import { radioHoverAtom } from '../../atoms/atoms'
 
 export function Radio(props) {
-  //tady přidáš songy, asi bude chytřejší způsob jak to udělal ale IDC for now jsou jen 2
-  const songs = ["/sounds/drink-self.wav", "/sounds/title-theme.mp3", "/sounds/soundtrack-2.wav"]
-  const audioRef =[ useRef(new Audio("/sounds/title-theme.mp3")), useRef(new Audio("/sounds/soundtrack-2.wav"))];
+  const songs = ["/sounds/title-theme.mp3", "/sounds/soundtrack-2.wav", "/sounds/soundtrack-3.mp3", "/sounds/soundtrack-4.mp3"];
+
+  const audioRef =[ useRef(new Audio("/sounds/title-theme.mp3")), useRef(new Audio("/sounds/soundtrack-2.wav")), useRef(new Audio("/sounds/soundtrack-3.mp3")), useRef(new Audio("/sounds/soundtrack-4.mp3"))];
+  //const audioRef = songs.map(song => useRef(new Audio(song)));
+  //const audioRef = useRef(songs.map(song => new Audio(song)));
 
   const [radioHover, setRadioHover] = useAtom(radioHoverAtom);
   
   const [songNum, setSongNum] = useState(1);
-  const maxSongNum = 1;
+  const maxSongNum = songs.length;
+
   useEffect(() => {
     const audio = audioRef[songNum].current;
-    audio.volume = 0.4;
-    audioRef[songNum].current.onended = function() {
-      if(songNum+1 > maxSongNum) {
-        setSongNum(0)
-      }
-      else {
-        setSongNum(songNum+1)
-      }
-      // setTimeout(() => playOn(), 1000)
-    }
-    
+    audio.volume = 0.1;
+
     // Clean up audio when component unmounts
     return () => {
       audio.pause();
@@ -41,17 +35,27 @@ export function Radio(props) {
   }, [songNum]);
 
   const { data, send } = useContext(WebsocketContext);
+
+  const randomTrack = () => {
+    setSongNum(Math.floor(Math.random() * songs.length));
+    console.log(songNum);
+  }
  
   useEffect(() => {
+    const audio = audioRef[songNum].current;
       if (data?.type === "join-room" && data?.radio){
+        randomTrack();
         playOn();
       }
       else if (data?.type === "radio"){
         if (data?.state){
+          randomTrack();
           playOn();
         }
         else{
           playOff();
+          audio.pause();
+          audio.currentTime = 0;
         }
       }
   }, [data])
@@ -64,37 +68,75 @@ export function Radio(props) {
 
   const [isOn, setIsOn] = useState(true);
 
-  const playOn = () => {
-    actions['off'].stop();
-    actions['on'].setLoop(LoopOnce);
-    actions['on'].clampWhenFinished = true;
-    actions['on'].play();
-    audioRef[songNum].current.play();
-  }
+const playOn = () => {
+  console.log('playing on');
+  const audio = audioRef[songNum].current;
 
-  const playOff = () => {
-    actions['on'].stop();
-    actions['off'].setLoop(LoopOnce);
-    actions['off'].clampWhenFinished = true;
-    actions['off'].play();
-    audioRef[songNum].current.pause();
-  }
+  actions['off'].stop();
+  actions['on'].setLoop(LoopOnce);
+  actions['on'].clampWhenFinished = true;
+  actions['on'].play();
 
-  const onCLick = (event) => {
-    event.stopPropagation(); // Prevents event bubbling
-    setIsOn(!isOn);
-    if (isOn){
-      send('{"type": "radio-on"}');
-      playOn();
-    }
-    else{
-      send('{"type": "radio-off"}');
-      playOff();
-    }
+  // Odstranit předchozí listener, kdyby tam náhodou zůstal
+  audio.oncanplaythrough = null;
+
+  // Pokud už je audio připravené, hraj rovnou
+  if (audio.readyState >= 4) { // HAVE_ENOUGH_DATA
+    audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+  } else {
+    // Jinak čekej na 'canplaythrough'
+    audio.oncanplaythrough = () => {
+      audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+    };
+    // Vynutit načtení, pokud se náhodou nespustil sám
+    audio.load();
   }
+};
+
+
+const playOff = () => {
+  const audio = audioRef[songNum].current;
+
+  actions['on'].stop();
+  actions['off'].setLoop(LoopOnce);
+  actions['off'].clampWhenFinished = true;
+  actions['off'].play();
+
+  // Odstranit případný předchozí listener
+  audio.oncanplaythrough = null;
+
+  if (audio.readyState >= 2) { // HAVE_CURRENT_DATA nebo vyšší
+    audio.pause();
+    audio.currentTime = 0;
+  } else {
+    // Pokud není připraveno, počkej na načtení
+    audio.oncanplaythrough = () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+    audio.load(); // Pro jistotu vynutíme načtení
+  }
+};
+
+
+const onClick = (event) => {
+  event.stopPropagation(); // Prevents event bubbling
+
+  const nextState = !isOn;
+  setIsOn(nextState);
+
+  if (nextState) {
+    send('{"type": "radio-on"}');
+    playOn();
+  } else {
+    send('{"type": "radio-off"}');
+    playOff();
+  }
+}
+
 
   return (
-    <group ref={group} {...props} dispose={null} onPointerDown={onCLick} onPointerEnter={() => {
+    <group ref={group} {...props} dispose={null} onPointerDown={onClick} onPointerEnter={() => {
       document.body.style.cursor = 'pointer';
       setRadioHover(true);
     }} onPointerLeave={() => {

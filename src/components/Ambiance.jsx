@@ -31,7 +31,7 @@ const Ambiance = () =>{
           scr.currentTime = 0;
           scr.volume = 0.3;
           crick.currentTime = 0;
-          crick.volume = 0.2;
+          crick.volume = 0.1;
         };
       }, []);
 
