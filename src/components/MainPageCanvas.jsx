@@ -35,10 +35,11 @@ const MainPageCanvas = () => {
             flatShading={true}/>
           </animated.mesh>
           <Environment preset="dawn" environmentIntensity={0.5} environmentRotation={[0,0,1]}/>
-          <Teren position={[0,-6,-20]} rotation={[0,-1.5,0]}/>       
+          <Teren position={[40,-6,-20]} rotation={[0,0,0]} scale={0.4}/>       
           <PerspectiveCamera makeDefault={true} far={1000} near={0.1} fov={53.702} position={[0, 0.7, 0]} rotation={[0, 0, 0]} scale={1.241} add={listener}/>
           <Sun/>
           <Kun/>
+
         </Canvas>
         </div>
     )

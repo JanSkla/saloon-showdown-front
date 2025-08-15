@@ -20,12 +20,14 @@ export function Radio(props) {
 
   const [radioHover, setRadioHover] = useAtom(radioHoverAtom);
   
-  const [songNum, setSongNum] = useState(1);
+  const [songNum, setSongNum] = useState(null);
   const maxSongNum = songs.length;
 
   useEffect(() => {
+    if (songNum === null || !audioRef[songNum]) return;
     const audio = audioRef[songNum].current;
     audio.volume = 0.1;
+    randomTrack(); // Start with a random track
 
     // Clean up audio when component unmounts
     return () => {
@@ -36,29 +38,31 @@ export function Radio(props) {
 
   const { data, send } = useContext(WebsocketContext);
 
-  const randomTrack = () => {
-    setSongNum(Math.floor(Math.random() * songs.length));
-    console.log(songNum);
-  }
+const randomTrack = () => {
+  return Math.floor(Math.random() * songs.length);
+};
  
-  useEffect(() => {
-    const audio = audioRef[songNum].current;
-      if (data?.type === "join-room" && data?.radio){
-        randomTrack();
-        playOn();
+useEffect(() => {
+  if (songNum === null || !audioRef[songNum]) return;
+  if (!data) return;
+
+  if (data.type === "join-room" && data.radio) {
+    const index = randomTrack();
+    playOnFromIndex(index);
+  } else if (data.type === "radio") {
+    if (data.state) {
+      const index = randomTrack();
+      playOnFromIndex(index);
+    } else {
+      playOff();
+      const audio = audioRef[songNum]?.current;
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
       }
-      else if (data?.type === "radio"){
-        if (data?.state){
-          randomTrack();
-          playOn();
-        }
-        else{
-          playOff();
-          audio.pause();
-          audio.currentTime = 0;
-        }
-      }
-  }, [data])
+    }
+  }
+}, [data]);
 
   const group = React.useRef()
   const { scene, animations } = useGLTF('/models/radio/radio.gltf')
@@ -66,10 +70,33 @@ export function Radio(props) {
   const { nodes, materials } = useGraph(clone)
   const { actions, mixer } = useAnimations(animations, group)
 
-  const [isOn, setIsOn] = useState(true);
+  const [isOn, setIsOn] = useState(false);
+
+const playOnFromIndex = (index) => {
+  if (songNum === null || !audioRef[songNum]) return;
+
+  setSongNum(index);
+  const audio = audioRef[index].current;
+
+  actions['off'].stop();
+  actions['on'].setLoop(LoopOnce);
+  actions['on'].clampWhenFinished = true;
+  actions['on'].play();
+
+  audio.oncanplaythrough = null;
+  audio.load();
+
+  if (audio.readyState >= 4) {
+    audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+  } else {
+    audio.oncanplaythrough = () => {
+      audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+    };
+  }
+};
+
 
 const playOn = () => {
-  console.log('playing on');
   const audio = audioRef[songNum].current;
 
   actions['off'].stop();
@@ -80,6 +107,7 @@ const playOn = () => {
   // Odstranit předchozí listener, kdyby tam náhodou zůstal
   audio.oncanplaythrough = null;
 
+  audio.load();
   // Pokud už je audio připravené, hraj rovnou
   if (audio.readyState >= 4) { // HAVE_ENOUGH_DATA
     audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
@@ -89,7 +117,6 @@ const playOn = () => {
       audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
     };
     // Vynutit načtení, pokud se náhodou nespustil sám
-    audio.load();
   }
 };
 
@@ -105,6 +132,8 @@ const playOff = () => {
   // Odstranit případný předchozí listener
   audio.oncanplaythrough = null;
 
+  audio.load(); // Pro jistotu vynutíme načtení
+  audio.pause();
   if (audio.readyState >= 2) { // HAVE_CURRENT_DATA nebo vyšší
     audio.pause();
     audio.currentTime = 0;
@@ -114,7 +143,6 @@ const playOff = () => {
       audio.pause();
       audio.currentTime = 0;
     };
-    audio.load(); // Pro jistotu vynutíme načtení
   }
 };
 
@@ -127,12 +155,13 @@ const onClick = (event) => {
 
   if (nextState) {
     send('{"type": "radio-on"}');
-    playOn();
+    const index = randomTrack(); // náhodné číslo
+    playOnFromIndex(index);      // hraje konkrétní track
   } else {
     send('{"type": "radio-off"}');
     playOff();
   }
-}
+};
 
 
   return (

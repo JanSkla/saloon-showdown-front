@@ -8,15 +8,28 @@ const Sound = ({url, isPlayer}) => {
     const { camera } = useThree()
     const [listener] = useState(() => new THREE.AudioListener())
     const buffer = useLoader(THREE.AudioLoader, url)
-    useEffect(() => {
-      sound.current.setBuffer(buffer)
-      sound.current.setRefDistance(1)
-      sound.current.setLoop(false)
-      sound.current.setDetune(isPlayer ? 0 : -100)
-      sound.current.play()
-      camera.add(listener)
-      return () => camera.remove(listener)
-    }, [])
+useEffect(() => {
+  if (!sound.current || !buffer) return;
+
+  sound.current.setBuffer(buffer);
+  sound.current.setRefDistance(1);
+  sound.current.setLoop(false);
+  sound.current.setDetune(isPlayer ? 0 : -100);
+
+  camera.add(listener);
+
+  if (sound.current.buffer) {
+    sound.current.play();
+  }
+
+  return () => {
+    camera.remove(listener);
+    if (sound.current && sound.current.isPlaying) {
+      sound.current.stop();
+    }
+  };
+}, [buffer]);
+
     return <positionalAudio ref={sound} args={[listener]} />
 }
 

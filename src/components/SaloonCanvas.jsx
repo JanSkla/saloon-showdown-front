@@ -10,6 +10,7 @@ import { Radio } from './models/Radio';
 import { useRef, useState } from 'react';
 import { WaitToLoad } from '../utils/waitToLoad';
 import Sun from './models/Sun';
+import { Teren } from './models/Teren';
 
 const SaloonCanvas = () => {
   const texture =  useLoader(THREE.TextureLoader, '/images/desert/mountains2.png')
@@ -25,6 +26,7 @@ const SaloonCanvas = () => {
         <LobbyPositions />
         <Radio position={[13.5, 1.13, -3.1]} scale={2.5}/>
         <Sun/>
+        <Teren position={[20,-5.5,-20]} rotation={[0,1.5,0]} scale={0.3}/>
         <mesh
               position={[-100, 16, 0]}
               rotation-y={1.6}
@@ -39,7 +41,6 @@ const SaloonCanvas = () => {
               flatShading={true}/>
             </mesh>
             <pointLight position={[15,13.5,0]} intensity={5} color={0xfebbbb}/>
-
     </Canvas>
   </div>
 }

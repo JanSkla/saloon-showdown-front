@@ -54,6 +54,19 @@ const POVCanvas = () => {
 
   const ammoCountRef = useRef(0);
 
+
+  const [audioElements, setAudioElements] = useState([]);
+
+useEffect(() => {
+  const elements = POV_SOUNDS.map((url) => {
+    const audio = new Audio(url);
+    audio.preload = 'auto';
+    return audio;
+  });
+
+  setAudioElements(elements);
+}, []);
+
   const playVariant = type => {
     setVariant(type);
   };
@@ -76,9 +89,29 @@ const POVCanvas = () => {
     spritesheetRef.current[variant].goToAndPlay(1);
   }, [variant])
   
-  useEffect(()=> {
-    if(POV_SOUNDS[variant]){   audio.play()}
-  }, [variant])
+useEffect(() => {
+  if (!audioElements[variant]) return;
+
+  const audio = audioElements[variant];
+
+  const playWhenReady = () => {
+    audio.currentTime = 0;
+    audio.play();
+  };
+
+  if (audio.readyState >= 4) {
+    // Zvuk je plně připraven
+    playWhenReady();
+  } else {
+    // Počkej, až se načte
+    audio.addEventListener("canplaythrough", playWhenReady, { once: true });
+  }
+
+  return () => {
+    audio.pause();
+    audio.removeEventListener("canplaythrough", playWhenReady);
+  };
+}, [variant, audioElements]);
   
   useEffect(() => {
     if(data?.type === "load-game"){
