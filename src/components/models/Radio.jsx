@@ -12,171 +12,175 @@ import { useAtom } from 'jotai'
 import { radioHoverAtom } from '../../atoms/atoms'
 
 export function Radio(props) {
-  const songs = ["/sounds/title-theme.mp3", "/sounds/soundtrack-2.wav", "/sounds/soundtrack-3.mp3", "/sounds/soundtrack-4.mp3"];
-
-  const audioRef =[ useRef(new Audio("/sounds/title-theme.mp3")), useRef(new Audio("/sounds/soundtrack-2.wav")), useRef(new Audio("/sounds/soundtrack-3.mp3")), useRef(new Audio("/sounds/soundtrack-4.mp3"))];
-  //const audioRef = songs.map(song => useRef(new Audio(song)));
-  //const audioRef = useRef(songs.map(song => new Audio(song)));
-
-  const [radioHover, setRadioHover] = useAtom(radioHoverAtom);
-  
-  const [songNum, setSongNum] = useState(null);
-  const maxSongNum = songs.length;
-
-  useEffect(() => {
-    if (songNum === null || !audioRef[songNum]) return;
-    const audio = audioRef[songNum].current;
-    audio.volume = 0.1;
-    randomTrack(); // Start with a random track
-
-    // Clean up audio when component unmounts
-    return () => {
-      audio.pause();
-      audio.currentTime = 0; // Reset audio if necessary
-    };
-  }, [songNum]);
-
-  const { data, send } = useContext(WebsocketContext);
-
-const randomTrack = () => {
-  return Math.floor(Math.random() * songs.length);
-};
- 
-useEffect(() => {
-  if (songNum === null || !audioRef[songNum]) return;
-  if (!data) return;
-
-  if (data.type === "join-room" && data.radio) {
-    const index = randomTrack();
-    playOnFromIndex(index);
-  } else if (data.type === "radio") {
-    if (data.state) {
-      const index = randomTrack();
-      playOnFromIndex(index);
-    } else {
-      playOff();
-      const audio = audioRef[songNum]?.current;
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    }
-  }
-}, [data]);
-
-  const group = React.useRef()
-  const { scene, animations } = useGLTF('/models/radio/radio.gltf')
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
-  const { nodes, materials } = useGraph(clone)
-  const { actions, mixer } = useAnimations(animations, group)
-
-  const [isOn, setIsOn] = useState(false);
-
-const playOnFromIndex = (index) => {
-  if (songNum === null || !audioRef[songNum]) return;
-
-  setSongNum(index);
-  const audio = audioRef[index].current;
-
-  actions['off'].stop();
-  actions['on'].setLoop(LoopOnce);
-  actions['on'].clampWhenFinished = true;
-  actions['on'].play();
-
-  audio.oncanplaythrough = null;
-  audio.load();
-
-  if (audio.readyState >= 4) {
-    audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
-  } else {
-    audio.oncanplaythrough = () => {
-      audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
-    };
-  }
-};
-
-
-const playOn = () => {
-  const audio = audioRef[songNum].current;
-
-  actions['off'].stop();
-  actions['on'].setLoop(LoopOnce);
-  actions['on'].clampWhenFinished = true;
-  actions['on'].play();
-
-  // Odstranit předchozí listener, kdyby tam náhodou zůstal
-  audio.oncanplaythrough = null;
-
-  audio.load();
-  // Pokud už je audio připravené, hraj rovnou
-  if (audio.readyState >= 4) { // HAVE_ENOUGH_DATA
-    audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
-  } else {
-    // Jinak čekej na 'canplaythrough'
-    audio.oncanplaythrough = () => {
-      audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
-    };
-    // Vynutit načtení, pokud se náhodou nespustil sám
-  }
-};
-
-
-const playOff = () => {
-  const audio = audioRef[songNum].current;
-
-  actions['on'].stop();
-  actions['off'].setLoop(LoopOnce);
-  actions['off'].clampWhenFinished = true;
-  actions['off'].play();
-
-  // Odstranit případný předchozí listener
-  audio.oncanplaythrough = null;
-
-  audio.load(); // Pro jistotu vynutíme načtení
-  audio.pause();
-  if (audio.readyState >= 2) { // HAVE_CURRENT_DATA nebo vyšší
-    audio.pause();
-    audio.currentTime = 0;
-  } else {
-    // Pokud není připraveno, počkej na načtení
-    audio.oncanplaythrough = () => {
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }
-};
-
-
-const onClick = (event) => {
-  event.stopPropagation(); // Prevents event bubbling
-
-  const nextState = !isOn;
-  setIsOn(nextState);
-
-  if (nextState) {
-    send('{"type": "radio-on"}');
-    const index = randomTrack(); // náhodné číslo
-    playOnFromIndex(index);      // hraje konkrétní track
-  } else {
-    send('{"type": "radio-off"}');
-    playOff();
-  }
-};
-
-
-  return (
-    <group ref={group} {...props} dispose={null} onPointerDown={onClick} onPointerEnter={() => {
-      document.body.style.cursor = 'pointer';
-      setRadioHover(true);
-    }} onPointerLeave={() => {
-      document.body.style.cursor = 'auto';
-      setRadioHover(false);
-    }}>
-        <group name="Armature" position={[-0.152, 0.162, -0.331]} rotation={[1.332, -0.041, 0.167]} scale={0.434} >
-          <primitive object={nodes.Bone002} />
-        </group>
-    </group>
-  )
+  return (<></>);
 }
+
+// export function Radio(props) {
+//   const songs = ["/sounds/title-theme.mp3", "/sounds/soundtrack-2.wav", "/sounds/soundtrack-3.mp3", "/sounds/soundtrack-4.mp3"];
+
+//   const audioRef =[ useRef(new Audio("/sounds/title-theme.mp3")), useRef(new Audio("/sounds/soundtrack-2.wav")), useRef(new Audio("/sounds/soundtrack-3.mp3")), useRef(new Audio("/sounds/soundtrack-4.mp3"))];
+//   //const audioRef = songs.map(song => useRef(new Audio(song)));
+//   //const audioRef = useRef(songs.map(song => new Audio(song)));
+
+//   const [radioHover, setRadioHover] = useAtom(radioHoverAtom);
+  
+//   const [songNum, setSongNum] = useState(null);
+//   const maxSongNum = songs.length;
+
+//   useEffect(() => {
+//     if (songNum === null || !audioRef[songNum]) return;
+//     const audio = audioRef[songNum].current;
+//     audio.volume = 0.1;
+//     randomTrack(); // Start with a random track
+
+//     // Clean up audio when component unmounts
+//     return () => {
+//       audio.pause();
+//       audio.currentTime = 0; // Reset audio if necessary
+//     };
+//   }, [songNum]);
+
+//   const { data, send } = useContext(WebsocketContext);
+
+// const randomTrack = () => {
+//   return Math.floor(Math.random() * songs.length);
+// };
+ 
+// useEffect(() => {
+//   if (songNum === null || !audioRef[songNum]) return;
+//   if (!data) return;
+
+//   if (data.type === "join-room" && data.radio) {
+//     const index = randomTrack();
+//     playOnFromIndex(index);
+//   } else if (data.type === "radio") {
+//     if (data.state) {
+//       const index = randomTrack();
+//       playOnFromIndex(index);
+//     } else {
+//       playOff();
+//       const audio = audioRef[songNum]?.current;
+//       if (audio) {
+//         audio.pause();
+//         audio.currentTime = 0;
+//       }
+//     }
+//   }
+// }, [data]);
+
+//   const group = React.useRef()
+//   const { scene, animations } = useGLTF('/models/radio/radio.gltf')
+//   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
+//   const { nodes, materials } = useGraph(clone)
+//   const { actions, mixer } = useAnimations(animations, group)
+
+//   const [isOn, setIsOn] = useState(false);
+
+// const playOnFromIndex = (index) => {
+//   if (songNum === null || !audioRef[songNum]) return;
+
+//   setSongNum(index);
+//   const audio = audioRef[index].current;
+
+//   actions['off'].stop();
+//   actions['on'].setLoop(LoopOnce);
+//   actions['on'].clampWhenFinished = true;
+//   actions['on'].play();
+
+//   audio.oncanplaythrough = null;
+//   audio.load();
+
+//   if (audio.readyState >= 4) {
+//     audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+//   } else {
+//     audio.oncanplaythrough = () => {
+//       audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+//     };
+//   }
+// };
+
+
+// const playOn = () => {
+//   const audio = audioRef[songNum].current;
+
+//   actions['off'].stop();
+//   actions['on'].setLoop(LoopOnce);
+//   actions['on'].clampWhenFinished = true;
+//   actions['on'].play();
+
+//   // Odstranit předchozí listener, kdyby tam náhodou zůstal
+//   audio.oncanplaythrough = null;
+
+//   audio.load();
+//   // Pokud už je audio připravené, hraj rovnou
+//   if (audio.readyState >= 4) { // HAVE_ENOUGH_DATA
+//     audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+//   } else {
+//     // Jinak čekej na 'canplaythrough'
+//     audio.oncanplaythrough = () => {
+//       audio.play().catch(e => console.warn("Chyba při přehrávání:", e));
+//     };
+//     // Vynutit načtení, pokud se náhodou nespustil sám
+//   }
+// };
+
+
+// const playOff = () => {
+//   const audio = audioRef[songNum].current;
+
+//   actions['on'].stop();
+//   actions['off'].setLoop(LoopOnce);
+//   actions['off'].clampWhenFinished = true;
+//   actions['off'].play();
+
+//   // Odstranit případný předchozí listener
+//   audio.oncanplaythrough = null;
+
+//   audio.load(); // Pro jistotu vynutíme načtení
+//   audio.pause();
+//   if (audio.readyState >= 2) { // HAVE_CURRENT_DATA nebo vyšší
+//     audio.pause();
+//     audio.currentTime = 0;
+//   } else {
+//     // Pokud není připraveno, počkej na načtení
+//     audio.oncanplaythrough = () => {
+//       audio.pause();
+//       audio.currentTime = 0;
+//     };
+//   }
+// };
+
+
+// const onClick = (event) => {
+//   event.stopPropagation(); // Prevents event bubbling
+
+//   const nextState = !isOn;
+//   setIsOn(nextState);
+
+//   if (nextState) {
+//     send('{"type": "radio-on"}');
+//     const index = randomTrack(); // náhodné číslo
+//     playOnFromIndex(index);      // hraje konkrétní track
+//   } else {
+//     send('{"type": "radio-off"}');
+//     playOff();
+//   }
+// };
+
+
+//   return (
+//     <group ref={group} {...props} dispose={null} onPointerDown={onClick} onPointerEnter={() => {
+//       document.body.style.cursor = 'pointer';
+//       setRadioHover(true);
+//     }} onPointerLeave={() => {
+//       document.body.style.cursor = 'auto';
+//       setRadioHover(false);
+//     }}>
+//         <group name="Armature" position={[-0.152, 0.162, -0.331]} rotation={[1.332, -0.041, 0.167]} scale={0.434} >
+//           <primitive object={nodes.Bone002} />
+//         </group>
+//     </group>
+//   )
+// }
 
 useGLTF.preload('/radio.gltf')
