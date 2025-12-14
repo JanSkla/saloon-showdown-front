@@ -1,4 +1,4 @@
-import React, { lazy, useContext, useEffect, useState } from "react";
+import React, { act, lazy, useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../utilComponents/WebsocketProvider";
 import { RoomContext } from "../utilComponents/RoomDataProvider";
 import { Button } from "../components/Button";
@@ -43,6 +43,10 @@ const GamePage = () => {
 
     const [play, setPlay] = useState(false);
 
+      const [playerShot, setPlayerShot] = useState(false);
+      const [beerDrank, setBeerDrank] = useState(false);
+    
+
     const startCountdown = () => {
         audio.play();
         setMiddleCanvasText(<span style={{fontSize: '8vh'}}>3</span>);
@@ -83,13 +87,25 @@ const GamePage = () => {
         }
         else if(data?.type === "round-actions" && data?.data){
             data.data.forEach(action => {
+                console.log(action, action.target, thisPID, 'action')
                 if(action.target == thisPID){
                   switch (action.type) {
                     case "shoot-death":
                       setDeath(true);
                       break;
+                    case "shoot-damage":
+                      setTimeout(() => setPlayerShot(true), 500);
+                      setTimeout(() => setPlayerShot(false), 3000);
+                      break;
                   }
                 }
+                else if(action.user == thisPID){
+                  switch (action.type) {
+                    case "finished-beer":
+                      setTimeout(() => setBeerDrank(true), 1500);
+                      setTimeout(() => setBeerDrank(false), 3000);
+                      break;
+                  }}
             }
         )
         }
@@ -148,6 +164,8 @@ const GamePage = () => {
                 </div>
                 <ThisPlayerHealth />
             </div>
+            {beerDrank && <MiddleCanvasText className="healEffect"></MiddleCanvasText>}
+            {playerShot && <MiddleCanvasText className="shotEffect"></MiddleCanvasText>}
             {death && <MiddleCanvasText className="deathScreen">
             </MiddleCanvasText>}
             <MiddleCanvasText>

@@ -143,10 +143,10 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     }}>Ready</ReadyText>}
     <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
     {playingPlayers.filter((_val, index) => index >= readyCount).map((_val, index) => <Cardpack position={[0, 2.77 + index*0.07, 0]} rotation={[0,index*15,0]}/>)}
-    <pointLight position={[0,5.5,0]} intensity={30} color={0xf79707}/>
+    <pointLight position={[0,5.5,0]} intensity={38} color={0xf79707}/>
     <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
     <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
-    {/* <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/> */}
+    <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/>
     <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
     <Ambiance/>
     <MainCamera />
@@ -155,7 +155,9 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     <Radio position={[11.8, 4.18, 4]} scale={1.7} rotation={[0,3,0]}/>
     </React.Suspense>
      {/* <OrbitControls/> */}
+     
   </Canvas>
 }
 
 export default GameCanvas
+

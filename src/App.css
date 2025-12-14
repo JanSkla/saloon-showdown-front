@@ -155,3 +155,42 @@ input {
   font-family: "Bevan", serif;
   font-weight: 400;
 }
+
+/* Definice animace */
+@keyframes flashEffect {
+  0% {
+    opacity: 0;
+  }
+  15% { /* Cca 50ms z 350ms */
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.shotEffect {
+  /* Aby to překrylo celou obrazovku, ale neblokovalo klikání */
+  position: fixed;
+  inset: 0; /* Zkratka pro top: 0, right: 0, bottom: 0, left: 0 */
+  pointer-events: none; /* Důležité: umožní klikat "skrz" efekt */
+  z-index: 9999; /* Musí být nad vším ostatním */
+
+  /* Tvoje grafika (trochu jsem zesílil červenou, aby to bylo víc vidět při rychlém bliknutí) */
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 0, 0, 0) 0%, rgba(255, 0, 0, 0.4) 100%);
+  
+  /* Spuštění animace */
+  animation: flashEffect 350ms ease-out forwards;
+}
+
+.healEffect {
+
+  position: fixed;
+  inset: 0; 
+  pointer-events: none; 
+  z-index: 9999; 
+
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 255, 0, 0) 0%, rgba(0, 255, 0, 0.4) 100%);
+  
+  animation: flashEffect 400ms ease-out forwards;
+}

@@ -11,7 +11,7 @@ export function Sun() {
     return (
     <mesh position={[20, 60, -250]}>
         {/* <EffectComposer>
-            <Bloom  intensity={0.4} blurPass={undefined} luminanceThreshold={0.1} luminanceSmoothing={0.2}/>
+            <Bloom  intensity={0.4} blurPass={undefined} luminanceThreshold={0.1} luminanceSmoothing={0.1}/>
         </EffectComposer> */}
         <Sphere  args={[5, 32, 32]} />
         <meshStandardMaterial color="white" />
