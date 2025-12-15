@@ -15,6 +15,8 @@ import ReadyText from './models/ReadyText';
 import { Radio } from './models/Radio';
 import Ambiance from './Ambiance';
 import { Cardpack } from './models/Cardpack';
+import PlayerSpritesheets from './PlayerSpritesheets';
+import { SpriteAnimator, useSpriteLoader } from '@react-three/drei';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -31,6 +33,7 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
 
   const [playingPlayers, setPlayingPlayers] = useState([]);
   const [readyCount, setReadyCount] = useState(0);
+  const [shootingPlayers, setShootingPlayers] = useState([]);
 
   const enemies = useRef([]);
 
@@ -95,6 +98,22 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     else if (data?.type === "player-ready" && data?.readycount !== undefined){
       setReadyCount(data?.readycount)
     }
+    else if(data?.type === "round-actions" && data?.data){
+      const shooters = [];
+      data.data.forEach(action => {
+        if(['shoot-damage', 'shoot-block', 'shoot-death'].includes(action.type)) {
+          shooters.push(action.user);
+        }
+      });
+      
+      if(shooters.length > 0) {
+        setShootingPlayers(shooters);
+        // Clear after animation plays
+        setTimeout(() => {
+          setShootingPlayers([]);
+        }, 500); // Adjust timing based on your spritesheet duration
+      }
+    }
   }, [data])
 
   useEffect(() => {
@@ -122,42 +141,42 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
     return <Html center>{progress} % loaded</Html>;
   };
 
-  return <Canvas
-  style={{backgroundColor: '#0d0a0a'}}
-  onCreated={({ gl, scene }) => {
-    scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
-  }}>
-    <React.Suspense fallback={<Loader />}>
-    {positions.map(({pId, pos, beerPos, name, rightPIDS}) => <>
-      <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)} rightPIDS={rightPIDS}/>
-      <Beer pId={pId} position={[beerPos.a - 0.3, 2.8, beerPos.b - 0.3]} lookAt={[-0.35, 2.8, -1.3]} />
-    </>)}
-    <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
-    {cardOptions.map((option, index) =>
-    <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
-    )}
-    {!isReady && <ReadyText onClick={e => {
-      send(JSON.stringify({type: "ready"}));
-      setIsReady(true)
-      document.body.style.cursor = 'auto';
-    }}>Ready</ReadyText>}
-    <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
-    {playingPlayers.filter((_val, index) => index >= readyCount).map((_val, index) => <Cardpack position={[0, 2.77 + index*0.07, 0]} rotation={[0,index*15,0]}/>)}
-    <pointLight position={[0,5.5,0]} intensity={38} color={0xf79707}/>
-    <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
-    <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
-    <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/>
-    <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
-    <Ambiance/>
-    <MainCamera />
-    <Bartender/>
-    <EmptyLazy OnLoaded={OnLoaded}/>
-    <Radio position={[11.8, 4.18, 4]} scale={1.7} rotation={[0,3,0]}/>
-    </React.Suspense>
-     {/* <OrbitControls/> */}
-     
-  </Canvas>
+  return <>
+    <Canvas
+    style={{backgroundColor: '#0d0a0a'}}
+    onCreated={({ gl, scene }) => {
+      scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
+    }}>
+      <React.Suspense fallback={<Loader />}>
+      {positions.map(({pId, pos, beerPos, name, rightPIDS}) => <>
+        <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)} rightPIDS={rightPIDS}/>
+        <Beer pId={pId} position={[beerPos.a - 0.3, 2.8, beerPos.b - 0.3]} lookAt={[-0.35, 2.8, -1.3]} />
+      </>)}
+      <Beer pId={thisPID} position={[-1.4, 2.8, -2]} lookAt={[-1.4, 2.8, -5.225]}/>
+      {cardOptions.map((option, index) =>
+      <Card lookAt={[-1.4, 3.9, -5.225]} key={option} cardOptions={option} cardNumber={index} cardsHeldNumber={cardOptions.length} sendChoice={sendChoice} cardChosen={cardChosen} isChosen={chosen}/>
+      )}
+      {!isReady && <ReadyText onClick={e => {
+        send(JSON.stringify({type: "ready"}));
+        setIsReady(true)
+        document.body.style.cursor = 'auto';
+      }}>Ready</ReadyText>}
+      <Room rotation={[0, 3, 0]} position={[2.8, 0, 2]}/>
+      {playingPlayers.filter((_val, index) => index >= readyCount).map((_val, index) => <Cardpack position={[0, 2.77 + index*0.07, 0]} rotation={[0,index*15,0]}/>)}
+      <pointLight position={[0,5.5,0]} intensity={38} color={0xf79707}/>
+      <pointLight position={[-1.4, 4.266, -5.225]} intensity={0.8} color={0xffffff}/>
+      <pointLight position={[8,4.5,-3]} intensity={3} color={0xfebbbb}/>
+      <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/>
+      <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
+      <Ambiance/>
+      <MainCamera />
+      <Bartender/>
+      <EmptyLazy OnLoaded={OnLoaded}/>
+      <Radio position={[11.8, 4.18, 4]} scale={1.7} rotation={[0,3,0]}/>
+      </React.Suspense>
+
+    </Canvas>
+  </>
 }
 
 export default GameCanvas
-

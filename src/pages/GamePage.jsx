@@ -94,8 +94,8 @@ const GamePage = () => {
                       setDeath(true);
                       break;
                     case "shoot-damage":
-                      setTimeout(() => setPlayerShot(true), 500);
-                      setTimeout(() => setPlayerShot(false), 3000);
+                      setTimeout(() => setPlayerShot(true), 700);
+                      setTimeout(() => setPlayerShot(false), 3200);
                       break;
                   }
                 }

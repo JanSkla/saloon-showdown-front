@@ -36,8 +36,8 @@ const POV_SOUNDS = [
   "/sounds/drink-self.wav",
   "/sounds/drink-self-shot.wav",
   "/sounds/whistle.wav",
-
 ]
+
 
 const POVCanvas = () => {
 

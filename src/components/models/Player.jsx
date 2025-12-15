@@ -7,6 +7,9 @@ import { Text } from '@react-three/drei';
 import { TARGET, TargetFrame } from './TargetFrame';
 import Sound from '../Sound';
 import { RoomContext } from '../../utilComponents/RoomDataProvider';
+import { SpriteAnimator, useSpriteLoader } from '@react-three/drei';
+import { hover } from '@testing-library/user-event/dist/hover';
+
 
 export const PLAYER = {
   cards: 0,
@@ -43,6 +46,7 @@ const poss = [
   [0.1, -0.1, 0.04]
 ]
 
+
 export default function Player({pId, position, onClick, name, targetState, rightPIDS = []}) {
   
   const disconnected = useRef(false);
@@ -68,6 +72,7 @@ export default function Player({pId, position, onClick, name, targetState, right
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_table.png'), top: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_cards_table_hand.png')},
     {main: useLoader(THREE.TextureLoader, textureLocation + 'cowboy_block_shot.png'), top: undefined},
   ]
+  
 
   const sounds = [
     undefined,
@@ -82,7 +87,6 @@ export default function Player({pId, position, onClick, name, targetState, right
     "/sounds/drink-other-shot.wav",
     undefined,
     undefined
-
   ]
 
 
@@ -91,6 +95,8 @@ export default function Player({pId, position, onClick, name, targetState, right
   const [health, _setHealth] = useState(MAX_HEALTH);
 
   const healthRef = useRef(MAX_HEALTH);
+
+  const [isShooting, setIsShooting] = useState(false);
 
   const setHealth = newVal => {
     healthRef.current = newVal;
@@ -104,11 +110,13 @@ export default function Player({pId, position, onClick, name, targetState, right
 
   const planeRef = useRef();
   const planeTopRef = useRef();
+  const hoverRef = useRef();
 
   const refreshLookAt = () => {
     if (planeRef.current) {
       planeRef.current.lookAt(0, position[1], 0);
       planeTopRef.current.lookAt(0, position[1], 0);
+      hoverRef.current.lookAt(0.1, position[1]+0.1, 0.1);
     }
   }
 
@@ -169,8 +177,16 @@ export default function Player({pId, position, onClick, name, targetState, right
             case "shoot-damage":
             case "shoot-death":
             case "shoot-block":
-              if (action.target === thisPID)
+              if (action.target === thisPID) {
                 setPlayerState(PLAYER.shoot);
+                
+                setTimeout(() => {
+                  setIsShooting(true);
+                }, 500);
+                setTimeout(() => {
+                  setIsShooting(false);
+                }, 3500);
+              }
               else if (rightPIDS.includes(action.target)){
                 setPlayerState(PLAYER.shootRight);
               }
@@ -244,7 +260,7 @@ export default function Player({pId, position, onClick, name, targetState, right
   
   return <>
     <mesh
-      position={position} // Position it at the origin
+      position={position}
       ref={planeRef}
       onClick={targetState == TARGET.choosing && health > 0 && onClick}
     >
@@ -265,21 +281,40 @@ export default function Player({pId, position, onClick, name, targetState, right
       <HealthDisplay />
       </mesh>
     <mesh
-      position={position} // Position it at the origin
+      position={position}
       ref={planeTopRef}
     >
       {!!variants[playerState].top &&
       <>
       <planeGeometry args={[3*scale, 4*scale]} />
       <meshStandardMaterial 
-          depthWrite={false} // Disable depth writing
-          depthTest={false} // Disable depth testing
+          depthWrite={false}
+          depthTest={false}
           side={THREE.DoubleSide}
           map={variants[playerState].top}
           transparent
           alphaTest={0.1}
           />
+
       </>}
+    </mesh>
+    <mesh
+    position={position}
+    ref={hoverRef}
+    renderOrder={10000} >
+      {isShooting && 
+  <SpriteAnimator 
+      position={[-0.3,-0.15,0.3]}
+      startFrame={0}
+      endFrame={46}
+      autoPlay={true}
+      loop={false}
+      numberOfFrames={46}
+      fps={12}
+      textureImageURL='/images/cowboy/enemy/enemy-shoot-flare.png'
+      scale={1.8}
+      depthTest={false}
+/>}
     </mesh>
   </>
 }
