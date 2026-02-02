@@ -21,6 +21,7 @@ const JoinPage = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const [publicLobbies, setPublicLobies] = useState([]);
   const [joining, setJoining] = useState(false);
+  const [showCode, setShowCode] = useState(false);
 
   useEffect(() => {
     console.log('AA')
@@ -71,7 +72,10 @@ const JoinPage = () => {
     </div>
     <br/>
     <Button disabled={!!isOpen} onClick={onJoinClick}>join</Button>
-    <input type="text" ref={codeInputRef} defaultValue={roomCode} autoFocus maxLength={4} style={{textTransform: "uppercase", fontSize: "20vh", width: "60vh"}}></input>
+    <div style={{display: "flex", alignItems: "center", gap: "10px"}}>
+      <input type={showCode ? "text" : "password"} ref={codeInputRef} defaultValue={roomCode} autoFocus maxLength={4} style={{textTransform: "uppercase", fontSize: "20vh", width: "60vh"}}></input>
+      <Button onClick={() => setShowCode(!showCode)} style={{fontSize: "3vh", padding: "10px 15px"}}>{showCode ? "hide" : "show"}</Button>
+    </div>
     
     <Button onClick={onLobbySearch} style={{fontSize: '5vh'}}>{hasSearched ? "refresh lobby search" : "find public lobbies"}</Button>
     {publicLobbies[0] === undefined && hasSearched && <div style={{color: "white"}}>NO PUBLIC LOBBIES</div>}
