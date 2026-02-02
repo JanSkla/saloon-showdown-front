@@ -99,6 +99,7 @@ const MainPage = () => {
     return <div className="canvas-container" style={{justifyContent: "end"}}>
         <MainPageCanvas/>
         <div style={{position: "absolute", display: "flex", flexDirection: "column", right: 100, top: 100, alignItems: "center"}}>
+            <img src="images/banner.png" style={{width: 400*sizeMultiplier, height: 280*sizeMultiplier}}></img>
             <span style={isPhone ? {fontSize: '3vh'}: undefined}>name:</span>
             <input type="text" ref={codeInputRef} value={name} onChange={e => changeName(e.target.value)} style={isPhone ? {fontSize: '3vh'}: undefined}></input>
             <Button disabled={!!isOpen} onClick={onCreateClick}>create</Button>
