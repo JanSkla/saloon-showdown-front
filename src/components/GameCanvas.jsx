@@ -118,7 +118,6 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
   }, [data])
 
   useEffect(() => {
-    console.log(playingPlayers)
     recalculatePlayers(playingPlayers);
   }, [playingPlayers])
 

@@ -32,7 +32,6 @@ export const WebsocketProvider = ({ children }) => {
 
     waitingMessagesForConnection.forEach(message => {
       ws.current?.send(message);
-      console.log("sent:", message)
     }); //send messages buffered before connection established
     waitingMessagesForConnection.length = 0; //delete sent messages
   }
@@ -46,18 +45,15 @@ export const WebsocketProvider = ({ children }) => {
     const socket = new WebSocket(wssAddress)
 
     socket.onopen = () => {
-        console.log("open")
         setOpen()
     }
     socket.onclose = () => {
-        console.log("closed");
         
         if(isOpenRef.current) setError('disconnected');;
         setIsOpen(false);
         navigate('/');
     }
     socket.onmessage = (event) => {
-        console.log("recieved: ",event.data)
         let data;
         try{
           data = JSON.parse(event.data);
@@ -84,7 +80,6 @@ export const WebsocketProvider = ({ children }) => {
     if (ws.current?.readyState === WebSocket.OPEN)
       {
         ws.current?.send(value);
-        console.log("sent:", value)
       }
     else if (ws.current?.readyState === WebSocket.CONNECTING){
         waitingMessagesForConnection.push(value);

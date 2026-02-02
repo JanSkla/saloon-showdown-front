@@ -23,7 +23,6 @@ const JoinPage = () => {
   const [joining, setJoining] = useState(false);
 
   useEffect(() => {
-    console.log('AA')
     if (joining && (data?.type === "join-room") && data?.status === 200){
       setRoomCode(data?.code);
       setOpacityThenCall(0, () => navigate("/game"));

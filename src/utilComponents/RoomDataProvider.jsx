@@ -18,18 +18,15 @@ export const RoomDataProvider = ({ children }) => {
       setPlayers(data?.players);
       setThisPID(data?.pId);
       setRoomCode(data?.code);
-      console.log("room players loaded", data?.players)
     }
     else if(data?.type === "player-join"){
       const updatedPlayers = [...players, data?.player];
       setPlayers(updatedPlayers);
-      console.log("player joined", updatedPlayers)
     }
     else if(data?.type === "player-disconnect" && data?.player){
       const updatedPlayers = players.filter(player => player.pId !== data?.player);
 
       setPlayers(updatedPlayers);
-      console.log("player disconnected", updatedPlayers)
     }
     else if(data?.type === "new-leader" && data?.player){
       const updatedPlayers = players.map(player => {
@@ -38,7 +35,6 @@ export const RoomDataProvider = ({ children }) => {
       });
 
       setPlayers(updatedPlayers);
-      console.log("player disconnected", updatedPlayers)
     }
   }, [data]);
 

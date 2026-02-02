@@ -61,7 +61,6 @@ export const ThisPlayerHealth = () => {
           }
         }
       })
-      console.log(healthRef.current, tempHealth, 'tempHealth')
       setHealth(tempHealth);
     }
   }, [data]);

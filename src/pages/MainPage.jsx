@@ -18,7 +18,6 @@ const cards = [
 
 
 const ShootImage = ({sizeMultiplier}) => {
-    console.log(sizeMultiplier)
     const [state, setState] = useState(0);
 
     useEffect(()=>{

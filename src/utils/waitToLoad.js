@@ -12,7 +12,6 @@ export const WaitToLoad = () => {
   const isLoaded = useMemo(() => loaded === total,[loaded, total])
 
   useEffect(() => {
-    console.log(loaded, total,isLoaded)
     if(isLoaded)
       setTimeout(() => {
         setOpacity(1);

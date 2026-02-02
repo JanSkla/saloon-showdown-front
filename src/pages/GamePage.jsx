@@ -87,7 +87,6 @@ const GamePage = () => {
         }
         else if(data?.type === "round-actions" && data?.data){
             data.data.forEach(action => {
-                console.log(action, action.target, thisPID, 'action')
                 if(action.target == thisPID){
                   switch (action.type) {
                     case "shoot-death":
