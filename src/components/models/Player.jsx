@@ -182,10 +182,10 @@ export default function Player({pId, position, onClick, name, targetState, right
                 
                 setTimeout(() => {
                   setIsShooting(true);
-                }, 500);
+                }, 550);
                 setTimeout(() => {
                   setIsShooting(false);
-                }, 3500);
+                }, 3550);
               }
               else if (rightPIDS.includes(action.target)){
                 setPlayerState(PLAYER.shootRight);
@@ -304,7 +304,7 @@ export default function Player({pId, position, onClick, name, targetState, right
     renderOrder={10000} >
       {isShooting && 
   <SpriteAnimator 
-      position={[-0.3,-0.15,0.3]}
+      position={[-0.5,-0.2,0.3]}
       startFrame={0}
       endFrame={46}
       autoPlay={true}
@@ -313,6 +313,7 @@ export default function Player({pId, position, onClick, name, targetState, right
       fps={12}
       textureImageURL='/images/cowboy/enemy/enemy-shoot-flare.png'
       scale={1.8}
+      asSprite={true}
       depthTest={false}
 />}
     </mesh>

@@ -45,7 +45,7 @@ const GamePage = () => {
 
       const [playerShot, setPlayerShot] = useState(false);
       const [beerDrank, setBeerDrank] = useState(false);
-    
+    const [playerShooted, setPlayerShooted] = useState(false);
 
     const startCountdown = () => {
         audio.play();
@@ -94,8 +94,8 @@ const GamePage = () => {
                       setDeath(true);
                       break;
                     case "shoot-damage":
-                      setTimeout(() => setPlayerShot(true), 700);
-                      setTimeout(() => setPlayerShot(false), 3200);
+                      setTimeout(() => setPlayerShot(true), 650);
+                      setTimeout(() => setPlayerShot(false), 3150);
                       break;
                   }
                 }
@@ -104,6 +104,12 @@ const GamePage = () => {
                     case "finished-beer":
                       setTimeout(() => setBeerDrank(true), 1500);
                       setTimeout(() => setBeerDrank(false), 3000);
+                      break;
+                    case "shoot-death":
+                    case "shoot-damage":
+                    case "shoot-block":
+                      setTimeout(() => setPlayerShooted(true), 600);
+                      setTimeout(() => setPlayerShooted(false), 2500);
                       break;
                   }}
             }
@@ -166,6 +172,8 @@ const GamePage = () => {
             </div>
             {beerDrank && <MiddleCanvasText className="healEffect"></MiddleCanvasText>}
             {playerShot && <MiddleCanvasText className="shotEffect"></MiddleCanvasText>}
+            {playerShooted && <MiddleCanvasText className="shootEffect"></MiddleCanvasText>}
+
             {death && <MiddleCanvasText className="deathScreen">
             </MiddleCanvasText>}
             <MiddleCanvasText>

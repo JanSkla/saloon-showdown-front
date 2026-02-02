@@ -1,5 +1,6 @@
 body {
   background-color: #000000;
+  margin: 0; height: 100%; overflow: hidden
 }
 
 .App {
@@ -193,4 +194,16 @@ input {
   background: radial-gradient(50% 50% at 50% 50%, rgba(0, 255, 0, 0) 0%, rgba(0, 255, 0, 0.4) 100%);
   
   animation: flashEffect 400ms ease-out forwards;
+}
+
+.shootEffect {
+
+  position: fixed;
+  inset: 0; 
+  pointer-events: none; 
+  z-index: 9999; 
+
+  background: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 0, 0) 0%, rgba(255, 255, 0, 0.4) 30%, rgba(255, 255, 255, 0.711) 100%);
+  
+  animation: flashEffect 350ms ease-out forwards;
 }

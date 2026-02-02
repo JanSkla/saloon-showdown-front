@@ -24,7 +24,7 @@ const CowboyCloseup = () => {
 
   const [variant, setVariant] = useState(textureMid)
 
-  const MULTIPLIER = 0.1;
+  const MULTIPLIER = 0.03;
 
   useFrame(() => {
     if (planeRef.current == undefined) return;

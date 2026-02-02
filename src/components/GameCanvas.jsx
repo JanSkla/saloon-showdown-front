@@ -17,6 +17,7 @@ import Ambiance from './Ambiance';
 import { Cardpack } from './models/Cardpack';
 import PlayerSpritesheets from './PlayerSpritesheets';
 import { SpriteAnimator, useSpriteLoader } from '@react-three/drei';
+import Flies from './models/Fly';
 
 const EmptyLazy = lazy(() => import("../utilComponents/EmptyLazy"))
 
@@ -142,11 +143,12 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
   };
 
   return <>
-    <Canvas
-    style={{backgroundColor: '#0d0a0a'}}
+<Canvas
+    style={{backgroundColor: '#0e0703'}}  // Match the dark orange theme
     onCreated={({ gl, scene }) => {
-      scene.fog = new THREE.FogExp2(0x120c0c, 0.08); // Fog color and density
+      scene.fog = new THREE.FogExp2(0x120706, 0.1, 40); // Dark orange, higher density
     }}>
+      <fog attach="fog" args={[0x120706, 0.15, 18]} />
       <React.Suspense fallback={<Loader />}>
       {positions.map(({pId, pos, beerPos, name, rightPIDS}) => <>
         <Player pId={pId} position={[pos.a, 3.55, pos.b]} onClick={() => chooseTarget(pId)} name={name} targetState={getTargetState(pId)} rightPIDS={rightPIDS}/>
@@ -169,12 +171,12 @@ const GameCanvas = ({chooseTarget, choosing, target, cardOptions, sendChoice, ga
       <pointLight position={[6,6,9]} intensity={8} color={0xfebbbb}/>
       <Environment preset="dawn" environmentIntensity={0.1} environmentRotation={[0,3,1]}/>
       <Ambiance/>
-      <MainCamera />
+      <MainCamera/>
       <Bartender/>
       <EmptyLazy OnLoaded={OnLoaded}/>
+      <Flies/>
       <Radio position={[11.8, 4.18, 4]} scale={1.7} rotation={[0,3,0]}/>
       </React.Suspense>
-
     </Canvas>
   </>
 }
